@@ -1,0 +1,6 @@
+apiVersion: v2
+name: shared
+description: A Helm chart library for solidcharts
+type: library
+version: 1.0.0
+
