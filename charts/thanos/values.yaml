@@ -573,8 +573,225 @@ compactor:
   # tolerations: []
 
 ruler:
-  # -- If `true`, create the ruler component.
+  # -- If `true`, create the _Thanos Rule_ component.
   enabled: false
+
+  # -- If `true`, add a `thanos_rule` label to `<NAMESPACE>/<RULE_FULLNAME>` on a `Rule` metrics.
+  instanceLabel: false
+
+  # -- Local disk block retention period for the _Rule_ component (`--tsdb.retention`).
+  retention: 48h
+
+  # -- Block duration for the _Rule_ component (`--tsdb.block-duration`).
+  blockDuration: 2h
+
+  # -- Rule eval interval for the _Rule_ component (`--eval-interval`).
+  evalInterval: 1m
+
+  serviceAccount:
+    # -- If `true`, create a new `ServiceAccount` for the _Rule_ component.
+    create: true
+    # -- (string) If this is set and `compact.serviceAccount.create` is `true` this will be used for the created _Rule_ component service account name, if this is set and `compact.serviceAccount.create` is `false` then this will define an existing service account to use for the _Rule_ component.
+    name:
+    # -- Labels to add to the _Rule_ service account.
+    labels: {}
+    # -- Annotations to add to the _Rule_ service account.
+    annotations: {}
+    # -- Automount API credentials for the _Rule_ service account.
+    automountToken: false
+
+  service:
+    # -- Service type
+    type: ClusterIP
+    # -- Service ports
+    ports:
+      http: 9090
+      grpc: 10901
+    # -- Annotations to add to the _Rule_ service.
+    annotations: {}
+    # -- (string) Traffic distribution for service.
+    trafficDistribution: ~
+
+  ingress:
+    # -- If `true`, create an `Ingress` for the _Rule_ service.
+    enabled: false
+    # -- Annotations to add to the _Rule_ service ingress.
+    annotations: {}
+    # -- Ingress class name for the _Rule_ service ingress.
+    ingressClassName:
+    # -- Path for the _Rule_ service ingress.
+    path: /
+    # -- Hosts for the _Rule_ service ingress.
+    # @default -- See _values.yaml_
+    hosts: []
+    #   - chart-example.local
+    # -- TLS configuration for the _Rule_ service ingress.
+    # @default -- See _values.yaml_
+    tls: []
+    #   - hosts:
+    #       - chart-example.local
+    #     secretName: chart-example-tls
+
+  # -- Number of _Rule_ replicas to create.
+  replicas: 1
+
+  # -- Update strategy for the _Rule_ stateful set.
+  updateStrategy: {}
+
+  pdb:
+    # -- If `true`, create a `PodDisruptionBudget` for the _Rule_ stateful set.
+    enabled: false
+    # -- (string) Minimum number of _Rule_ replicas that the PDB should require to be available.
+    minAvailable:
+    # -- (string) Maximum number of _Rule_ replicas that the PDB should allow to be unavailable.
+    maxUnavailable:
+    # -- (string) Unhealthy pod eviction policy for the _Rule_ PDB.
+    unhealthyPodEvictionPolicy:
+
+  # -- Labels to add to the _Rule_ pod.
+  podLabels: {}
+
+  # -- Annotations to add to the _Rule_ pod.
+  podAnnotations: {}
+
+  containerPorts:
+    http: 9090
+    grpc: 10901
+
+  # -- Security context for the _Rule_ pod.
+  # @default -- See _values.yaml_
+  podSecurityContext:
+    fsGroup: 65534
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- (string) Priority class name for the _Rule_ pod.
+  priorityClassName:
+
+  # -- (int) Termination grace period for the _Rule_ pod; in seconds.
+  terminationGracePeriodSeconds:
+
+  # -- Security context for the _Rule_ pod default container.
+  # @default -- See _values.yaml_
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- Additional environment variables for the _Rule_ pod default container.
+  extraEnv: []
+
+  # -- Additional args for the _Rule_ pod default container.
+  extraArgs: []
+
+  # -- Liveness probe configuration for the _Rule_ pod default container.
+  # @default -- See _values.yaml_
+  livenessProbe:
+    httpGet:
+      path: /-/healthy
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 30
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 4
+
+  # -- Readiness probe configuration for the _Rule_ pod default container.
+  # @default -- See _values.yaml_
+  readinessProbe:
+    httpGet:
+      path: /-/ready
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 20
+
+  # -- Resources for the _Rule_ pod default container.
+  resources: {}
+
+  persistence:
+    # -- If `true`, create a `PersistentVolumeClaim` for the _Rule_ pod data.
+    enabled: false
+    # -- Annotations to add to the _Rule_ pod PVC.
+    annotations: {}
+    # -- Access mode for the _Rule_ pod PVC.
+    accessMode: ReadWriteOnce
+    # -- Storage class for the _Rule_ pod PVC.
+    storageClass: standard
+    # -- Size for the _Rule_ pod PVC.
+    size: 8Gi
+    # -- If `true`, retain the _Rule_ PVC after the pod is deleted.
+    retainDeleted: true
+    # -- If `true`, retain the _Rule_ PVC after the pod is scaled down.
+    retainScaled: true
+
+  # -- Extra volumes for the _Rule_ pod.
+  extraVolumes: []
+
+  # -- Extra volume mounts for the _Rule_ pod default container.
+  extraVolumeMounts: []
+
+  configReloader:
+    # -- If `true`, create the _Rule_ pod config reloader sidecar container.
+    enabled: true
+    image:
+      # -- Image repository for the _Rule_ pod config reloader sidecar container.
+      repository: ghcr.io/jimmidyson/configmap-reload
+      # -- Image tag for the _Rule_ pod config reloader sidecar container.
+      tag: v0.15.0
+      # -- Image digest for the _Rule_ pod config reloader sidecar container.
+      digest:
+      # -- Image pull policy for the _Rule_ pod config reloader sidecar container.
+      pullPolicy: IfNotPresent
+    # -- Resources for the _Rule_ pod config reloader sidecar container.
+    resources: {}
+    # -- Extra volume mounts for the _Rule_ pod config reloader sidecar container.
+    extraVolumeMounts: []
+
+    # -- Node selector labels for scheduling the pod (override commons).
+    # nodeSelector: {}
+
+    # -- Affinity settings for scheduling the pod (override commons).
+    # affinity: {}
+
+    # -- Topology spread constraints for scheduling for pod (override commons).
+    # topologySpreadConstraints: []
+
+    # -- Node taints pod will tolerate for scheduling (override commons).
+    # tolerations: []
+
+  alertmanagersConfig:
+    # -- If `true`, create a `Secret` for the _Rule_ component alertmanagers configuration.
+    create: true
+    # -- (string) If this is set and `rule.alertmanagersConfig.create` is `true` this will be used for the created secret name, if this is set and `rule.alertmanagersConfig.create` is `false` then this will define an existing secret to use.
+    name:
+    # -- Secret key for the _Rule_ component alertmanagers configuration.
+    key: config
+    # -- Alert managers configuration for the _Rule_ component.
+    value: |-
+      alertmanagers: []
+
+  rules:
+    # -- If `true`, create a `ConfigMap` for the _Rule_ component rules.
+    create: true
+    # -- (string) If this is set and `rule.rules.create` is `true` this will be used for the created config map name, if this is set and `rule.rules.create` is `false` then this will define an existing config map to use.
+    name:
+    # Rules for the _Rule_ component.
+    value: ~
 
 receiver:
   # -- If `true`, create the _Thanos Receive Ingestor_ & _Thanos Receive Router_ components.
@@ -598,14 +815,14 @@ bucketweb:
     automountToken: false
 
   service:
-    # -- Service type for the bucket web service.
+    # -- Service type for the service.
     type: ClusterIP
-    # -- (int) Port for the bucket web service.
+    # -- (int) Port for the service.
     ports:
       http: 9090
-    # -- Annotations to add to the bucket web service.
+    # -- Annotations to add to the service.
     annotations: {}
-    # -- (string) Traffic distribution for the bucket web service.
+    # -- (string) Traffic distribution for service.
     trafficDistribution: ~
 
   ingress:
