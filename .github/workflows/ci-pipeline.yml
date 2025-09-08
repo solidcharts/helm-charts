@@ -1,0 +1,21 @@
+name: CI Pipeline
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: d3adb5/helm-unittest-action@v2
+        name: Run unit tests
+        with:
+          helm-version: v3.18.6
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          install-mode: if-not-present

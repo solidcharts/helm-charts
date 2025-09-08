@@ -41,3 +41,7 @@ tasks:
     dir: 'charts'
     cmds:
       - helm-docs
+  act:
+    desc: Run act
+    cmds:
+      - act --container-architecture linux/amd64
