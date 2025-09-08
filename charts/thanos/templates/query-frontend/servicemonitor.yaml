@@ -1,0 +1,31 @@
+{{- if and .Values.queryFrontend.enabled .Values.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "thanos.queryFrontend.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thanos.queryFrontend.labels" . | nindent 4 }}
+  {{- with .Values.serviceMonitor.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  jobLabel: {{ .Values.serviceMonitor.jobLabel }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "thanos.queryFrontend.selectorLabels" . | nindent 6 }}
+    matchExpressions:
+      - key: prometheus.io/service-monitor
+        operator: NotIn
+        values:
+          - "false"
+  endpoints:
+    - port: http
+    {{- if .Values.serviceMonitor.endpointConfig }}
+      {{- toYaml .Values.serviceMonitor.endpointConfig | nindent 6 }}
+    {{- else }}
+    {{- end }}
+{{- end -}}

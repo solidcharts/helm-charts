@@ -1,0 +1,114 @@
+{{- if .Values.queryFrontend.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "thanos.queryFrontend.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thanos.queryFrontend.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.queryFrontend.autoscaling.enabled }}
+  replicas: {{ .Values.queryFrontend.replicas }}
+  {{- end }}
+  {{- with .Values.queryFrontend.updateStrategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "thanos.queryFrontend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "thanos.queryFrontend.selectorLabels" . | nindent 8 }}
+      {{- with .Values.queryFrontend.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.queryFrontend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "thanos.queryFrontend.serviceAccountName" . }}
+      {{- with .Values.queryFrontend.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.queryFrontend.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.queryFrontend.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
+      containers:
+        - name: thanos-query-frontend
+          {{- with .Values.queryFrontend.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: {{ include "thanos.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: HOST_IP_ADDRESS
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          {{- with .Values.queryFrontend.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          args:
+            - query-frontend
+            - --log.level={{ .Values.logLevel }}
+            - --log.format={{ .Values.logFormat }}
+            - {{ printf "--http-address=0.0.0.0:%d" (int .Values.queryFrontend.containerPorts.http) }}
+          {{- if .Values.autoGomemlimit.enabled }}
+            - --enable-auto-gomemlimit
+          {{- with .Values.autoGomemlimit.ratio }}
+            - --auto-gomemlimit.ratio={{ . }}
+          {{- end }}
+            {{- end }}
+            - {{ printf "--query-frontend.downstream-url=http://%s.%s.svc.%s:%d" (include "thanos.query.fullname" .) .Release.Namespace .Values.clusterDomain (int .Values.query.service.ports.http) }}
+          {{- with .Values.queryFrontend.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: {{ .Values.queryFrontend.containerPorts.http }}
+          livenessProbe:
+            {{- toYaml .Values.queryFrontend.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.queryFrontend.readinessProbe | nindent 12 }}
+          {{- with .Values.queryFrontend.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.queryFrontend.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.queryFrontend.extraVolumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.nodeSelector" (dict "component" .Values.queryFrontend "commons" .Values.commons)) }}
+      nodeSelector:
+        {{- . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.affinity" (dict "component" .Values.queryFrontend "commons" .Values.commons)) }}
+      affinity:
+        {{- . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.topologySpreadConstraints" (dict "component" .Values.queryFrontend "commons" .Values.commons)) }}
+      topologySpreadConstraints:
+        {{- . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.tolerations" (dict "component" .Values.queryFrontend "commons" .Values.commons)) }}
+      tolerations:
+        {{- . | nindent 8 }}
+      {{- end }}
+{{- end -}}

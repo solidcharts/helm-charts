@@ -95,11 +95,13 @@ query:
     automountToken: false
 
   service:
+    # -- Service type
+    type: ClusterIP
+    # -- Service ports
     ports:
       http: 9090
       grpc: 10901
-    # -- Annotations to add to the bucket web service.
-    # -- Annotations to add to the query service.
+    # -- Annotations to add to service.
     annotations: {}
     # -- (string) Traffic distribution for the query service.
     trafficDistribution:
@@ -248,6 +250,171 @@ query:
   # -- Node taints pod will tolerate for scheduling (override commons).
   # tolerations: []
 
+queryFrontend:
+  # -- If `true`, create the _Thanos Query Frontend_ component.
+  enabled: false
+
+  serviceAccount:
+    # -- If `true`, create a new `ServiceAccount` for the _Query Frontend_ component.
+    create: true
+    # -- (string) If this is set and `compact.serviceAccount.create` is `true` this will be used for the created _Query Frontend_ component service account name, if this is set and `compact.serviceAccount.create` is `false` then this will define an existing service account to use for the _Query Frontend_ component.
+    name:
+    # -- Labels to add to the _Query Frontend_ service account.
+    labels: {}
+    # -- Annotations to add to the _Query Frontend_ service account.
+    annotations: {}
+    # -- Automount API credentials for the _Query Frontend_ service account.
+    automountToken: false
+
+  service:
+    # -- Service type
+    type: ClusterIP
+    ports:
+      http: 9090
+    # -- Annotations to add to the _Query Frontend_ service.
+    annotations: {}
+    # -- (string) Traffic distribution for the _Query Frontend_ service.
+    trafficDistribution: ~
+
+  ingress:
+    # -- If `true`, create an `Ingress` for the _Query Frontend_ service.
+    enabled: false
+    # -- Annotations to add to the _Query Frontend_ service ingress.
+    annotations: {}
+    # -- Ingress class name for the _Query Frontend_ service ingress.
+    ingressClassName:
+    # -- Path for the _Query Frontend_ service ingress.
+    path: /
+    # -- Hosts for the _Query Frontend_ service ingress.
+    # @default -- See _values.yaml_
+    hosts: []
+    #   - chart-example.local
+    # -- TLS configuration for the _Query Frontend_ service ingress.
+    # @default -- See _values.yaml_
+    tls: []
+    #   - hosts:
+    #       - chart-example.local
+    #     secretName: chart-example-tls
+
+  # -- Number of _Query Frontend_ replicas to create.
+  replicas: 1
+
+  # -- Update strategy for the _Query Frontend_ deployment.
+  updateStrategy: {}
+
+  autoscaling:
+    # -- If `true`, create a `HorizontalPodAutoscaler` for the _Query Frontend_ deployment.
+    enabled: false
+    # -- Minimum number of _Query Frontend_ replicas that the HPA should maintain.
+    minReplicas: 1
+    # -- Maximum number of _Query Frontend_ replicas that the HPA should create.
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the _Query Frontend_ pod.
+    targetCPUUtilizationPercentage: 80
+    # -- (int) Target memory utilisation percentage for the _Query Frontend_ pod.
+    targetMemoryUtilizationPercentage:
+
+  pdb:
+    # -- If `true`, create a `PodDisruptionBudget` for the _Query Frontend_ deployment.
+    enabled: false
+    # -- (string) Minimum number of _Query Frontend_ replicas that the PDB should require to be available.
+    minAvailable:
+    # -- (string) Maximum number of _Query Frontend_ replicas that the PDB should allow to be unavailable.
+    maxUnavailable:
+    # -- (string) Unhealthy pod eviction policy for the _Query Frontend_ PDB.
+    unhealthyPodEvictionPolicy:
+
+  # -- Labels to add to the _Query Frontend_ pod.
+  podLabels: {}
+
+  # -- Annotations to add to the _Query Frontend_ pod.
+  podAnnotations: {}
+
+  containerPorts:
+    http: 9090
+
+  # -- Security context for the _Query Frontend_ pod.
+  # @default -- See _values.yaml_
+  podSecurityContext:
+    fsGroup: 65534
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- (string) Priority class name for the _Query Frontend_ pod.
+  priorityClassName:
+
+  # -- (int) Termination grace period for the _Query Frontend_ pod; in seconds.
+  terminationGracePeriodSeconds:
+
+  # -- Security context for the _Query Frontend_ pod default container.
+  # @default -- See _values.yaml_
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- Additional environment variables for the _Query Frontend_ pod default container.
+  extraEnv: []
+
+  # -- Additional args for the _Query Frontend_ pod default container.
+  extraArgs: []
+
+  # -- Liveness probe configuration for the _Query Frontend_ pod default container.
+  # @default -- See _values.yaml_
+  livenessProbe:
+    httpGet:
+      path: /-/healthy
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 30
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 4
+
+  # -- Readiness probe configuration for the _Query Frontend_ pod default container.
+  # @default -- See _values.yaml_
+  readinessProbe:
+    httpGet:
+      path: /-/ready
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 20
+
+  # -- Resources for the _Query Frontend_ pod default container.
+  resources: {}
+
+  # -- Extra volumes for the _Query Frontend_ pod.
+  extraVolumes: []
+
+  # -- Extra volume mounts for the _Query Frontend_ pod default container.
+  extraVolumeMounts: []
+
+  # -- Node selector labels for scheduling the pod (override commons).
+  # nodeSelector: {}
+
+  # -- Affinity settings for scheduling the pod (override commons).
+  # affinity: {}
+
+  # -- Topology spread constraints for scheduling for pod (override commons).
+  # topologySpreadConstraints: []
+
+  # -- Node taints pod will tolerate for scheduling (override commons).
+  # tolerations: []
 
 storeGateway:
   # -- If `true`, create the store gateway component.
