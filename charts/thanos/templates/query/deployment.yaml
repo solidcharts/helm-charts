@@ -72,14 +72,14 @@ spec:
             - --auto-gomemlimit.ratio={{ . }}
           {{- end }}
           {{- end }}
-          {{- range (concat .Values.additionalReplicaLabels (ternary (list "rule_replica") (list) .Values.rule.enabled ) (ternary (list "receive_replica") (list) .Values.receiver.enabled )) | uniq }}
+          {{- range (concat .Values.additionalReplicaLabels (ternary (list "rule_replica") (list) .Values.ruler.enabled ) (ternary (list "receive_replica") (list) .Values.receiver.enabled )) | uniq }}
             - --query.replica-label={{ . }}
           {{- end }}
           {{- if .Values.query.enableDnsDiscovery }}
           {{- if .Values.storeGateway.enabled }}
             - {{ printf "--endpoint%s=dnssrv+_grpc._tcp.%s-headless.%s.svc.%s" (ternary "-group" "" .Values.storeEndpointGroup) (include "thanos.storeGateway.fullname" .) .Release.Namespace .Values.clusterDomain }}
           {{- end }}
-          {{- if .Values.rule.enabled }}
+          {{- if .Values.ruler.enabled }}
             - {{ printf "--endpoint=dnssrv+_grpc._tcp.%s-headless.%s.svc.%s" (include "thanos.ruler.fullname" .) .Release.Namespace .Values.clusterDomain}}
           {{- end }}
           {{- if .Values.receiver.enabled }}

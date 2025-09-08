@@ -1,0 +1,167 @@
+{{- if .Values.compactor.enabled -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "thanos.compactor.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thanos.compactor.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "thanos.compactor.serviceName" . }}
+  replicas: 1
+  {{- with .Values.compactor.updateStrategy }}
+  updateStrategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "thanos.compactor.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "thanos.compactor.selectorLabels" . | nindent 8 }}
+      {{- with .Values.compactor.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if or .Values.objstoreConfig.create (gt (len .Values.compactor.podAnnotations) 0) }}
+      annotations:
+      {{- if .Values.objstoreConfig.create }}
+        checksum/config: {{ include "thanos.objstoreConfigHash" . }}
+      {{- end }}
+      {{- with .Values.compactor.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "thanos.compactor.serviceAccountName" . }}
+      {{- with .Values.compactor.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.compactor.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.compactor.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
+      containers:
+        - name: thanos-compactor
+          {{- with .Values.compactor.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: {{ include "thanos.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: HOST_IP_ADDRESS
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            {{- with .Values.compactor.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          args:
+            - compactor
+            - --wait
+            - --log.level={{ .Values.logLevel }}
+            - --log.format={{ .Values.logFormat }}
+            - {{ printf "--http-address=0.0.0.0:%d" (int .Values.compactor.containerPorts.http) }}
+            - --data-dir=/var/thanos/compactor
+            - --objstore.config-file=/etc/thanos/objstore.yaml
+          {{- if .Values.autoGomemlimit.enabled }}
+            - --enable-auto-gomemlimit
+          {{- with .Values.autoGomemlimit.ratio }}
+            - --auto-gomemlimit.ratio={{ . }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.compactor.deduplication.enabled }}
+            - --compactor.enable-vertical-compaction
+          {{- range (concat .Values.additionalReplicaLabels (ternary (list "rule_replica") (list) .Values.ruler.enabled ) (ternary (list "receive_replica") (list) .Values.receiver.enabled )) | uniq }}
+            - --deduplication.replica-label={{ . }}
+          {{- end }}
+          {{- if .Values.compactor.deduplication.func }}
+            - --deduplication.func={{ .Values.compactor.deduplication.func }}
+          {{- end }}
+          {{- end }}
+          {{- with .Values.compactor.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: {{ .Values.compactor.containerPorts.http }}
+          livenessProbe:
+            {{- toYaml .Values.compactor.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.compactor.readinessProbe | nindent 12 }}
+          volumeMounts:
+            - mountPath: /etc/thanos/objstore.yaml
+              name: objstore-config
+              subPath: {{ .Values.objstoreConfig.key }}
+              readOnly: true
+            - mountPath: /var/thanos/compactor
+              name: data
+              readOnly: false
+          {{- with .Values.compactor.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.compactor.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: objstore-config
+          secret:
+            secretName: {{ include "thanos.objstoreConfigSecretName" . }}
+      {{- if not .Values.compactor.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+      {{- end }}
+      {{- with .Values.compactor.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.nodeSelector" (dict "component" .Values.compactor "commons" .Values.commons)) }}
+      nodeSelector:
+        {{- . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.affinity" (dict "component" .Values.compactor "commons" .Values.commons)) }}
+      affinity:
+        {{- . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.topologySpreadConstraints" (dict "component" .Values.compactor "commons" .Values.commons)) }}
+      topologySpreadConstraints:
+        {{- . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.tolerations" (dict "component" .Values.compactor "commons" .Values.commons)) }}
+      tolerations:
+        {{- . | nindent 8 }}
+      {{- end }}
+  {{- if .Values.compactor.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "thanos.compactor.selectorLabels" . | nindent 10 }}
+        {{- with .Values.compactor.persistence.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        resources:
+          requests:
+            storage: {{ .Values.compactor.persistence.size }}
+  {{- if semverCompare ">= 1.27-0" .Capabilities.KubeVersion.Version }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ ternary "Retain" "Delete" .Values.compactor.persistence.retainDeleted }}
+    whenScaled: {{ ternary "Retain" "Delete" .Values.compactor.persistence.retainScaled }}
+  {{- end }}
+  {{- end }}
+{{- end -}}

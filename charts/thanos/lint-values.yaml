@@ -16,6 +16,9 @@ commons:
 serviceMonitor:
   enabled: true
 
+compactor:
+  enabled: true
+
 bucketweb:
   enabled: true
   tolerations: [ ]

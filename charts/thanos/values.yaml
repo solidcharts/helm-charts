@@ -265,7 +265,147 @@ storeGateway:
     # -- Automount API credentials for the store gateway service account.
     automountToken: false
 
-rule:
+compactor:
+  # -- If `true`, create component.
+  enabled: false
+
+  deduplication:
+    # -- If `true`, enable deduplication via the _Compact_ component.
+    enabled: true
+    # -- (string) If specified override the default deduplication function.
+    func:
+
+  serviceAccount:
+    # -- If `true`, create a new `ServiceAccount` for the _Compact_ component.
+    create: true
+    # -- (string) If this is set and `compact.serviceAccount.create` is `true` this will be used for the created _Compact_ component service account name, if this is set and `compact.serviceAccount.create` is `false` then this will define an existing service account to use for the _Compact_ component.
+    name:
+    # -- Labels to add to the _Compact_ service account.
+    labels: {}
+    # -- Annotations to add to the _Compact_ service account.
+    annotations: {}
+    # -- Automount API credentials for the _Compact_ service account.
+    automountToken: false
+
+  service:
+    # -- Service ports
+    ports:
+      http: 9090
+    # -- Annotations to add to the _Compact_ service.
+    annotations: {}
+
+  # -- Update strategy for the _Compact_ stateful set.
+  updateStrategy: {}
+
+  # -- Labels to add to the _Compact_ pod.
+  podLabels: {}
+
+  # -- Annotations to add to the _Compact_ pod.
+  podAnnotations: {}
+
+  containerPorts:
+    http: 9090
+
+  # -- Security context for the _Compact_ pod.
+  # @default -- See _values.yaml_
+  podSecurityContext:
+    fsGroup: 65534
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- (string) Priority class name for the _Compact_ pod.
+  priorityClassName:
+
+  # -- (int) Termination grace period for the _Compact_ pod; in seconds.
+  terminationGracePeriodSeconds:
+
+  # -- Security context for the _Compact_ pod default container.
+  # @default -- See _values.yaml_
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- Additional environment variables for the _Compact_ pod default container.
+  extraEnv: []
+
+  # -- Additional args for the _Compact_ pod default container.
+  extraArgs: []
+
+  # -- Liveness probe configuration for the _Compact_ pod default container.
+  # @default -- See _values.yaml_
+  livenessProbe:
+    httpGet:
+      path: /-/healthy
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 30
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 4
+
+  # -- Readiness probe configuration for the _Compact_ pod default container.
+  # @default -- See _values.yaml_
+  readinessProbe:
+    httpGet:
+      path: /-/ready
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 20
+
+  # -- Resources for the _Compact_ pod default container.
+  resources: {}
+
+  persistence:
+    # -- If `true`, create a `PersistentVolumeClaim` for the _Compact_ pod data.
+    enabled: false
+    # -- Annotations to add to the _Compact_ pod PVC.
+    annotations: {}
+    # -- Access mode for the _Compact_ pod PVC.
+    accessMode: ReadWriteOnce
+    # -- Storage class for the pod PVC.
+    storageClass: ""
+    # -- Size for the _Compact_ pod PVC.
+    size: 8Gi
+    # -- If `true`, retain the _Compact_ PVC after the pod is deleted.
+    retainDeleted: true
+    # -- If `true`, retain the _Compact_ PVC after the pod is scaled down.
+    retainScaled: true
+
+  # -- Extra volumes for the _Compact_ pod.
+  extraVolumes: []
+
+  # -- Extra volume mounts for the _Compact_ pod default container.
+  extraVolumeMounts: []
+
+  # -- Node selector labels for scheduling the pod (override commons).
+  # nodeSelector: {}
+
+  # -- Affinity settings for scheduling the pod (override commons).
+  # affinity: {}
+
+  # -- Topology spread constraints for scheduling for pod (override commons).
+  # topologySpreadConstraints: []
+
+  # -- Node taints pod will tolerate for scheduling (override commons).
+  # tolerations: []
+
+ruler:
   # -- If `true`, create the ruler component.
   enabled: false
 
