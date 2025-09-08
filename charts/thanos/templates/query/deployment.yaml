@@ -1,0 +1,137 @@
+{{- if .Values.query.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "thanos.query.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thanos.query.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.query.autoscaling.enabled }}
+  replicas: {{ .Values.query.replicas }}
+  {{- end }}
+  {{- with .Values.query.updateStrategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "thanos.query.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "thanos.query.selectorLabels" . | nindent 8 }}
+      {{- with .Values.query.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.query.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "thanos.query.serviceAccountName" . }}
+      {{- with .Values.query.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.query.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.query.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
+      containers:
+        - name: thanos-query
+          {{- with .Values.query.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: {{ include "thanos.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: HOST_IP_ADDRESS
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          {{- with .Values.query.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          args:
+            - query
+            - --log.level={{ .Values.logLevel }}
+            - --log.format={{ .Values.logFormat }}
+            - {{ printf "--http-address=0.0.0.0:%d" (int .Values.query.containerPorts.http) }}
+            - {{ printf "--grpc-address=0.0.0.0:%d" (int .Values.query.containerPorts.grpc) }}
+          {{- if .Values.autoGomemlimit.enabled }}
+            - --enable-auto-gomemlimit
+          {{- with .Values.autoGomemlimit.ratio }}
+            - --auto-gomemlimit.ratio={{ . }}
+          {{- end }}
+          {{- end }}
+          {{- range (concat .Values.additionalReplicaLabels (ternary (list "rule_replica") (list) .Values.rule.enabled ) (ternary (list "receive_replica") (list) .Values.receiver.enabled )) | uniq }}
+            - --query.replica-label={{ . }}
+          {{- end }}
+          {{- if .Values.query.enableDnsDiscovery }}
+          {{- if .Values.storeGateway.enabled }}
+            - {{ printf "--endpoint%s=dnssrv+_grpc._tcp.%s-headless.%s.svc.%s" (ternary "-group" "" .Values.storeEndpointGroup) (include "thanos.storeGateway.fullname" .) .Release.Namespace .Values.clusterDomain }}
+          {{- end }}
+          {{- if .Values.rule.enabled }}
+            - {{ printf "--endpoint=dnssrv+_grpc._tcp.%s-headless.%s.svc.%s" (include "thanos.ruler.fullname" .) .Release.Namespace .Values.clusterDomain}}
+          {{- end }}
+          {{- if .Values.receiver.enabled }}
+            - {{ printf "--endpoint=dnssrv+_grpc._tcp.%s-headless.%s.svc.%s" (include "thanos.receiverIngestor.fullname" .) .Release.Namespace .Values.clusterDomain}}
+          {{- end }}
+          {{- end }}
+          {{- range .Values.additionalEndpoints | uniq }}
+            - --endpoint={{ . }}
+          {{- end }}
+          {{- range .Values.additionalEndpointGroups }}
+            - --endpoint-group={{ . }}
+          {{- end }}
+          {{- with .Values.query.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: {{ .Values.query.containerPorts.http }}
+            - name: grpc
+              protocol: TCP
+              containerPort: {{ .Values.query.containerPorts.grpc }}
+          livenessProbe:
+            {{- toYaml .Values.query.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.query.readinessProbe | nindent 12 }}
+          {{- with .Values.query.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.query.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.query.extraVolumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.query.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.query.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.query.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.query.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end -}}

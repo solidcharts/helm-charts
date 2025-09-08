@@ -1,0 +1,30 @@
+{{- if and .Values.query.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "thanos.query.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thanos.query.labels" . | nindent 4 }}
+  {{- with .Values.query.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.query.service.type }}
+{{- if (semverCompare ">= 1.31-0" .Capabilities.KubeVersion.Version) }}
+{{- with .Values.query.service.trafficDistribution }}
+  trafficDistribution: {{ . }}
+{{- end }}
+{{- end }}
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.query.service.ports.http }}
+      targetPort: http
+    - name: grpc
+      port: {{ .Values.query.service.ports.grpc }}
+      targetPort: grpc
+  selector:
+    {{- include "thanos.query.selectorLabels" . | nindent 4 }}
+{{- end }}

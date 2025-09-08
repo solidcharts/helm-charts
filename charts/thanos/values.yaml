@@ -42,6 +42,18 @@ autoGomemlimit:
   # -- (float) The ratio of reserved GOMEMLIMIT memory to the detected maximum container or system memory.
   ratio:
 
+# -- If `true`, configure the store endpoints with `--endpoint-group` so they're queried round-robin rather than fanout.
+storeEndpointGroup: false
+
+# -- Additional replica labels external to the chart.
+additionalReplicaLabels: []
+
+# -- Additional endpoints external to the chart to be configured with `--endpoint`.
+additionalEndpoints: []
+
+# -- Additional endpoint groups external to the chart to be configured with `--endpoint-group`.
+additionalEndpointGroups: []
+
 serviceMonitor:
   # -- If `true`, create `ServiceMonitor` resources to support collecting metrics via the Prometheus Operator
   enabled: false
@@ -52,6 +64,201 @@ serviceMonitor:
   # -- Endpoint configuration for the service monitor endpoint.
   endpointConfig:
     path: /metrics
+
+query:
+  # -- If `true`, create component.
+  enabled: true
+
+  serviceAccount:
+    # -- If `true`, create a new `ServiceAccount` for the query component.
+    create: true
+    # -- (string) If this is set and `compact.serviceAccount.create` is `true` this will be used for the created query component service account name, if this is set and `compact.serviceAccount.create` is `false` then this will define an existing service account to use for the query component.
+    name:
+    # -- Labels to add to the query service account.
+    labels: {}
+    # -- Annotations to add to the query service account.
+    annotations: {}
+    # -- Automount API credentials for the query service account.
+    automountToken: false
+
+  service:
+    ports:
+      http: 9090
+      grpc: 10901
+    # -- Annotations to add to the bucket web service.
+    # -- Annotations to add to the query service.
+    annotations: {}
+    # -- (string) Traffic distribution for the query service.
+    trafficDistribution:
+
+  ingress:
+    # -- If `true`, create an `Ingress` for the query service.
+    enabled: false
+    # -- Annotations to add to the query service ingress.
+    annotations: {}
+    # -- Ingress class name for the query service ingress.
+    ingressClassName:
+    # -- Path for the query service ingress.
+    path: /
+    # -- Hosts for the query service ingress.
+    # @default -- See _values.yaml_
+    hosts: []
+    #   - chart-example.local
+    # -- TLS configuration for the query service ingress.
+    # @default -- See _values.yaml_
+    tls: []
+    #   - hosts:
+    #       - chart-example.local
+    #     secretName: chart-example-tls
+
+  # -- Number of query replicas to create.
+  replicas: 1
+
+  # -- Update strategy for the query deployment.
+  updateStrategy: {}
+
+  autoscaling:
+    # -- If `true`, create a `HorizontalPodAutoscaler` for the query deployment.
+    enabled: false
+    # -- Minimum number of query replicas that the HPA should maintain.
+    minReplicas: 1
+    # -- Maximum number of query replicas that the HPA should create.
+    maxReplicas: 3
+    # -- Target CPU utilisation percentage for the query pod.
+    targetCPUUtilizationPercentage: 80
+    # -- (int) Target memory utilisation percentage for the query pod.
+    targetMemoryUtilizationPercentage:
+
+  pdb:
+    # -- If `true`, create a `PodDisruptionBudget` for the query deployment.
+    enabled: false
+    # -- (string) Minimum number of query replicas that the PDB should require to be available.
+    minAvailable:
+    # -- (string) Maximum number of query replicas that the PDB should allow to be unavailable.
+    maxUnavailable:
+    # -- (string) Unhealthy pod eviction policy for the query PDB.
+    unhealthyPodEvictionPolicy:
+
+  # -- Labels to add to the query pod.
+  podLabels: {}
+
+  # -- Annotations to add to the query pod.
+  podAnnotations: {}
+
+  containerPorts:
+    http: 9090
+    grpc: 10901
+
+  # -- Security context for the query pod.
+  # @default -- See _values.yaml_
+  podSecurityContext:
+    fsGroup: 65534
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- (string) Priority class name for the query pod.
+  priorityClassName:
+
+  # -- (int) Termination grace period for the query pod; in seconds.
+  terminationGracePeriodSeconds:
+
+  # -- Security context for the query pod default container.
+  # @default -- See _values.yaml_
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- Additional environment variables for the query pod default container.
+  extraEnv: []
+
+  # -- Additional args for the query pod default container.
+  extraArgs: []
+
+  # -- Liveness probe configuration for the query pod default container.
+  # @default -- See _values.yaml_
+  livenessProbe:
+    httpGet:
+      path: /-/healthy
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 30
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 4
+
+  # -- Readiness probe configuration for the query pod default container.
+  # @default -- See _values.yaml_
+  readinessProbe:
+    httpGet:
+      path: /-/ready
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 20
+
+  # -- Resources for the query pod default container.
+  resources: {}
+
+  # -- Extra volumes for the query pod.
+  extraVolumes: []
+
+  # -- Extra volume mounts for the query pod default container.
+  extraVolumeMounts: []
+
+  # -- Node selector labels for scheduling the query pod.
+  nodeSelector: {}
+
+  # -- Affinity settings for scheduling the query pod. If an explicit label selector is not provided for pod affinity or pod anti-affinity one will be created from the pod selector labels.
+  affinity: {}
+
+  # -- Topology spread constraints for scheduling for the query pod. If an explicit label selector is not provided one will be created from the pod selector labels.
+  topologySpreadConstraints: []
+
+  # -- Node taints the query pod will tolerate for scheduling.
+  tolerations: []
+
+  # -- Enable DNS service discovery.
+  enableDnsDiscovery: true
+
+storeGateway:
+  # -- If `true`, create the store gateway component.
+  enabled: true
+
+  serviceAccount:
+    # -- If `true`, create a new `ServiceAccount` for the store gateway component.
+    create: true
+    # -- (string) If this is set and `compact.serviceAccount.create` is `true` this will be used for the created store gateway component service account name, if this is set and `compact.serviceAccount.create` is `false` then this will define an existing service account to use for the store gateway component.
+    name:
+    # -- Labels to add to the store gateway service account.
+    labels: { }
+    # -- Annotations to add to the store gateway service account.
+    annotations: { }
+    # -- Automount API credentials for the store gateway service account.
+    automountToken: false
+
+rule:
+  # -- If `true`, create the ruler component.
+  enabled: false
+
+receiver:
+  # -- If `true`, create the _Thanos Receive Ingestor_ & _Thanos Receive Router_ components.
+  enabled: false
+
 
 bucketweb:
   # -- If `true`, create the bucket web component.
@@ -135,7 +342,7 @@ bucketweb:
   podAnnotations: {}
 
   containerPorts:
-    http: 8080
+    http: 9090
 
   # -- Security context for the bucket web pod.
   # @default -- See _values.yaml_
@@ -219,12 +426,3 @@ bucketweb:
 
   # -- Node taints the bucket web pod will tolerate for scheduling.
   tolerations: []
-
-  # -- Enable DNS service discovery.
-  enableDnsDiscovery: true
-
-  # -- **DEPRECATED** - Labels added to metrics to show the replica recording the data (`--query.replica-label`); use `additionalReplicaLabels` instead.
-  replicaLabels: []
-
-  # -- **DEPRECATED** - Additional stores to configure query with (`--store`); use `additionalEndpoints` instead.
-  additionalStores: []
