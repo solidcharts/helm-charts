@@ -1,62 +1,25 @@
 {{/*
-Expand the name of the chart.
+The Thanos image to use
 */}}
-{{- define "thanos.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- define "thanos.image" -}}
+{{- $separator := ":" -}}
+{{- $tag := printf "%s" (default (printf "v%s" .Chart.AppVersion) .Values.image.tag) }}
+{{- $version := $tag }}
+{{- $digest := ternary (printf "%s" .Values.image.digest) "" (not (empty .Values.image.digest)) }}
+{{- if not (empty $digest) }}
+    {{- $separator = "@" -}}
+    {{- $version = $digest }}
+{{- end -}}
+{{- printf "%s%s%s" .Values.image.repository $separator $version }}
 {{- end }}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
+Objstore secret name
 */}}
-{{- define "thanos.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "thanos.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Common labels
-*/}}
-{{- define "thanos.labels" -}}
-helm.sh/chart: {{ include "thanos.chart" . }}
-{{ include "thanos.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "thanos.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "thanos.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "thanos.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "thanos.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
+{{- define "thanos.objstoreConfigSecretName" -}}
+{{- if .Values.objstoreConfig.create -}}
+{{- default (printf "%s-objstore-config" (include "shared.fullname" .)) .Values.objstoreConfig.name }}
+{{- else -}}
+{{- .Values.objstoreConfig.name }}
+{{- end -}}
+{{- end -}}

@@ -1,123 +1,230 @@
-# Default values for thanos.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
-replicaCount: 1
-
+# Default values for thanos chart
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  repository: nginx
-  # This sets the pull policy for images.
+  repository: quay.io/thanos/thanos
+  # -- Pull policy for images.
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  # -- Overrides the image tag whose default is the chart appVersion.
+  tag: ~
+  # -- Set image digest
+  digest: ~
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
-# This is to override the chart name.
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: ~
+fullnameOverride: ~
 
-# This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
-serviceAccount:
-  # Specifies whether a service account should be created
+# -- _Kubernetes_ cluster domain.
+clusterDomain: cluster.local
+
+objstoreConfig:
+  # -- If `true`, create a `Secret` for the objstore store configuration.
   create: true
-  # Automatically mount a ServiceAccount's API credentials?
-  automount: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  # -- (string) If this is set and `objstoreConfig.create` is `true` this will be used for the created secret name, if this is set and `objstoreConfig.create` is `false` then this will define an existing secret to use.
+  name:
+  # -- Secret key for the objstore configuration.
+  key: config
+  # -- Objstore configuration; this can either be a string or a map. The default values are not suitable for production.
+  value: |-
+    type: FILESYSTEM
+    config:
+      directory: /var/thanos/store/s3
 
-# This is for setting Kubernetes Annotations to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-podAnnotations: {}
-# This is for setting Kubernetes Labels to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-podLabels: {}
+# -- Log level for _Thanos_ components.
+logLevel: info
 
-podSecurityContext: {}
-  # fsGroup: 2000
+# -- Log format for _Thanos_ components.
+logFormat: logfmt
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
-# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
-service:
-  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-  type: ClusterIP
-  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  port: 80
-
-# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
-ingress:
+autoGomemlimit:
+  # -- If `true`, enable the go runtime to automatically limit memory consumption for all Thanos components by setting GOMEMLIMIT.
   enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  # -- (float) The ratio of reserved GOMEMLIMIT memory to the detected maximum container or system memory.
+  ratio:
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-livenessProbe:
-  httpGet:
-    path: /
-    port: http
-readinessProbe:
-  httpGet:
-    path: /
-    port: http
-
-# This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
-autoscaling:
+serviceMonitor:
+  # -- If `true`, create `ServiceMonitor` resources to support collecting metrics via the Prometheus Operator
   enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  # -- Additional labels for the service monitor.
+  additionalLabels: {}
+  # -- Label to use as the `jobLabel`.
+  jobLabel: app.kubernetes.io/component-instance
+  # -- Endpoint configuration for the service monitor endpoint.
+  endpointConfig:
+    path: /metrics
 
-# Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
+bucketweb:
+  # -- If `true`, create the bucket web component.
+  enabled: false
 
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+  serviceAccount:
+    # -- If `true`, create a new `ServiceAccount` for the component.
+    create: true
+    # -- (string) If this is set and `bucketweb.serviceAccount.create` is `true` this will be used for the created bucket web component service account name, if this is set and `bucketweb.serviceAccount.create` is `false` then this will define an existing service account to use for the bucket web component.
+    name: ~
+    # -- Labels to add to the bucket web service account.
+    labels: {}
+    # -- Annotations to add to the bucket web service account.
+    annotations: {}
+    # -- Automount API credentials for the bucket web service account.
+    automountToken: false
 
-nodeSelector: {}
+  service:
+    # -- Service type for the bucket web service.
+    type: ClusterIP
+    # -- (int) Port for the bucket web service.
+    ports:
+      http: 9090
+    # -- Annotations to add to the bucket web service.
+    annotations: {}
+    # -- (string) Traffic distribution for the bucket web service.
+    trafficDistribution: ~
 
-tolerations: []
+  ingress:
+    # -- If `true`, create an `Ingress` for the bucket web service.
+    enabled: false
+    # -- Annotations to add to the bucket web service ingress.
+    annotations: {}
+    # -- Ingress class name for the bucket web service ingress.
+    ingressClassName:
+    # -- Path for the bucket web service ingress.
+    path: /
+    # -- Hosts for the bucket web service ingress.
+    # @default -- See _values.yaml_
+    hosts: []
+    #   - chart-example.local
+    # -- TLS configuration for the bucket web service ingress.
+    # @default -- See _values.yaml_
+    tls: []
+    #   - hosts:
+    #       - chart-example.local
+    #     secretName: chart-example-tls
 
-affinity: {}
+  # -- Number of bucket web replicas to create.
+  replicas: 1
+
+  # -- Update strategy for the bucket web deployment.
+  updateStrategy: {}
+
+  autoscaling:
+    # -- If `true`, create a `HorizontalPodAutoscaler` for the bucket web deployment.
+    enabled: false
+    # -- Minimum number of bucket web replicas that the HPA should maintain.
+    minReplicas: 1
+    # -- Maximum number of bucket web replicas that the HPA should create.
+    maxReplicas: 3
+    # -- Target CPU utilization percentage for the bucket web pod.
+    targetCPUUtilizationPercentage: 80
+    # -- (int) Target memory utilization percentage for the bucket web pod.
+    targetMemoryUtilizationPercentage: ~
+
+  pdb:
+    # -- If `true`, create a `PodDisruptionBudget` for the bucket web deployment.
+    enabled: false
+    # -- (string) Minimum number of bucket web replicas that the PDB should require to be available.
+    minAvailable:
+    # -- (string) Maximum number of bucket web replicas that the PDB should allow to be unavailable.
+    maxUnavailable:
+    # -- (string) Unhealthy pod eviction policy for the bucket web PDB.
+    unhealthyPodEvictionPolicy:
+
+  # -- Labels to add to the bucket web pod.
+  podLabels: {}
+
+  # -- Annotations to add to the bucket web pod.
+  podAnnotations: {}
+
+  containerPorts:
+    http: 8080
+
+  # -- Security context for the bucket web pod.
+  # @default -- See _values.yaml_
+  podSecurityContext:
+    fsGroup: 65534
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- (string) Priority class name for the bucket web pod.
+  priorityClassName:
+
+  # -- (int) Termination grace period for the bucket web pod; in seconds.
+  terminationGracePeriodSeconds:
+
+  # -- Security context for the bucket web pod default container.
+  # @default -- See _values.yaml_
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- Additional environment variables for the bucket web pod default container.
+  extraEnv: []
+
+  # -- Additional args for the bucket web pod default container.
+  extraArgs: []
+
+  # -- Liveness probe configuration for the bucket web pod default container.
+  # @default -- See _values.yaml_
+  livenessProbe:
+    httpGet:
+      path: /-/healthy
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 30
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 4
+
+  # -- Readiness probe configuration for the bucket web pod default container.
+  # @default -- See _values.yaml_
+  readinessProbe:
+    httpGet:
+      path: /-/ready
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 20
+
+  # -- Resources for the bucket web pod default container.
+  resources: {}
+
+  # -- Extra volumes for the bucket web pod.
+  extraVolumes: []
+
+  # -- Extra volume mounts for the bucket web pod default container.
+  extraVolumeMounts: []
+
+  # -- Node selector labels for scheduling the bucket web pod.
+  nodeSelector: {}
+
+  # -- Affinity settings for scheduling the bucket web pod. If an explicit label selector is not provided for pod affinity or pod anti-affinity one will be created from the pod selector labels.
+  affinity: {}
+
+  # -- Topology spread constraints for scheduling for the bucket web pod. If an explicit label selector is not provided one will be created from the pod selector labels.
+  topologySpreadConstraints: []
+
+  # -- Node taints the bucket web pod will tolerate for scheduling.
+  tolerations: []
+
+  # -- Enable DNS service discovery.
+  enableDnsDiscovery: true
+
+  # -- **DEPRECATED** - Labels added to metrics to show the replica recording the data (`--query.replica-label`); use `additionalReplicaLabels` instead.
+  replicaLabels: []
+
+  # -- **DEPRECATED** - Additional stores to configure query with (`--store`); use `additionalEndpoints` instead.
+  additionalStores: []

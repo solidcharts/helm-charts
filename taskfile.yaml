@@ -1,0 +1,44 @@
+version: '3'
+
+
+tasks:
+  default:
+    cmds:
+      - task: help
+  help:
+    desc: "Show help"
+    cmds:
+      - task -l
+  template:
+    desc: Run template with lint values
+    dir: '{{.USER_WORKING_DIR}}'
+    cmds:
+      - helm template $(basename "$PWD") . -f lint-values.yaml
+  install-unittest:
+    desc: Install unittest plugin
+    cmd: helm plugin install https://github.com/helm-unittest/helm-unittest.git
+  test:
+    desc: Run unit tests
+    dir: '{{.USER_WORKING_DIR}}'
+    cmds:
+      - helm unittest --failfast -f 'tests/*.yaml' .
+  _template:
+    desc: Run template with lint values into _template.yaml file
+    dir: '{{.USER_WORKING_DIR}}'
+    cmds:
+      - helm template $(basename "$PWD") . -f lint-values.yaml > _template.yaml
+  _template_debug:
+    desc: Run template with lint values into _template.yaml file with debug option
+    dir: '{{.USER_WORKING_DIR}}'
+    cmds:
+      - helm template $(basename "$PWD") . -f lint-values.yaml --debug > _template.yaml
+  _template-cli:
+    desc: Run template with custom values provided as CLI parameter into _template.yaml file
+    dir: '{{.USER_WORKING_DIR}}'
+    cmds:
+      - helm template $(basename "$PWD") . -f {{.CLI_ARGS}} > _template.yaml
+  docs: ## https://github.com/norwoodj/helm-docs?tab=readme-ov-file
+    desc: Generate helm docs
+    dir: 'charts'
+    cmds:
+      - helm-docs

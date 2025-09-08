@@ -1,0 +1,8 @@
+
+serviceMonitor:
+  enabled: true
+
+bucketweb:
+  enabled: true
+  autoscaling:
+    enabled: true
