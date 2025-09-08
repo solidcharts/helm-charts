@@ -1,8 +1,21 @@
+commons:
+  tolerations:
+    - effect: NoSchedule
+      key: infrastructure
+      operator: Exists
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: node-type
+                operator: In
+                values:
+                  - compute
 
 serviceMonitor:
   enabled: true
 
 bucketweb:
   enabled: true
-  autoscaling:
-    enabled: true
+  tolerations: [ ]
