@@ -156,7 +156,7 @@ spec:
         {{- end }}
       spec:
         {{- if .Values.compactor.persistence.storageClass }}
-        storageClassName: {{ .Values.ruler.persistence.storageClass }}
+        storageClassName: {{ .Values.compactor.persistence.storageClass }}
         {{- end }}
         accessModes:
           - {{ .Values.compactor.persistence.accessMode }}

@@ -547,7 +547,7 @@ storeGateway:
     # -- Access mode for the _Store Gateway_ pod PVC.
     accessMode: ReadWriteOnce
     # -- Storage class for the _Store Gateway_ pod PVC.
-    storageClass: standard
+    storageClass: ""
     # -- Size for the _Store Gateway_ pod PVC.
     size: 8Gi
     # -- If `true`, retain the _Store Gateway_ PVC after the pod is deleted.
@@ -866,7 +866,7 @@ ruler:
     # -- Access mode for the _Rule_ pod PVC.
     accessMode: ReadWriteOnce
     # -- Storage class for the _Rule_ pod PVC.
-    storageClass: standard
+    storageClass: ""
     # -- Size for the _Rule_ pod PVC.
     size: 8Gi
     # -- If `true`, retain the _Rule_ PVC after the pod is deleted.

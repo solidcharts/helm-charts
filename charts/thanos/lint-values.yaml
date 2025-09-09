@@ -19,6 +19,9 @@ storeGateway:
   enabled: true
 compactor:
   enabled: true
+  persistence:
+    enabled: true
+    storageClass: "ssd"
 bucketweb:
   enabled: true
   tolerations: [ ]
