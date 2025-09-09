@@ -18,14 +18,14 @@ spec:
 {{- end }}
 {{- end }}
   ports:
-    - name: http
-      protocol: TCP
-      port: {{ .Values.ruler.service.ports.http }}
-      targetPort: http
     - name: grpc
       protocol: TCP
       port: {{ .Values.ruler.service.ports.grpc }}
       targetPort: grpc
+    - name: http
+      protocol: TCP
+      port: {{ .Values.ruler.service.ports.http }}
+      targetPort: http
   selector:
     {{- include "thanos.ruler.selectorLabels" . | nindent 4 }}
 {{- end }}

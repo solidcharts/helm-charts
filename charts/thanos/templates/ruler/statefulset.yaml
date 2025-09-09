@@ -106,12 +106,12 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           ports:
-            - name: http
-              protocol: TCP
-              containerPort: {{ .Values.ruler.containerPorts.http }}
             - name: grpc
               protocol: TCP
               containerPort: {{ .Values.ruler.containerPorts.grpc }}
+            - name: http
+              protocol: TCP
+              containerPort: {{ .Values.ruler.containerPorts.http }}
           livenessProbe:
             {{- toYaml .Values.ruler.livenessProbe | nindent 12 }}
           readinessProbe:
