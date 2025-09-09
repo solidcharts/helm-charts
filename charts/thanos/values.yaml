@@ -99,7 +99,7 @@ query:
     type: ClusterIP
     # -- Service ports
     ports:
-      http: 9090
+      http: 10902
       grpc: 10901
     # -- Annotations to add to service.
     annotations: {}
@@ -161,7 +161,7 @@ query:
   podAnnotations: {}
 
   containerPorts:
-    http: 9090
+    http: 10902
     grpc: 10901
 
   # -- Security context for the query pod.
@@ -270,7 +270,7 @@ queryFrontend:
     # -- Service type
     type: ClusterIP
     ports:
-      http: 9090
+      http: 10902
     # -- Annotations to add to the _Query Frontend_ service.
     annotations: {}
     # -- (string) Traffic distribution for the _Query Frontend_ service.
@@ -331,7 +331,7 @@ queryFrontend:
   podAnnotations: {}
 
   containerPorts:
-    http: 9090
+    http: 10902
 
   # -- Security context for the _Query Frontend_ pod.
   # @default -- See _values.yaml_
@@ -457,7 +457,7 @@ compactor:
   service:
     # -- Service ports
     ports:
-      http: 9090
+      http: 10902
     # -- Annotations to add to the _Compact_ service.
     annotations: {}
 
@@ -471,7 +471,7 @@ compactor:
   podAnnotations: {}
 
   containerPorts:
-    http: 9090
+    http: 10902
 
   # -- Security context for the _Compact_ pod.
   # @default -- See _values.yaml_
@@ -605,7 +605,7 @@ ruler:
     type: ClusterIP
     # -- Service ports
     ports:
-      http: 9090
+      http: 10902
       grpc: 10901
     # -- Annotations to add to the _Rule_ service.
     annotations: {}
@@ -655,7 +655,7 @@ ruler:
   podAnnotations: {}
 
   containerPorts:
-    http: 9090
+    http: 10902
     grpc: 10901
 
   # -- Security context for the _Rule_ pod.
@@ -819,7 +819,7 @@ bucketweb:
     type: ClusterIP
     # -- (int) Port for the service.
     ports:
-      http: 9090
+      http: 10902
     # -- Annotations to add to the service.
     annotations: {}
     # -- (string) Traffic distribution for service.
@@ -880,7 +880,7 @@ bucketweb:
   podAnnotations: {}
 
   containerPorts:
-    http: 9090
+    http: 10902
 
   # -- Security context for the bucket web pod.
   # @default -- See _values.yaml_
