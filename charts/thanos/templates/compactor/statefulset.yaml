@@ -155,6 +155,11 @@ spec:
           {{- toYaml . | nindent 10 }}
         {{- end }}
       spec:
+        {{- if .Values.compactor.persistence.storageClass }}
+        storageClassName: {{ .Values.ruler.persistence.storageClass }}
+        {{- end }}
+        accessModes:
+          - {{ .Values.compactor.persistence.accessMode }}
         resources:
           requests:
             storage: {{ .Values.compactor.persistence.size }}
