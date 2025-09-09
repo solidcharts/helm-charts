@@ -56,7 +56,7 @@ jobs:
             if [[ $rcVersion == "true" ]] || [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
               echo "Checking release for chart $chartName and current file version $currentVersion"
               set +e  # Disable exit on error
-              helm pull "${chartRepositoryPath" --version "$currentVersion"
+              helm pull "$chartRepositoryPath" --version "$currentVersion"
               chartReleased=$?
               set -e  # Enable exit on error
               echo "chartReleased=$chartReleased"
