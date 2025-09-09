@@ -83,7 +83,7 @@ spec:
           {{- end }}
           {{- end }}
           {{- if .Values.compactor.deduplication.enabled }}
-            - --compactor.enable-vertical-compaction
+            - --compact.enable-vertical-compaction
           {{- range (concat .Values.additionalReplicaLabels (ternary (list "rule_replica") (list) .Values.ruler.enabled ) (ternary (list "receive_replica") (list) .Values.receiver.enabled )) | uniq }}
             - --deduplication.replica-label={{ . }}
           {{- end }}
