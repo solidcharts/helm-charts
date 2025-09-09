@@ -73,7 +73,7 @@ serviceMonitor:
   # -- Additional labels for the service monitor.
   additionalLabels: {}
   # -- Label to use as the `jobLabel`.
-  jobLabel: app.kubernetes.io/component-instance
+  jobLabel: app.kubernetes.io/component
   # -- Endpoint configuration for the service monitor endpoint.
   endpointConfig:
     path: /metrics
@@ -417,20 +417,155 @@ queryFrontend:
   # tolerations: []
 
 storeGateway:
-  # -- If `true`, create the store gateway component.
+  # -- If `true`, create the _Store Gateway_ component.
   enabled: true
 
   serviceAccount:
-    # -- If `true`, create a new `ServiceAccount` for the store gateway component.
+    # -- If `true`, create a new `ServiceAccount` for the _Store Gateway_ component.
     create: true
-    # -- (string) If this is set and `compact.serviceAccount.create` is `true` this will be used for the created store gateway component service account name, if this is set and `compact.serviceAccount.create` is `false` then this will define an existing service account to use for the store gateway component.
+    # -- (string) If this is set and `compact.serviceAccount.create` is `true` this will be used for the created _Store Gateway_ component service account name, if this is set and `compact.serviceAccount.create` is `false` then this will define an existing service account to use for the _Store Gateway_ component.
     name:
-    # -- Labels to add to the store gateway service account.
-    labels: { }
-    # -- Annotations to add to the store gateway service account.
-    annotations: { }
-    # -- Automount API credentials for the store gateway service account.
+    # -- Labels to add to the _Store Gateway_ service account.
+    labels: {}
+    # -- Annotations to add to the _Store Gateway_ service account.
+    annotations: {}
+    # -- Automount API credentials for the _Store Gateway_ service account.
     automountToken: false
+
+  service:
+    # -- Service ports
+    ports:
+      http: 10902
+      grpc: 10901
+    # -- Annotations to add to the _Store Gateway_ service.
+    annotations: {}
+    # -- (string) Traffic distribution for the _Store Gateway_ service.
+    trafficDistribution:
+
+  # -- Number of _Store Gateway_ replicas to create.
+  replicas: 1
+
+  # -- Update strategy for the _Store Gateway_ stateful set.
+  updateStrategy: {}
+
+  pdb:
+    # -- If `true`, create a `PodDisruptionBudget` for the _Store Gateway_ stateful set.
+    enabled: false
+    # -- (string) Minimum number of _Store Gateway_ replicas that the PDB should require to be available.
+    minAvailable:
+    # -- (string) Maximum number of _Store Gateway_ replicas that the PDB should allow to be unavailable.
+    maxUnavailable:
+    # -- (string) Unhealthy pod eviction policy for the _Store Gateway_ PDB.
+    unhealthyPodEvictionPolicy:
+
+  # -- Labels to add to the _Store Gateway_ pod.
+  podLabels: {}
+
+  # -- Annotations to add to the _Store Gateway_ pod.
+  podAnnotations: {}
+
+  containerPorts:
+    http: 10902
+    grpc: 10901
+
+  # -- Security context for the _Store Gateway_ pod.
+  # @default -- See _values.yaml_
+  podSecurityContext:
+    fsGroup: 65534
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- (string) Priority class name for the _Store Gateway_ pod.
+  priorityClassName:
+
+  # -- (int) Termination grace period for the _Store Gateway_ pod; in seconds.
+  terminationGracePeriodSeconds:
+
+  # -- Security context for the _Store Gateway_ pod default container.
+  # @default -- See _values.yaml_
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsGroup: 65532
+    runAsNonRoot: true
+    runAsUser: 65534
+    seccompProfile:
+      type: RuntimeDefault
+
+  # -- Additional environment variables for the _Store Gateway_ pod default container.
+  extraEnv: []
+
+  # -- Additional args for the _Store Gateway_ pod default container.
+  extraArgs: []
+
+  # -- Liveness probe configuration for the _Store Gateway_ pod default container.
+  # @default -- See _values.yaml_
+  livenessProbe:
+    httpGet:
+      path: /-/healthy
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 30
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 4
+
+  # -- Readiness probe configuration for the _Store Gateway_ pod default container.
+  # @default -- See _values.yaml_
+  readinessProbe:
+    httpGet:
+      path: /-/ready
+      port: http
+      scheme: HTTP
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 20
+
+  # -- Resources for the _Store Gateway_ pod default container.
+  resources: {}
+
+  # -- Extra volumes for the _Store Gateway_ pod.
+  extraVolumes: []
+
+  # -- Extra volume mounts for the _Store Gateway_ pod default container.
+  extraVolumeMounts: []
+
+  persistence:
+    # -- If `true`, create a `PersistentVolumeClaim` for the _Store Gateway_ pod data.
+    enabled: false
+    # -- Annotations to add to the _Store Gateway_ pod PVC.
+    annotations: {}
+    # -- Access mode for the _Store Gateway_ pod PVC.
+    accessMode: ReadWriteOnce
+    # -- Storage class for the _Store Gateway_ pod PVC.
+    storageClass: standard
+    # -- Size for the _Store Gateway_ pod PVC.
+    size: 8Gi
+    # -- If `true`, retain the _Store Gateway_ PVC after the pod is deleted.
+    retainDeleted: true
+    # -- If `true`, retain the _Store Gateway_ PVC after the pod is scaled down.
+    retainScaled: true
+
+  # -- Node selector labels for scheduling the pod (override commons).
+  # nodeSelector: {}
+
+  # -- Affinity settings for scheduling the pod (override commons).
+  # affinity: {}
+
+  # -- Topology spread constraints for scheduling for pod (override commons).
+  # topologySpreadConstraints: []
+
+  # -- Node taints pod will tolerate for scheduling (override commons).
+  # tolerations: []
 
 compactor:
   # -- If `true`, create component.

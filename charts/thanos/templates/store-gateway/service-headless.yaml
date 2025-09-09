@@ -1,0 +1,32 @@
+{{- if .Values.storeGateway.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "thanos.storeGateway.serviceNameHeadless" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thanos.storeGateway.labels" . | nindent 4 }}
+  {{- with .Values.storeGateway.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+{{- if (semverCompare ">= 1.31-0" .Capabilities.KubeVersion.Version) }}
+{{- with .Values.storeGateway.service.trafficDistribution }}
+  trafficDistribution: {{ . }}
+{{- end }}
+{{- end }}
+  ports:
+    - name: grpc
+      protocol: TCP
+      port: {{ .Values.storeGateway.service.ports.grpc }}
+      targetPort: grpc
+    - name: http
+      protocol: TCP
+      port: {{ .Values.storeGateway.service.ports.http }}
+      targetPort: http
+  selector:
+    {{- include "thanos.storeGateway.selectorLabels" . | nindent 4 }}
+{{- end -}}

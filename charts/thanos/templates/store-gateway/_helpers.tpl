@@ -31,3 +31,10 @@ Create the name of the service account to use
 {{- default "default" .Values.storeGateway.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Fullname
+*/}}
+{{- define "thanos.storeGateway.serviceNameHeadless" -}}
+{{ printf "%s-headless" (include "thanos.storeGateway.fullname" .) }}
+{{- end }}

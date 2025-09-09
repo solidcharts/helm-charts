@@ -11,14 +11,14 @@ commons:
               - key: node-type
                 operator: In
                 values:
-                  - compute
+                  - infrastructure
 
 serviceMonitor:
   enabled: true
-
+storeGateway:
+  enabled: true
 compactor:
   enabled: true
-
 bucketweb:
   enabled: true
   tolerations: [ ]
