@@ -73,14 +73,13 @@ spec:
             {{- with .Values.autoGomemlimit.ratio }}
             - --auto-gomemlimit.ratio={{ . }}
             {{- end }}
+            {{- end }}
             {{- if .Values.bucketweb.refresh }}
             - --refresh={{ .Values.bucketweb.refresh}}
             {{- end }}
             {{- if .Values.bucketweb.timeout }}
             - --timeout={{ .Values.bucketweb.timeout }}
             {{- end }}
-            {{- end }}
-            - {{ printf "--query-frontend.downstream-url=http://%s.%s.svc.%s:%d" (include "thanos.query.fullname" .) .Release.Namespace .Values.clusterDomain (int .Values.httpPort) }}
             {{- with .Values.bucketweb.extraArgs }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
