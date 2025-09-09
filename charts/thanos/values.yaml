@@ -936,8 +936,9 @@ receiver:
 bucketweb:
   # -- If `true`, create the bucket web component.
   enabled: false
-
+  # -- Refresh interval to download metadata from remote storage
   refresh: "30m"
+  # -- Timeout to download metadata from remote storage
   timeout: "5m"
 
   serviceAccount:
