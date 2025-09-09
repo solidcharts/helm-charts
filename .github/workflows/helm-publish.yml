@@ -68,9 +68,8 @@ jobs:
                 helm package "$d" -u -d "${d}"
                 chartVersionName="$chartName-$currentVersion"
                 chartPackageName="$chartVersionName.tgz"
-                ls -al "${d}"
                 echo "Pushing chart $chartPackageName"
-                helm push $chartPackageName oci://${REGISTRY,,}
+                helm push "${d}$chartPackageName" oci://${REGISTRY,,}
                 echo "🎉 Chart $chartPackageName pushed successfully"
                 # TODO - CREATE RELEASE with changelog
               fi
