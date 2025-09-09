@@ -27,7 +27,7 @@ tests:
           value: thanos-bucketweb
       - equal:
           path: spec.template.spec.containers[0].ports[0].containerPort
-          value: 9090
+          value: 10902
       - equal:
           path: spec.template.spec.containers[0].ports[0].name
           value: http
