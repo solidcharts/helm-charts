@@ -50,13 +50,13 @@ jobs:
             rcVersion="false"
             chartName=$(yq '.name' "$d/Chart.yaml")
             currentVersion=$(yq '.version' "$d/Chart.yaml")
-            chartRepositoryPath="$REGISTRY/$chartName"
+            chartRepositoryPath="oci://$REGISTRY/$chartName"
             echo "🔄 Processing chart $chartName and version $currentVersion"
             if [[ $currentVersion == *"rc"* ]] && [ "${{ github.event_name }}" == "pull_request" ]; then rcVersion="true"; fi
             if [[ $rcVersion == "true" ]] || [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
               echo "Checking release for chart $chartName and current file version $currentVersion"
               set +e  # Disable exit on error
-              helm pull "${REGISTRY}/$chartName" --version "$currentVersion"
+              helm pull "${chartRepositoryPath" --version "$currentVersion"
               chartReleased=$?
               set -e  # Enable exit on error
               echo "chartReleased=$chartReleased"
