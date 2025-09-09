@@ -29,9 +29,10 @@ jobs:
               # Template lint values if lint-values.yaml exists
               if [ -f lint-values.yaml ]; then
                 echo "Templating lint values for $chart..."
-                helm template "$chart" . -f lint-values.yaml
-                else
-                echo "No lint-values.yaml found for $chart, skipping template validation"
+                helm template "$chart" . -f lint-values.yaml > _template.yaml
+                echo "🟢 Successfully templated values for $chart..."
+              else
+                echo "🟡 No lint-values.yaml found for $chart, skipping template validation"
               fi
               cd - > /dev/null
             fi

@@ -1,0 +1,78 @@
+name: Helm Publish
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+      - '.git*'
+      - 'README.md'
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - '.github/**'
+      - '.git*'
+      - 'README.md'
+  workflow_dispatch: {}
+
+env:
+  CHARTS_PATH: "charts/"
+  REGISTRY: "ghcr.io/${{ github.repository }}"
+  #REGISTRY: "ghcr.io/solidcharts/helm-charts"
+
+jobs:
+  helm:
+    permissions:
+      contents: read
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.18.6
+      - name: 'Setup yq'
+        uses: dcarbone/install-yq-action@v1
+        with:
+          version: 'v4.44.3'
+      - name: Package Helm Charts
+        shell: bash
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${REGISTRY} --username ${GITHUB_ACTOR} --password-stdin
+          for d in ${CHARTS_PATH}*/ ; do
+            if [[ ! -f "${d}Chart.yaml" ]]; then
+                echo "${d}Chart.yaml not found. Skipping."
+                continue
+            fi
+            chartName=$(yq '.name' "$d/Chart.yaml")
+            currentVersion=$(yq '.version' "$d/Chart.yaml")
+            chartRepositoryPath="$REGISTRY/$chartName"
+            echo "🔄 Processing chart $chartName and version $currentVersion"
+            if [[ $currentVersion == *"RC"* ]] && [ "${{ github.event_name }}" == "pull_request" ]; then rcVersion="true"; fi
+            if [[ $rcVersion == "true" ]] || [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+              echo "Checking release for chart $chartName and current file version $currentVersion"
+              set +e  # Disable exit on error
+              helm pull "${REGISTRY}/$chartName" --version "$currentVersion"
+              chartReleased=$?
+              set -e  # Enable exit on error
+              echo "chartReleased=$chartReleased"
+              if [ $chartReleased -eq 0 ]; then
+                echo "$chartName version already released [skipping]"
+              else
+                echo "Packaging chart $chartName and version $currentVersion"
+                helm dep update "$d"
+                helm package "$d" -u -d "${d}"
+                chartVersionName="$chartName-$currentVersion"
+                chartPackageName="$chartVersionName.tgz"
+                ls -al "${d}"
+                echo "Pushing chart $chartPackageName"
+                helm push $chartPackageName oci://${REGISTRY,,}
+                echo "🎉 Chart $chartPackageName pushed successfully"
+                # TODO - CREATE RELEASE with changelog
+              fi
+            fi
+          done
