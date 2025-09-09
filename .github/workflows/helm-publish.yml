@@ -59,11 +59,10 @@ jobs:
               helm pull "$chartRepositoryPath" --version "$currentVersion"
               chartReleased=$?
               set -e  # Enable exit on error
-              echo "chartReleased=$chartReleased"
               if [ $chartReleased -eq 0 ]; then
-                echo "$chartName version already released [skipping]"
+                echo "🦘 $chartName version already released [skipping]"
               else
-                echo "Packaging chart $chartName and version $currentVersion"
+                echo "📦 Packaging chart $chartName and version $currentVersion"
                 helm dep update "$d"
                 helm package "$d" -u -d "${d}"
                 chartVersionName="$chartName-$currentVersion"
