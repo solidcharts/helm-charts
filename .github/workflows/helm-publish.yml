@@ -47,6 +47,7 @@ jobs:
                 echo "${d}Chart.yaml not found. Skipping."
                 continue
             fi
+            rcVersion="false"
             chartName=$(yq '.name' "$d/Chart.yaml")
             currentVersion=$(yq '.version' "$d/Chart.yaml")
             chartRepositoryPath="$REGISTRY/$chartName"
