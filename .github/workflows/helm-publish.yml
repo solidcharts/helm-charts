@@ -20,7 +20,6 @@ on:
 env:
   CHARTS_PATH: "charts/"
   REGISTRY: "ghcr.io/${{ github.repository }}"
-  #REGISTRY: "ghcr.io/solidcharts/helm-charts"
 
 jobs:
   helm:
@@ -52,7 +51,7 @@ jobs:
             currentVersion=$(yq '.version' "$d/Chart.yaml")
             chartRepositoryPath="$REGISTRY/$chartName"
             echo "🔄 Processing chart $chartName and version $currentVersion"
-            if [[ $currentVersion == *"RC"* ]] && [ "${{ github.event_name }}" == "pull_request" ]; then rcVersion="true"; fi
+            if [[ $currentVersion == *"rc"* ]] && [ "${{ github.event_name }}" == "pull_request" ]; then rcVersion="true"; fi
             if [[ $rcVersion == "true" ]] || [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
               echo "Checking release for chart $chartName and current file version $currentVersion"
               set +e  # Disable exit on error
