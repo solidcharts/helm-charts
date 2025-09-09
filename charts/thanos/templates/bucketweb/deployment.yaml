@@ -68,16 +68,22 @@ spec:
             - --log.format={{ .Values.logFormat }}
             - {{ printf "--http-address=0.0.0.0:%d" (int .Values.bucketweb.containerPorts.http) }}
             - --objstore.config-file=/etc/thanos/objstore.yaml
-          {{- if .Values.autoGomemlimit.enabled }}
+            {{- if .Values.autoGomemlimit.enabled }}
             - --enable-auto-gomemlimit
-          {{- with .Values.autoGomemlimit.ratio }}
+            {{- with .Values.autoGomemlimit.ratio }}
             - --auto-gomemlimit.ratio={{ . }}
-          {{- end }}
+            {{- end }}
+            {{- if .Values.bucketweb.refresh }}
+            - --refresh={{ .Values.bucketweb.refresh}}
+            {{- end }}
+            {{- if .Values.bucketweb.timeout }}
+            - --timeout={{ .Values.bucketweb.timeout }}
+            {{- end }}
             {{- end }}
             - {{ printf "--query-frontend.downstream-url=http://%s.%s.svc.%s:%d" (include "thanos.query.fullname" .) .Release.Namespace .Values.clusterDomain (int .Values.httpPort) }}
-          {{- with .Values.bucketweb.extraArgs }}
+            {{- with .Values.bucketweb.extraArgs }}
             {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- end }}
           ports:
             - name: http
               protocol: TCP

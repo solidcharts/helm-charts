@@ -937,6 +937,9 @@ bucketweb:
   # -- If `true`, create the bucket web component.
   enabled: false
 
+  refresh: "30m"
+  timeout: "5m"
+
   serviceAccount:
     # -- If `true`, create a new `ServiceAccount` for the component.
     create: true
