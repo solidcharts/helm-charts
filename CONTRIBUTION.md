@@ -14,3 +14,14 @@ pre-commit install
 ## Tasks
 
 For some automation the project uses [Task](https://taskfile.dev/) - modern task runner, a cross-platform build tool inspired by Make.
+
+## Using `shared` chart
+
+To use `shared` chart with the current (modified locally) version you can reference it like this:
+
+```
+dependencies:
+  - name: shared
+    version: 0.1.0
+    repository: file://../shared
+```

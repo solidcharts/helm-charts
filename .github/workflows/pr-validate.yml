@@ -1,4 +1,4 @@
-name: Validate PR
+name: Pull request validation
 
 on:
   pull_request:
@@ -51,6 +51,7 @@ jobs:
     with:
       chart_dir: charts
       target_branch: main
+      excluded_charts: shared
       helm_docs: true
       helm_docs_args: --template-files=./_templates.gotmpl --template-files=./_chart-readme.md.gotmpl
       changelog: true
