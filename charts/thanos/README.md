@@ -6,6 +6,20 @@
 
 This chart is a replacement for Bitnami Thanos chart.
 
+**Homepage:** <https://thanos.io/>
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| pnowy | <solidcharts@przemeknowak.com> |  |
+
+## Source Code
+
+* <https://github.com/thanos-io/thanos>
+* <https://github.com/thanos-io/kube-thanos>
+* <https://github.com/solidcharts/helm-charts/>
+
 ## Installing the Chart
 
 ### OCI Repository

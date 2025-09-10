@@ -4,6 +4,22 @@ description: Thanos Helm chart for Kubernetes
 type: application
 version: 0.0.1-rc.10
 appVersion: 0.39.2
+keywords:
+  - kubernetes
+  - thanos
+  - prometheus
+  - monitoring
+  - alerting
+  - metrics
+home: https://thanos.io/
+icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/thanos/icon.png
+sources:
+  - https://github.com/thanos-io/thanos
+  - https://github.com/thanos-io/kube-thanos
+  - https://github.com/solidcharts/helm-charts/
+maintainers:
+  - name: pnowy
+    email: solidcharts@przemeknowak.com
 
 dependencies:
   - name: shared

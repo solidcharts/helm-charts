@@ -4,6 +4,16 @@
 
 A Helm chart for Kubernetes
 
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| pnowy | <solidcharts@przemeknowak.com> |  |
+
+## Source Code
+
+* <https://github.com/solidcharts/helm-charts/>
+
 ## Installing the Chart
 
 ### OCI Repository
