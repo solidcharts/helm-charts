@@ -1,6 +1,6 @@
-suite: test bucketweb deployment
+suite: test query-frontend deployment
 templates:
-  - bucketweb/deployment.yaml
+  - query-frontend/deployment.yaml
 tests:
   - it: should skip deployment with default values
     asserts:
@@ -8,14 +8,14 @@ tests:
           count: 0
   - it: should generate deployment when enabled
     set:
-      bucketweb:
+      queryFrontend:
         enabled: true
     asserts:
       - isKind:
           of: Deployment
       - matchRegex:
           path: metadata.name
-          pattern: RELEASE-NAME-thanos-bucketweb
+          pattern: RELEASE-NAME-thanos-query-frontend
       - equal:
           path: spec.replicas
           value: 1
@@ -24,20 +24,10 @@ tests:
           pattern: quay.io/thanos/thanos:v
       - equal:
           path: spec.template.spec.containers[0].name
-          value: thanos-bucketweb
-      - equal:
-          path: spec.template.spec.containers[0].ports[0].containerPort
-          value: 10902
-      - equal:
-          path: spec.template.spec.containers[0].ports[0].name
-          value: http
-      - equal:
-          path: spec.template.spec.containers[0].env[0].name
-          value: HOST_IP_ADDRESS
-
+          value: thanos-query-frontend
   - it: should use custom replica count
     set:
-      bucketweb:
+      queryFrontend:
         enabled: true
         replicas: 3
     asserts:
@@ -46,12 +36,11 @@ tests:
       - equal:
           path: spec.replicas
           value: 3
-
   - it: should use custom image tag
     set:
       image:
         tag: v0.99.0
-      bucketweb:
+      queryFrontend:
         enabled: true
     asserts:
       - isKind:
@@ -59,10 +48,9 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: quay.io/thanos/thanos:v0.99.0
-
   - it: should not render scheduling fields when no commons or component configs are set
     set:
-      bucketweb:
+      queryFrontend:
         enabled: true
     asserts:
       - isKind:
@@ -75,10 +63,9 @@ tests:
           path: spec.template.spec.topologySpreadConstraints
       - notExists:
           path: spec.template.spec.tolerations
-
   - it: should use commons nodeSelector when no component-specific config is set
     set:
-      bucketweb:
+      queryFrontend:
         enabled: true
       commons:
         nodeSelector:
@@ -92,7 +79,6 @@ tests:
           value:
             kubernetes.io/arch: amd64
             node-type: compute
-
   - it: should use commons tolerations when no component-specific config is set
     set:
       commons:
@@ -104,7 +90,7 @@ tests:
           - key: "node-role"
             operator: "Exists"
             effect: "NoExecute"
-      bucketweb:
+      queryFrontend:
         enabled: true
     asserts:
       - isKind:
@@ -119,7 +105,6 @@ tests:
             - key: "node-role"
               operator: "Exists"
               effect: "NoExecute"
-
   - it: should use commons affinity when no component-specific config is set
     set:
       commons:
@@ -132,7 +117,7 @@ tests:
                   operator: In
                   values:
                   - compute
-      bucketweb:
+      queryFrontend:
         enabled: true
     asserts:
       - isKind:
@@ -148,7 +133,6 @@ tests:
                     operator: In
                     values:
                     - compute
-
   - it: should use commons topologySpreadConstraints when no component-specific config is set
     set:
       commons:
@@ -159,7 +143,7 @@ tests:
             labelSelector:
               matchLabels:
                 app: thanos
-      bucketweb:
+      queryFrontend:
         enabled: true
     asserts:
       - isKind:
@@ -173,32 +157,30 @@ tests:
               maxSkew: 1
               topologyKey: topology.kubernetes.io/zone
               whenUnsatisfiable: DoNotSchedule
-
   - it: should override commons nodeSelector with component-specific config
     set:
       commons:
         nodeSelector:
           kubernetes.io/arch: amd64
           node-type: compute
-      bucketweb:
+      queryFrontend:
         enabled: true
         nodeSelector:
           kubernetes.io/arch: arm64
-          component: bucketweb
+          component: query-frontend
     asserts:
       - isKind:
           of: Deployment
       - equal:
           path: spec.template.spec.nodeSelector
           value:
-            component: bucketweb
+            component: query-frontend
             kubernetes.io/arch: arm64
       - notEqual:
           path: spec.template.spec.nodeSelector
           value:
             kubernetes.io/arch: amd64
             node-type: compute
-
   - it: should override commons tolerations with component-specific config
     set:
       commons:
@@ -207,10 +189,10 @@ tests:
             operator: "Equal"
             value: "monitoring"
             effect: "NoSchedule"
-      bucketweb:
+      queryFrontend:
         enabled: true
         tolerations:
-          - key: "bucketweb-specific"
+          - key: "query-frontend-specific"
             operator: "Equal"
             value: "true"
             effect: "NoSchedule"
@@ -223,7 +205,7 @@ tests:
       - equal:
           path: spec.template.spec.tolerations
           value:
-            - key: "bucketweb-specific"
+            - key: "query-frontend-specific"
               operator: "Equal"
               value: "true"
               effect: "NoSchedule"
@@ -233,7 +215,6 @@ tests:
       - notEqual:
           path: spec.template.spec.tolerations[0].key
           value: "infrastructure"
-
   - it: should override commons affinity with component-specific config
     set:
       commons:
@@ -246,7 +227,7 @@ tests:
                   operator: In
                   values:
                   - compute
-      bucketweb:
+      queryFrontend:
         enabled: true
         affinity:
           podAntiAffinity:
@@ -270,7 +251,6 @@ tests:
       - equal:
           path: spec.template.spec.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].weight
           value: 100
-
   - it: should override commons topologySpreadConstraints with component-specific config
     set:
       commons:
@@ -281,7 +261,7 @@ tests:
             labelSelector:
               matchLabels:
                 app: thanos
-      bucketweb:
+      queryFrontend:
         enabled: true
         topologySpreadConstraints:
           - maxSkew: 2
@@ -289,7 +269,7 @@ tests:
             whenUnsatisfiable: ScheduleAnyway
             labelSelector:
               matchLabels:
-                component: bucketweb
+                component: query-frontend
     asserts:
       - isKind:
           of: Deployment
@@ -301,11 +281,10 @@ tests:
               whenUnsatisfiable: ScheduleAnyway
               labelSelector:
                 matchLabels:
-                  component: bucketweb
+                  component: query-frontend
       - notEqual:
           path: spec.template.spec.topologySpreadConstraints[0].topologyKey
           value: topology.kubernetes.io/zone
-#
   - it: should use mixed commons and component-specific configs (selective override)
     set:
       commons:
@@ -325,11 +304,11 @@ tests:
                   operator: In
                   values:
                   - compute
-      bucketweb:
+      queryFrontend:
         enabled: true
         # Override only tolerations, use commons for nodeSelector and affinity
         tolerations:
-          - key: "bucketweb-only"
+          - key: "query-frontend-only"
             operator: "Equal"
             value: "true"
             effect: "NoSchedule"
@@ -349,14 +328,13 @@ tests:
       - equal:
           path: spec.template.spec.tolerations
           value:
-            - key: "bucketweb-only"
+            - key: "query-frontend-only"
               operator: "Equal"
               value: "true"
               effect: "NoSchedule"
       - notEqual:
           path: spec.template.spec.tolerations[0].key
           value: "infrastructure"
-
   - it: should handle empty component-specific configs and fall back to commons
     set:
       commons:
@@ -366,7 +344,7 @@ tests:
           - key: "infrastructure"
             operator: "Exists"
             effect: "NoSchedule"
-      bucketweb:
+      queryFrontend:
         enabled: true
         nodeSelector: {}
         tolerations: []

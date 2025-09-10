@@ -1,0 +1,24 @@
+{{- if and .Values.receiver.enabled .Values.receiver.router.pdb.enabled -}}
+apiVersion: {{ include "shared.pdb.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "thanos.receiverRouter.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thanos.receiverRouter.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "thanos.receiverRouter.selectorLabels" . | nindent 6 }}
+{{- if .Values.receiver.router.pdb.minAvailable }}
+  minAvailable: {{ .Values.receiver.router.pdb.minAvailable }}
+{{- end  }}
+{{- if .Values.receiver.router.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.receiver.router.pdb.maxUnavailable }}
+{{- end  }}
+{{- if (semverCompare ">= 1.27-0" .Capabilities.KubeVersion.Version) }}
+{{- with .Values.receiver.router.pdb.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+{{- end  }}
+{{- end  }}
+{{- end -}}

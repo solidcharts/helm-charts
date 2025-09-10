@@ -1,0 +1,12 @@
+{{- if and .Values.receiver.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "thanos.receiverRouter.hashringsConfigmapName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thanos.receiverRouter.labels" . | nindent 4 }}
+data:
+  hashrings.json: |
+    [{{ include "thanos.receiverRouter.hashringDefaultConfig" . | fromYaml | toJson }}]
+{{- end -}}

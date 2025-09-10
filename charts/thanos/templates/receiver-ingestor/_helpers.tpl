@@ -31,3 +31,19 @@ Create the name of the service account to use
 {{- default "default" .Values.receiver.ingestor.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Fullname
+*/}}
+{{- define "thanos.receiverIngestor.serviceNameHeadless" -}}
+{{ printf "%s-headless" (include "thanos.receiverIngestor.fullname" .) }}
+{{- end }}
+
+{{/*
+Endpoints
+*/}}
+{{- define "thanos.receiverIngestor.endpoints" -}}
+{{- range (until (.Values.receiver.ingestor.replicas | int)) }}
+{{ printf "- %s" ((printf "%s-%s.%s-headless.%s.svc.%s:%d" (include "thanos.receiverIngestor.fullname" $) (toString .) (include "thanos.receiverIngestor.fullname" $) $.Release.Namespace $.Values.clusterDomain (int $.Values.receiver.ingestor.service.ports.grpc)) | quote) }}
+{{- end }}
+{{- end -}}

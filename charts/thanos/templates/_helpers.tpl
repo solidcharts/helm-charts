@@ -14,6 +14,21 @@ The Thanos image to use
 {{- end }}
 
 {{/*
+The config reloader image to use
+*/}}
+{{- define "thanos.configReloaderImage" -}}
+{{- $separator := ":" -}}
+{{- $tag := printf "%s" .Values.ruler.configReloader.image.tag }}
+{{- $version := $tag }}
+{{- $digest := ternary (printf "%s" .Values.ruler.configReloader.image.digest) "" (not (empty .Values.ruler.configReloader.image.digest)) }}
+{{- if not (empty $digest) }}
+    {{- $separator = "@" -}}
+    {{- $version = $digest }}
+{{- end -}}
+{{- printf "%s%s%s" .Values.ruler.configReloader.image.repository $separator $version }}
+{{- end }}
+
+{{/*
 Objstore secret name
 */}}
 {{- define "thanos.objstoreConfigSecretName" -}}

@@ -1,0 +1,27 @@
+{{- if .Values.receiver.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "thanos.receiverIngestor.serviceNameHeadless" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thanos.receiverIngestor.labels" . | nindent 4 }}
+  {{- with .Values.receiver.ingestor.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: grpc
+      protocol: TCP
+      port: {{ .Values.receiver.ingestor.service.ports.grpc }}
+      targetPort: grpc
+    - name: http
+      protocol: TCP
+      port: {{ .Values.receiver.ingestor.service.ports.http }}
+      targetPort: http
+  selector:
+    {{- include "thanos.receiverIngestor.selectorLabels" . | nindent 4 }}
+{{- end -}}

@@ -1,0 +1,24 @@
+{{- if and .Values.receiver.enabled .Values.receiver.ingestor.pdb.enabled -}}
+apiVersion: {{ include "shared.pdb.apiVersion" . }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "thanos.receiverIngestor.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thanos.receiverIngestor.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "thanos.receiverIngestor.selectorLabels" . | nindent 6 }}
+{{- if .Values.receiver.ingestor.pdb.minAvailable }}
+  minAvailable: {{ .Values.receiver.ingestor.pdb.minAvailable }}
+{{- end  }}
+{{- if .Values.receiver.ingestor.pdb.maxUnavailable }}
+  maxUnavailable: {{ .Values.receiver.ingestor.pdb.maxUnavailable }}
+{{- end  }}
+{{- if (semverCompare ">= 1.27-0" .Capabilities.KubeVersion.Version) }}
+{{- with .Values.receiver.ingestor.pdb.unhealthyPodEvictionPolicy }}
+  unhealthyPodEvictionPolicy: {{ . }}
+{{- end  }}
+{{- end  }}
+{{- end -}}

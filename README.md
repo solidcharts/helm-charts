@@ -1,4 +1,4 @@
-# Helm charts
+# Solid Helm Charts
 
 Bunch of helm charts which use official images from given tool providers.
 
