@@ -16,16 +16,16 @@ imagePullSecrets: []
 
 commons:
   # -- Node selector labels for scheduling for all components.
-  nodeSelector: { }
+  nodeSelector: {}
 
   # -- Affinity settings for scheduling the all components.
-  affinity: { }
+  affinity: {}
 
   # -- Topology spread constraints for scheduling for all components.
-  topologySpreadConstraints: [ ]
+  topologySpreadConstraints: []
 
   # -- Node taints the query pod will tolerate for scheduling for all components.
-  tolerations: [ ]
+  tolerations: []
 
 # -- _Kubernetes_ cluster domain.
 clusterDomain: cluster.local
