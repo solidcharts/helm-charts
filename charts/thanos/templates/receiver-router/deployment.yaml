@@ -1,0 +1,135 @@
+{{- if .Values.receiver.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "thanos.receiverRouter.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "thanos.receiverRouter.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.receiver.router.autoscaling.enabled }}
+  replicas: {{ .Values.receiver.router.replicas }}
+  {{- end }}
+  {{- with .Values.receiver.router.updateStrategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "thanos.receiverRouter.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "thanos.receiverRouter.selectorLabels" . | nindent 8 }}
+      {{- with .Values.receiver.router.podLabels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.receiver.router.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "thanos.receiverRouter.serviceAccountName" . }}
+      {{- with .Values.receiver.router.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.receiver.router.priorityClassName }}
+      priorityClassName: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.receiver.router.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ . }}
+      {{- end }}
+      containers:
+        - name: thanos-receiver-router
+          {{- with .Values.receiver.router.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: {{ include "thanos.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: HOST_IP_ADDRESS
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          {{- with .Values.receiver.router.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          args:
+            - receive
+            - --log.level={{ .Values.logLevel }}
+            - --log.format={{ .Values.logFormat }}
+            - {{ printf "--grpc-address=0.0.0.0:%d" (int .Values.receiver.router.containerPorts.grpc) }}
+            - {{ printf "--http-address=0.0.0.0:%d" (int .Values.receiver.router.containerPorts.http) }}
+            - {{ printf "--remote-write.address=0.0.0.0:%d" (int .Values.receiver.httpRemoteWritePort) }}
+          {{- if .Values.autoGomemlimit.enabled }}
+            - --enable-auto-gomemlimit
+          {{- with .Values.autoGomemlimit.ratio }}
+            - --auto-gomemlimit.ratio={{ . }}
+          {{- end }}
+          {{- end }}
+            - --receive.hashrings-file=/etc/thanos/hashrings.json
+            - --receive.replication-factor={{ .Values.receiver.replicationFactor }}
+            - --label=receive_replica="$(NAME)"
+          {{- with .Values.receiver.router.extraArgs }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: grpc
+              protocol: TCP
+              containerPort: {{ .Values.receiver.router.containerPorts.grpc }}
+            - name: http
+              protocol: TCP
+              containerPort: {{ .Values.receiver.router.containerPorts.http }}
+            - name: http-rem-write
+              protocol: TCP
+              containerPort: {{ .Values.receiver.httpRemoteWritePort }}
+          livenessProbe:
+            {{- toYaml .Values.receiver.router.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.receiver.router.readinessProbe | nindent 12 }}
+          volumeMounts:
+            - name: hashrings-config
+              mountPath: /etc/thanos/hashrings.json
+              subPath: hashrings.json
+              readOnly: true
+          {{- with .Values.receiver.router.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.receiver.router.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: hashrings-config
+          configMap:
+            name: {{ include "thanos.receiverRouter.hashringsConfigmapName" . }}
+      {{- with .Values.receiver.router.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.nodeSelector" (dict "component" .Values.receiver.router "commons" .Values.commons)) }}
+      nodeSelector:
+        {{- . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.affinity" (dict "component" .Values.receiver.router "commons" .Values.commons)) }}
+      affinity:
+        {{- . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.topologySpreadConstraints" (dict "component" .Values.receiver.router "commons" .Values.commons)) }}
+      topologySpreadConstraints:
+        {{- . | nindent 8 }}
+      {{- end }}
+      {{- with (include "shared.tolerations" (dict "component" .Values.receiver.router "commons" .Values.commons)) }}
+      tolerations:
+        {{- . | nindent 8 }}
+      {{- end }}
+{{- end -}}

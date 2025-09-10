@@ -31,3 +31,20 @@ Create the name of the service account to use
 {{- default "default" .Values.receiver.router.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Hashrings configmap name
+*/}}
+{{- define "thanos.receiverRouter.hashringsConfigmapName" -}}
+{{ include "thanos.receiverRouter.fullname" . }}-hashrings
+{{- end -}}
+
+{{/*
+Hashring default config
+*/}}
+{{- define "thanos.receiverRouter.hashringDefaultConfig" -}}
+hashring: default
+tenants: []
+endpoints:
+  {{- include "thanos.receiverIngestor.endpoints" . | nindent 2 }}
+{{- end }}

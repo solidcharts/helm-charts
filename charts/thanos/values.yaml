@@ -1101,6 +1101,10 @@ receiver:
       automountToken: false
 
     service:
+      # -- Service ports
+      ports:
+        grpc: 10901
+        http: 10902
       # -- Annotations to add to the _Receive Router_ service.
       annotations: {}
 
@@ -1142,7 +1146,7 @@ receiver:
       # -- (int) Target memory utilisation percentage for the _Receive Router_ pod.
       targetMemoryUtilizationPercentage:
 
-    podDisruptionBudget:
+    pdb:
       # -- If `true`, create a `PodDisruptionBudget` for the _Receive Router_ deployment.
       enabled: false
       # -- (string) Minimum number of _Receive Router_ replicas that the PDB should require to be available.
@@ -1157,6 +1161,10 @@ receiver:
 
     # -- Annotations to add to the _Receive Router_ pod.
     podAnnotations: {}
+
+    containerPorts:
+      grpc: 10901
+      http: 10902
 
     # -- Security context for the _Receive Router_ pod.
     # @default -- See _values.yaml_
