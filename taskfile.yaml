@@ -38,9 +38,8 @@ tasks:
       - helm template $(basename "$PWD") . -f {{.CLI_ARGS}} > _template.yaml
   docs: ## https://github.com/norwoodj/helm-docs?tab=readme-ov-file
     desc: Generate helm docs
-    dir: 'charts'
     cmds:
-      - helm-docs
+      - helm-docs --template-files=./_templates.gotmpl --template-files=./_chart-readme.md.gotmpl -l debug
   act:
     desc: Run act
     cmds:

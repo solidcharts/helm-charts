@@ -15,7 +15,7 @@
 
 ### OCI Repository
 
-To install the chart using the recommended OCI method you can use the following command.
+To install the chart you can use the following command:
 
 ```shell
 helm upgrade --install {{ template "chart.name" . }} oci://ghcr.io/solidcharts/helm-charts/{{ template "chart.name" . }} --version {{ template "chart.version" . }}
