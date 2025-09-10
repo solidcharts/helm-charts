@@ -11,4 +11,6 @@ repos:
         entry: jnorwood/helm-docs:v1.14.2
         args:
           - --chart-search-root=charts
+          - --template-files=./_templates.gotmpl
+          - --template-files=./_chart-readme.md.gotmpl
 exclude: README.md
