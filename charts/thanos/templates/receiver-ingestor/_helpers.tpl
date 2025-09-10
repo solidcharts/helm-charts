@@ -31,3 +31,10 @@ Create the name of the service account to use
 {{- default "default" .Values.receiver.ingestor.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Fullname
+*/}}
+{{- define "thanos.receiverIngestor.serviceNameHeadless" -}}
+{{ printf "%s-headless" (include "thanos.receiverIngestor.fullname" .) }}
+{{- end }}

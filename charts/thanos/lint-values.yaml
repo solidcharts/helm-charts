@@ -22,6 +22,8 @@ compactor:
   persistence:
     enabled: true
     storageClass: "ssd"
+receiver:
+  enabled: true
 bucketweb:
   enabled: true
   tolerations: [ ]
