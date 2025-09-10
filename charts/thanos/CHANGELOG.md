@@ -23,5 +23,5 @@
 <!--
 RELEASE LINKS
 -->
-[UNRELEASED]: https://github.com/stevehipwell/helm-charts/tree/main/charts/thanos
-[v0.1.0]: https://github.com/stevehipwell/helm-charts/releases/tag/thanos-0.1.0
+[UNRELEASED]: https://github.com/solidcharts/helm-charts/tree/main/charts/thanos
+[v0.1.0]: https://github.com/solidcharts/helm-charts/releases/tag/thanos-0.1.0
