@@ -225,7 +225,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].readinessProbe.initialDelaySeconds
           value: 10
-  - it: should not render scheduling fields when no commons or component configs are set
+  - it: should not render scheduling fields when no components or component configs are set
     set:
       storeGateway:
         enabled: true
@@ -240,11 +240,11 @@ tests:
           path: spec.template.spec.topologySpreadConstraints
       - notExists:
           path: spec.template.spec.tolerations
-  - it: should use commons nodeSelector when no component-specific config is set
+  - it: should use components nodeSelector when no component-specific config is set
     set:
       storeGateway:
         enabled: true
-      commons:
+      components:
         nodeSelector:
           kubernetes.io/arch: amd64
           node-type: storage
@@ -256,9 +256,9 @@ tests:
           value:
             kubernetes.io/arch: amd64
             node-type: storage
-  - it: should use commons tolerations when no component-specific config is set
+  - it: should use components tolerations when no component-specific config is set
     set:
-      commons:
+      components:
         tolerations:
           - key: "storage"
             operator: "Equal"
@@ -276,9 +276,9 @@ tests:
               operator: "Equal"
               value: "ssd"
               effect: "NoSchedule"
-  - it: should override commons nodeSelector with component-specific config
+  - it: should override components nodeSelector with component-specific config
     set:
-      commons:
+      components:
         nodeSelector:
           kubernetes.io/arch: amd64
           node-type: compute
