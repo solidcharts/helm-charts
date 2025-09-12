@@ -1,58 +1,129 @@
-# Default values for rabbitmq.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+## -- Global parameters
+global:
+  ## -- Global Image registry
+  imageRegistry: ""
 
-# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
-replicaCount: 1
+nameOverride: ""
+fullnameOverride: ""
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  repository: nginx
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
+  repository: rabbitmq
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
-# This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+# -- _Kubernetes_ cluster domain.
+clusterDomain: cluster.local
+
+# -- Image pull secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
 
-# This is to override the chart name.
-nameOverride: ""
-fullnameOverride: ""
+# -- Number of replicas to create.
+replicas: 1
+
+# -- Update strategy for the compactor stateful set.
+updateStrategy: {}
 
 managementPlugin:
   ## -- Set to true to enable the RabbitMQ management plugin.
   enabled: true
+
+## -- Additional default RabbitMQ plugins to enable (Prometheus Metrics, PeerDiscoveryK8s and Management plugins are automatically added)
+additionalPlugins: []
+
+## -- Additional 3rd party RabbitMQ plugins to download and enable (URLs)
+installPlugins: []
+
+## -- RabbitMQ configuration
+config:
+  ## The memory threshold under which RabbitMQ will stop reading from client network sockets, in order to avoid being killed by the OS
+  ## ref: https://www.rabbitmq.com/alarms.html
+  ## ref: https://www.rabbitmq.com/memory.html#threshold
+  ##
+  memoryHighWatermark:
+    ## -- Enable configuring Memory high watermark on RabbitMQ
+    enabled: false
+    ## -- Memory high watermark type. Either `absolute` or `relative`
+    type: "relative"
+    ## -- Memory high watermark value.
+    ## The default value of 0.4 stands for 40% of available RAM
+    ## Note: the memory relative limit is applied to the resourcesPreset memory limit or the resource.limits.memory to calculate the memory threshold
+    ## You can also use an absolute value, e.g.: 256Mi
+    value: 0.4
+  ## -- Additional RabbitMQ configuration
+  extraConfiguration: ~
+  ## -- Advanced RabbitMQ configuration
+  advancedConfiguration: ~
+
+## -- PeerDiscoveryK8sPlugin configuration
+peerDiscoveryK8sPlugin:
+  ## -- Enable K8s peer discovery plugin for a RabbitMQ HA-cluster
+  enabled: false
+  ## -- Uses the FQDN as connection string (RABBITMQ_USE_LONGNAME)
+  useLongname: true
+  ## -- Peer discovery plugin address type
+  addressType: hostname
+
+## -- RabbitMQ Authentication
+auth:
+  ## -- Enable RabbitMQ authentication
+  enabled: true
+  ## -- RabbitMQ default username
+  username: admin
+  ## -- RabbitMQ password (if empty, random password will be generated)
+  password: ""
+  ## -- Erlang cookie for clustering (if empty, random cookie will be generated)
+  erlangCookie: ""
+  ## -- Name of existing secret containing RabbitMQ credentials
+  existingSecret: ""
+  ## -- Key in existing secret containing RabbitMQ password
+  existingPasswordKey: "password"
+  ## -- Key in existing secret containing Erlang cookie
+  existingErlangCookieKey: "erlang-cookie"
+
+## @section Init Container configuration
+initContainer:
+  image:
+    ## -- Init container image registry
+    registry: docker.io
+    ## -- Init container image repository
+    repository: busybox
+    ## -- Init container image tag
+    tag: "1.37.0"
+    ## -- Init container image pull policy
+    pullPolicy: IfNotPresent
+  securityContext:
+    ## -- Enable container privilege escalation
+    allowPrivilegeEscalation: false
+    ## -- Configure the container to run as a non-root user
+    runAsNonRoot: true
+    ## -- User ID for the RabbitMQ container
+    runAsUser: 999
+    ## -- Group ID for the RabbitMQ container
+    runAsGroup: 999
+    ## -- Mount container root filesystem as read-only
+    readOnlyRootFilesystem: true
+    ## -- Linux capabilities to be dropped
+    capabilities:
+      drop:
+        - ALL
 
 serviceAccount:
   # -- If `true`, create a new `ServiceAccount` for the component.
   create: true
   # -- (string) If this is set and `serviceAccount.create` is `true` this will be used for the created component service account name, if this is set and `serviceAccount.create` is `false` then this will define an existing service account to use for the component.
   name: ~
-  # -- Labels to add to the bucket web service account.
+  # -- Labels to add to the account.
   labels: {}
-  # -- Annotations to add to the bucket web service account.
+  # -- Annotations to add to the account.
   annotations: {}
-  # -- Automount API credentials for the bucket web service account.
-  automountToken: false
-
-# This is for setting Kubernetes Annotations to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-podAnnotations: {}
-# This is for setting Kubernetes Labels to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-podLabels: {}
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  # -- Automount API credentials for the account.
+  automountToken: true
 
 service:
   # -- Service type
@@ -68,6 +139,48 @@ service:
     dist: 25672
     # -- RabbitMQ metrics service port
     metrics: 15692
+
+# -- Pod annotations
+podAnnotations: {}
+# -- Pod labels
+podLabels: {}
+
+containerPorts:
+  amqp: 5672
+  mgmt: 15672
+  epmd: 4369
+  dist: 25672
+  metrics: 15692
+
+podSecurityContext:
+  ## -- Group ID for the volumes of the pod
+  fsGroup: 999
+
+securityContext:
+  ## -- Enable container privilege escalation
+  allowPrivilegeEscalation: false
+  ## -- Configure the container to run as a non-root user
+  runAsNonRoot: true
+  ## -- User ID for the RabbitMQ container
+  runAsUser: 999
+  ## -- Group ID for the RabbitMQ container
+  runAsGroup: 999
+  ## -- Mount container root filesystem as read-only
+  readOnlyRootFilesystem: true
+  ## -- Linux capabilities to be dropped
+  capabilities:
+    drop:
+      - ALL
+
+# -- Additional environment variables for the query pod default container.
+extraEnv: []
+
+# -- Additional args for the query pod default container.
+extraArgs: []
+
+rbac:
+  # -- If `true`, create and use RBAC resources
+  create: true
 
 metrics:
   ## -- Set to true to enable the Prometheus metrics
@@ -121,29 +234,54 @@ resources: {}
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
-  httpGet:
-    path: /
-    port: http
+  exec:
+    command:
+      - /bin/bash
+      - -ec
+      - rabbitmq-diagnostics -q check_running
+  initialDelaySeconds: 120
+  periodSeconds: 30
+  timeoutSeconds: 20
+  failureThreshold: 3
+  successThreshold: 1
 readinessProbe:
-  httpGet:
-    path: /
-    port: http
+  exec:
+    command:
+      - /bin/bash
+      - -ec
+      - rabbitmq-diagnostics -q check_running
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 1
+  successThreshold: 1
 
-# Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
+persistence:
+  ## -- Enable persistent storage
+  enabled: true
+  # -- Annotations to add to the pod PVC.
+  annotations: {}
+  ## -- Storage class to use for persistent volume
+  storageClass: ""
+  ## -- Persistent Volume access modes
+  accessMode: ReadWriteOnce
+  ## -- Size of persistent volume
+  size: 8Gi
+  # -- If `true`, retain the PVC after the pod is deleted.
+  retainDeleted: true
+  # -- If `true`, retain the PVC after the pod is scaled down.
+  retainScaled: true
 
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+# -- Extra volumes for the pod.
+extraVolumes: []
 
+# -- Extra volume mounts for the pod default container.
+extraVolumeMounts: []
+# -- Node selector labels for scheduling.
 nodeSelector: {}
-
-tolerations: []
-
+# -- Affinity settings for scheduling.
 affinity: {}
+# -- Topology spread constraints for scheduling.
+topologySpreadConstraints: []
+# -- Node taints the query pod will tolerate for scheduling.
+tolerations: []

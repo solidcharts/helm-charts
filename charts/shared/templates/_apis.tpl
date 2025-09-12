@@ -12,7 +12,7 @@
   {{- eq (include "shared.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
 {{- end -}}
 
-{{/* Check Ingress stability */}}
+{{/* PVC volume claim retention policy support */}}
 {{- define "shared.pvc.persistentVolumeClaimRetentionPolicySupported" -}}
   {{- (semverCompare ">= 1.27-0" .Capabilities.KubeVersion.Version) -}}
 {{- end -}}

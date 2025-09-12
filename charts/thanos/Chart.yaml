@@ -23,5 +23,4 @@ maintainers:
 dependencies:
   - name: shared
     version: 0.X.X
-#    repository: oci://ghcr.io/solidcharts/helm-charts
-    repository: file://../shared
+    repository: oci://ghcr.io/solidcharts/helm-charts

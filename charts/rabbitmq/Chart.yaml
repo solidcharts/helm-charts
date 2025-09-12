@@ -3,7 +3,7 @@ name: rabbitmq
 description: A Helm chart for RabbitMQ
 type: application
 version: 0.1.0
-appVersion: "1.16.0"
+appVersion: "4.1.4-management"
 sources:
   - https://github.com/solidcharts/helm-charts/
 maintainers:
