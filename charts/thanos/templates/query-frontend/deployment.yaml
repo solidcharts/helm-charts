@@ -95,19 +95,19 @@ spec:
       volumes:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with (include "shared.nodeSelector" (dict "component" .Values.queryFrontend "commons" .Values.commons)) }}
+      {{- with (include "shared.nodeSelector" (dict "component" .Values.queryFrontend "commons" .Values.components)) }}
       nodeSelector:
         {{- . | nindent 8 }}
       {{- end }}
-      {{- with (include "shared.affinity" (dict "component" .Values.queryFrontend "commons" .Values.commons)) }}
+      {{- with (include "shared.affinity" (dict "component" .Values.queryFrontend "commons" .Values.components)) }}
       affinity:
         {{- . | nindent 8 }}
       {{- end }}
-      {{- with (include "shared.topologySpreadConstraints" (dict "component" .Values.queryFrontend "commons" .Values.commons)) }}
+      {{- with (include "shared.topologySpreadConstraints" (dict "component" .Values.queryFrontend "commons" .Values.components)) }}
       topologySpreadConstraints:
         {{- . | nindent 8 }}
       {{- end }}
-      {{- with (include "shared.tolerations" (dict "component" .Values.queryFrontend "commons" .Values.commons)) }}
+      {{- with (include "shared.tolerations" (dict "component" .Values.queryFrontend "commons" .Values.components)) }}
       tolerations:
         {{- . | nindent 8 }}
       {{- end }}

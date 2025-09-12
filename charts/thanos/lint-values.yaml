@@ -1,4 +1,4 @@
-commons:
+components:
   tolerations:
     - effect: NoSchedule
       key: infrastructure

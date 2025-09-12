@@ -63,11 +63,11 @@ tests:
           path: spec.template.spec.topologySpreadConstraints
       - notExists:
           path: spec.template.spec.tolerations
-  - it: should use commons nodeSelector when no component-specific config is set
+  - it: should use components nodeSelector when no component-specific config is set
     set:
       query:
         enabled: true
-      commons:
+      components:
         nodeSelector:
           kubernetes.io/arch: amd64
           node-type: compute
@@ -79,9 +79,9 @@ tests:
           value:
             kubernetes.io/arch: amd64
             node-type: compute
-  - it: should use commons tolerations when no component-specific config is set
+  - it: should use components tolerations when no component-specific config is set
     set:
-      commons:
+      components:
         tolerations:
           - key: "infrastructure"
             operator: "Equal"
@@ -105,9 +105,9 @@ tests:
             - key: "node-role"
               operator: "Exists"
               effect: "NoExecute"
-  - it: should use commons affinity when no component-specific config is set
+  - it: should use components affinity when no component-specific config is set
     set:
-      commons:
+      components:
         affinity:
           nodeAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
@@ -133,9 +133,9 @@ tests:
                     operator: In
                     values:
                     - compute
-  - it: should use commons topologySpreadConstraints when no component-specific config is set
+  - it: should use components topologySpreadConstraints when no component-specific config is set
     set:
-      commons:
+      components:
         topologySpreadConstraints:
           - maxSkew: 1
             topologyKey: topology.kubernetes.io/zone
@@ -157,9 +157,9 @@ tests:
               maxSkew: 1
               topologyKey: topology.kubernetes.io/zone
               whenUnsatisfiable: DoNotSchedule
-  - it: should override commons nodeSelector with component-specific config
+  - it: should override components nodeSelector with component-specific config
     set:
-      commons:
+      components:
         nodeSelector:
           kubernetes.io/arch: amd64
           node-type: compute
@@ -181,9 +181,9 @@ tests:
           value:
             kubernetes.io/arch: amd64
             node-type: compute
-  - it: should override commons tolerations with component-specific config
+  - it: should override components tolerations with component-specific config
     set:
-      commons:
+      components:
         tolerations:
           - key: "infrastructure"
             operator: "Equal"
@@ -215,9 +215,9 @@ tests:
       - notEqual:
           path: spec.template.spec.tolerations[0].key
           value: "infrastructure"
-  - it: should override commons affinity with component-specific config
+  - it: should override components affinity with component-specific config
     set:
-      commons:
+      components:
         affinity:
           nodeAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
@@ -251,9 +251,9 @@ tests:
       - equal:
           path: spec.template.spec.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].weight
           value: 100
-  - it: should override commons topologySpreadConstraints with component-specific config
+  - it: should override components topologySpreadConstraints with component-specific config
     set:
-      commons:
+      components:
         topologySpreadConstraints:
           - maxSkew: 1
             topologyKey: topology.kubernetes.io/zone
@@ -285,9 +285,9 @@ tests:
       - notEqual:
           path: spec.template.spec.topologySpreadConstraints[0].topologyKey
           value: topology.kubernetes.io/zone
-  - it: should use mixed commons and component-specific configs (selective override)
+  - it: should use mixed components and component-specific configs (selective override)
     set:
-      commons:
+      components:
         nodeSelector:
           kubernetes.io/arch: amd64
         tolerations:
@@ -335,9 +335,9 @@ tests:
       - notEqual:
           path: spec.template.spec.tolerations[0].key
           value: "infrastructure"
-  - it: should handle empty component-specific configs and fall back to commons
+  - it: should handle empty component-specific configs and fall back to components shared config
     set:
-      commons:
+      components:
         nodeSelector:
           kubernetes.io/arch: amd64
         tolerations:

@@ -1,6 +1,6 @@
 # thanos
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.39.2](https://img.shields.io/badge/AppVersion-0.39.2-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.39.2](https://img.shields.io/badge/AppVersion-0.39.2-informational?style=flat-square)
 
 ## Description
 
@@ -27,7 +27,7 @@ This chart is a replacement for Bitnami Thanos chart.
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.1.0
+helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.2.0
 ```
 
 ## Requirements
@@ -88,10 +88,6 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 | bucketweb.timeout | string | `"5m"` | Timeout to download metadata from remote storage |
 | bucketweb.updateStrategy | object | `{}` | Update strategy for the bucket web deployment. |
 | clusterDomain | string | `"cluster.local"` | _Kubernetes_ cluster domain. |
-| commons.affinity | object | `{}` | Affinity settings for scheduling the all components. |
-| commons.nodeSelector | object | `{}` | Node selector labels for scheduling for all components. |
-| commons.tolerations | list | `[]` | Node taints the query pod will tolerate for scheduling for all components. |
-| commons.topologySpreadConstraints | list | `[]` | Topology spread constraints for scheduling for all components. |
 | compactor.containerPorts.http | int | `10902` |  |
 | compactor.deduplication.enabled | bool | `true` | If `true`, enable deduplication via the compactor component. |
 | compactor.deduplication.func | string | `nil` | If specified override the default deduplication function. |
@@ -124,6 +120,10 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 | compactor.serviceAccount.name | string | `nil` | If this is set and `compact.serviceAccount.create` is `true` this will be used for the created compactor component service account name, if this is set and `compact.serviceAccount.create` is `false` then this will define an existing service account to use for the compactor component. |
 | compactor.terminationGracePeriodSeconds | int | `nil` | Termination grace period for the compactor pod; in seconds. |
 | compactor.updateStrategy | object | `{}` | Update strategy for the compactor stateful set. |
+| components.affinity | object | `{}` | Affinity settings for scheduling the all components. |
+| components.nodeSelector | object | `{}` | Node selector labels for scheduling for all components. |
+| components.tolerations | list | `[]` | Node taints the query pod will tolerate for scheduling for all components. |
+| components.topologySpreadConstraints | list | `[]` | Topology spread constraints for scheduling for all components. |
 | fullnameOverride | string | `nil` |  |
 | global.imageRegistry | string | `""` |  |
 | image.digest | string | `nil` | Set image digest |
