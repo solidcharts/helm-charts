@@ -24,29 +24,36 @@ To install the chart you can use the following command:
 helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.1.0
 ```
 
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| oci://ghcr.io/solidcharts/helm-charts | shared | 0.X.X |
+
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| autoscaling.enabled | bool | `false` |  |
-| autoscaling.maxReplicas | int | `100` |  |
-| autoscaling.minReplicas | int | `1` |  |
-| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"nginx"` |  |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
-| ingress.annotations | object | `{}` |  |
-| ingress.className | string | `""` |  |
-| ingress.enabled | bool | `false` |  |
-| ingress.hosts[0].host | string | `"chart-example.local"` |  |
-| ingress.hosts[0].paths[0].path | string | `"/"` |  |
-| ingress.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` |  |
-| ingress.tls | list | `[]` |  |
+| ingress.annotations | object | `{}` | Annotations to add to the ingress |
+| ingress.enabled | bool | `false` | If `true`, create an `Ingress` |
+| ingress.hosts | list | `[{"host":"rabbitmq.local","paths":[{"path":"/","pathType":"Prefix"}]}]` | Hosts for the ingress. |
+| ingress.ingressClassName | string | `""` | Ingress class name |
+| ingress.tls | list | `[]` | TLS configuration for the service ingress |
 | livenessProbe.httpGet.path | string | `"/"` |  |
 | livenessProbe.httpGet.port | string | `"http"` |  |
+| managementPlugin.enabled | bool | `true` |  |
+| metrics.enabled | bool | `false` |  |
+| metrics.serviceMonitor.additionalLabels | object | `{}` |  |
+| metrics.serviceMonitor.annotations | object | `{}` |  |
+| metrics.serviceMonitor.enabled | bool | `false` | If `true`, create a ServiceMonitor for the Prometheus Operator |
+| metrics.serviceMonitor.interval | string | `"30s"` |  |
+| metrics.serviceMonitor.scrapeTimeout | string | `"10s"` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
@@ -57,12 +64,17 @@ helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq -
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| service.port | int | `80` |  |
-| service.type | string | `"ClusterIP"` |  |
-| serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.automount | bool | `true` |  |
-| serviceAccount.create | bool | `true` |  |
-| serviceAccount.name | string | `""` |  |
+| service.ports.amqp | int | `5672` | RabbitMQ AMQP service port |
+| service.ports.dist | int | `25672` | RabbitMQ Erlang distribution service port |
+| service.ports.epmd | int | `4369` | RabbitMQ epmd service port |
+| service.ports.metrics | int | `15692` | RabbitMQ metrics service port |
+| service.ports.mgmt | int | `15672` | RabbitMQ HTTP management service port |
+| service.type | string | `"ClusterIP"` | Service type |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the bucket web service account. |
+| serviceAccount.automountToken | bool | `false` | Automount API credentials for the bucket web service account. |
+| serviceAccount.create | bool | `true` | If `true`, create a new `ServiceAccount` for the component. |
+| serviceAccount.labels | object | `{}` | Labels to add to the bucket web service account. |
+| serviceAccount.name | string | `nil` | If this is set and `serviceAccount.create` is `true` this will be used for the created component service account name, if this is set and `serviceAccount.create` is `false` then this will define an existing service account to use for the component. |
 | tolerations | list | `[]` |  |
 | volumeMounts | list | `[]` |  |
 | volumes | list | `[]` |  |

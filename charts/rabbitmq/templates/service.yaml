@@ -7,9 +7,20 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.service.ports.amqp }}
+      targetPort: amqp
       protocol: TCP
-      name: http
+      name: amqp
+    {{- if .Values.managementPlugin.enabled }}
+    - port: {{ .Values.service.ports.mgmt }}
+      targetPort: mgmt
+      protocol: TCP
+      name: mgmt
+    {{- end }}
+    {{- if .Values.metrics.enabled }}
+    - port: {{ .Values.service.ports.metrics }}
+      targetPort: metrics
+      name: metrics
+    {{- end }}
   selector:
     {{- include "rabbitmq.selectorLabels" . | nindent 4 }}

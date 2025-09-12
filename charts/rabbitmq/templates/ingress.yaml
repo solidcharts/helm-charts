@@ -1,8 +1,12 @@
 {{- if .Values.ingress.enabled -}}
-apiVersion: networking.k8s.io/v1
+{{- $apiIsStable := eq (include "shared.ingress.isStable" .) "true" -}}
+{{- $ingressSupportsPathType := eq (include "shared.ingress.supportsPathType" .) "true" -}}
+{{- $serviceName := include "rabbitmq.fullname" . -}}
+apiVersion: {{ include "shared.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ include "rabbitmq.fullname" . }}
+  name: {{ $serviceName }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "rabbitmq.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
@@ -10,34 +14,39 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with .Values.ingress.className }}
-  ingressClassName: {{ . }}
-  {{- end }}
-  {{- if .Values.ingress.tls }}
-  tls:
-    {{- range .Values.ingress.tls }}
-    - hosts:
-        {{- range .hosts }}
-        - {{ . | quote }}
-        {{- end }}
-      secretName: {{ .secretName }}
-    {{- end }}
-  {{- end }}
+{{- if and $apiIsStable .Values.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
+{{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
+  {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
           {{- range .paths }}
           - path: {{ .path }}
-            {{- with .pathType }}
-            pathType: {{ . }}
+            {{- if $ingressSupportsPathType }}
+            pathType: {{ .pathType }}
             {{- end }}
             backend:
+              {{- if $apiIsStable }}
               service:
-                name: {{ include "rabbitmq.fullname" $ }}
+                name: {{ $serviceName }}
                 port:
-                  number: {{ $.Values.service.port }}
+                  name: mgmt
+              {{- else }}
+                serviceName: {{ $serviceName }}
+                servicePort: mgmt
+              {{- end }}
           {{- end }}
+  {{- end }}
+{{- if .Values.ingress.tls }}
+  tls:
+  {{- range .Values.ingress.tls }}
+    - hosts:
+    {{- range .hosts }}
+        - {{ quote . }}
     {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
 {{- end }}

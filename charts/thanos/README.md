@@ -34,7 +34,7 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/solidcharts/helm-charts | shared | 0.1.0 |
+| oci://ghcr.io/solidcharts/helm-charts | shared | 0.X.X |
 
 ## Values
 

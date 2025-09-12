@@ -1,53 +1,36 @@
 {{/*
-Expand the name of the chart.
+Name of the chart.
 */}}
 {{- define "rabbitmq.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- include "shared.name" . -}}
 {{- end }}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
+Default fully qualified app name.
 */}}
 {{- define "rabbitmq.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
+{{- include "shared.fullname" . -}}
 {{- end }}
 
 {{/*
-Create chart name and version as used by the chart label.
+Chart name and version as used by the chart label.
 */}}
 {{- define "rabbitmq.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- include "shared.chart" . }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
 {{- define "rabbitmq.labels" -}}
-helm.sh/chart: {{ include "rabbitmq.chart" . }}
-{{ include "rabbitmq.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "shared.labels" . }}
 {{- end }}
 
 {{/*
 Selector labels
 */}}
 {{- define "rabbitmq.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "rabbitmq.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "shared.selectorLabels" . }}
 {{- end }}
 
 {{/*

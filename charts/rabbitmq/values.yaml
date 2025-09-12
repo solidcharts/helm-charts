@@ -15,21 +15,26 @@ image:
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
+
 # This is to override the chart name.
 nameOverride: ""
 fullnameOverride: ""
 
-# This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
+managementPlugin:
+  ## -- Set to true to enable the RabbitMQ management plugin.
+  enabled: true
+
 serviceAccount:
-  # Specifies whether a service account should be created
+  # -- If `true`, create a new `ServiceAccount` for the component.
   create: true
-  # Automatically mount a ServiceAccount's API credentials?
-  automount: true
-  # Annotations to add to the service account
+  # -- (string) If this is set and `serviceAccount.create` is `true` this will be used for the created component service account name, if this is set and `serviceAccount.create` is `false` then this will define an existing service account to use for the component.
+  name: ~
+  # -- Labels to add to the bucket web service account.
+  labels: {}
+  # -- Annotations to add to the bucket web service account.
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  # -- Automount API credentials for the bucket web service account.
+  automountToken: false
 
 # This is for setting Kubernetes Annotations to a Pod.
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
@@ -49,25 +54,51 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
-  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  # -- Service type
   type: ClusterIP
-  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  port: 80
+  ports:
+    # -- RabbitMQ AMQP service port
+    amqp: 5672
+    # -- RabbitMQ HTTP management service port
+    mgmt: 15672
+    # -- RabbitMQ epmd service port
+    epmd: 4369
+    # -- RabbitMQ Erlang distribution service port
+    dist: 25672
+    # -- RabbitMQ metrics service port
+    metrics: 15692
+
+metrics:
+  ## -- Set to true to enable the Prometheus metrics
+  enabled: false
+  serviceMonitor:
+    # -- If `true`, create a ServiceMonitor for the Prometheus Operator
+    enabled: false
+    ## -- Additional labels for the ServiceMonitor
+    additionalLabels: {}
+    ## @param metrics.serviceMonitor.annotations Annotations for ServiceMonitor
+    annotations: {}
+    ## @param metrics.serviceMonitor.interval Scrape interval
+    interval: 30s
+    ## @param metrics.serviceMonitor.scrapeTimeout Scrape timeout
+    scrapeTimeout: 10s
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
+  # -- If `true`, create an `Ingress`
   enabled: false
-  className: ""
+  # -- Annotations to add to the ingress
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  # -- Ingress class name
+  ingressClassName: ""
+  # -- Hosts for the ingress.
   hosts:
-    - host: chart-example.local
+    - host: rabbitmq.local
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
+  # -- TLS configuration for the service ingress
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -94,14 +125,6 @@ readinessProbe:
   httpGet:
     path: /
     port: http
-
-# This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
 volumes: []
