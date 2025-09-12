@@ -1,6 +1,6 @@
 # thanos
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.39.2](https://img.shields.io/badge/AppVersion-0.39.2-informational?style=flat-square)
+![Version: 0.2.0-rc.1](https://img.shields.io/badge/Version-0.2.0--rc.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.39.2](https://img.shields.io/badge/AppVersion-0.39.2-informational?style=flat-square)
 
 ## Description
 
@@ -27,7 +27,7 @@ This chart is a replacement for Bitnami Thanos chart.
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.1.0
+helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.2.0-rc.1
 ```
 
 ## Requirements
