@@ -14,6 +14,10 @@
 
 ## [UNRELEASED]
 
+### Changed
+
+- Ingress settings (dropped `ingress.path` for `ingress.tls` array with paths included)
+
 ## [v0.1.0] - 2025-09-10
 
 ### Added

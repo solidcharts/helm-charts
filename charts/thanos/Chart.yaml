@@ -20,7 +20,6 @@ sources:
 maintainers:
   - name: pnowy
     email: solidcharts@przemeknowak.com
-
 dependencies:
   - name: shared
     version: 0.X.X

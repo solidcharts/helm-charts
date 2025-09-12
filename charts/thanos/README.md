@@ -60,7 +60,6 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 | bucketweb.ingress.enabled | bool | `false` | If `true`, create an `Ingress` for the bucket web service. |
 | bucketweb.ingress.hosts | list | See _values.yaml_ | Hosts for the bucket web service ingress. |
 | bucketweb.ingress.ingressClassName | string | `nil` | Ingress class name for the bucket web service ingress. |
-| bucketweb.ingress.path | string | `"/"` | Path for the bucket web service ingress. |
 | bucketweb.ingress.tls | list | See _values.yaml_ | TLS configuration for the bucket web service ingress. |
 | bucketweb.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the bucket web pod default container. |
 | bucketweb.pdb.enabled | bool | `false` | If `true`, create a `PodDisruptionBudget` for the bucket web deployment. |
@@ -155,7 +154,6 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 | query.ingress.enabled | bool | `false` | If `true`, create an `Ingress` for the query service. |
 | query.ingress.hosts | list | See _values.yaml_ | Hosts for the query service ingress. |
 | query.ingress.ingressClassName | string | `nil` | Ingress class name for the query service ingress. |
-| query.ingress.path | string | `"/"` | Path for the query service ingress. |
 | query.ingress.tls | list | See _values.yaml_ | TLS configuration for the query service ingress. |
 | query.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the query pod default container. |
 | query.pdb.enabled | bool | `false` | If `true`, create a `PodDisruptionBudget` for the query deployment. |
@@ -196,7 +194,6 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 | queryFrontend.ingress.enabled | bool | `false` | If `true`, create an `Ingress` for the query frontend service. |
 | queryFrontend.ingress.hosts | list | See _values.yaml_ | Hosts for the query frontend service ingress. |
 | queryFrontend.ingress.ingressClassName | string | `nil` | Ingress class name for the query frontend service ingress. |
-| queryFrontend.ingress.path | string | `"/"` | Path for the query frontend service ingress. |
 | queryFrontend.ingress.tls | list | See _values.yaml_ | TLS configuration for the query frontend service ingress. |
 | queryFrontend.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the query frontend pod default container. |
 | queryFrontend.pdb.enabled | bool | `false` | If `true`, create a `PodDisruptionBudget` for the query frontend deployment. |
@@ -281,7 +278,6 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 | receiver.router.ingress.enabled | bool | `false` | If `true`, create an `Ingress` for the receiver router service. |
 | receiver.router.ingress.hosts | list | See _values.yaml_ | Hosts for the receiver router service ingress. |
 | receiver.router.ingress.ingressClassName | string | `nil` | Ingress class name for the receiver router service ingress. |
-| receiver.router.ingress.path | string | `"/"` | Path for the receiver router service ingress. |
 | receiver.router.ingress.tls | list | See _values.yaml_ | TLS configuration for the receiver router service ingress. |
 | receiver.router.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the receiver router pod default container. |
 | receiver.router.nodeSelector | object | `{}` | Node selector labels for scheduling the receiver router pod. |
@@ -332,7 +328,6 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 | ruler.ingress.enabled | bool | `false` | If `true`, create an `Ingress` for the ruler service. |
 | ruler.ingress.hosts | list | See _values.yaml_ | Hosts for the ruler service ingress. |
 | ruler.ingress.ingressClassName | string | `nil` | Ingress class name for the ruler service ingress. |
-| ruler.ingress.path | string | `"/"` | Path for the ruler service ingress. |
 | ruler.ingress.tls | list | See _values.yaml_ | TLS configuration for the ruler service ingress. |
 | ruler.instanceLabel | bool | `false` | If `true`, add a `thanos_rule` label to `<NAMESPACE>/<RULE_FULLNAME>` on a `Rule` metrics. |
 | ruler.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the ruler pod default container. |
