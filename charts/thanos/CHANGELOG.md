@@ -18,6 +18,8 @@
 
 - Ingress settings (dropped `ingress.path` for `ingress.tls` array with paths included)
 - Changed `serviceMonitor.additionalLabels` to `serviceMonitor.labels`
+- Separated image registry/repository property under `image.registry` and `image.repository` instead of single `image.repository`
+- Global image registry property under `global.imageRegistry` allowing to override it for all images
 
 ## [v0.1.0] - 2025-09-10
 

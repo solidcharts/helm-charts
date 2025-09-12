@@ -34,7 +34,7 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://ghcr.io/solidcharts/helm-charts | shared | 0.X.X |
+| file://../shared | shared | 0.X.X |
 
 ## Values
 
@@ -125,9 +125,11 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 | compactor.terminationGracePeriodSeconds | int | `nil` | Termination grace period for the compactor pod; in seconds. |
 | compactor.updateStrategy | object | `{}` | Update strategy for the compactor stateful set. |
 | fullnameOverride | string | `nil` |  |
+| global.imageRegistry | string | `""` |  |
 | image.digest | string | `nil` | Set image digest |
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy for images. |
-| image.repository | string | `"quay.io/thanos/thanos"` |  |
+| image.registry | string | `"quay.io"` | Image registry |
+| image.repository | string | `"thanos/thanos"` | Image repository |
 | image.tag | string | `nil` | Overrides the image tag whose default is the chart appVersion. |
 | imagePullSecrets | list | `[]` |  |
 | logFormat | string | `"logfmt"` | Log format for _Thanos_ components. |
