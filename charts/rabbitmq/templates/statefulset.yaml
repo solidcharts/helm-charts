@@ -1,0 +1,226 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "rabbitmq.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "rabbitmq.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "rabbitmq.serviceNameHeadless" . }}
+  replicas: {{ .Values.replicas }}
+  {{- with .Values.updateStrategy }}
+  updateStrategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  podManagementPolicy: OrderedReady
+  selector:
+    matchLabels:
+      {{- include "rabbitmq.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "rabbitmq.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "rabbitmq.serviceAccountName" . }}
+      {{- if .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
+      {{- if or .Values.auth.enabled .Values.installPlugins }}
+      initContainers:
+        {{- if .Values.auth.enabled }}
+        - name: init-erlang-cookie
+          image: "{{ include "rabbitmq.initContainer.image" . }}"
+          imagePullPolicy: "{{ .Values.initContainer.image.pullPolicy }}"
+          {{- if .Values.initContainer.securityContext }}
+          securityContext:
+            {{- toYaml .Values.initContainer.securityContext | nindent 12 }}
+          {{- end }}
+          command:
+            - sh
+            - -c
+            - |
+              echo "$RABBITMQ_ERLANG_COOKIE" > /var/lib/rabbitmq/.erlang.cookie
+              chmod 400 /var/lib/rabbitmq/.erlang.cookie
+              chown {{ .Values.securityContext.runAsUser | default 999 }}:{{ .Values.securityContext.runAsGroup | default 999 }} /var/lib/rabbitmq/.erlang.cookie
+          env:
+            - name: RABBITMQ_ERLANG_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "rabbitmq.secretName" . }}
+                  key: {{ include "rabbitmq.secretErlangCookieKey" . }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/rabbitmq
+        {{- end }}
+        {{- if .Values.installPlugins }}
+        - name: download-plugins
+          image: "{{ include "rabbitmq.initContainer.image" . }}"
+          imagePullPolicy: "{{ .Values.initContainer.image.pullPolicy }}"
+          {{- if .Values.initContainer.securityContext }}
+          securityContext:
+            {{- toYaml .Values.initContainer.securityContext | nindent 12 }}
+          {{- end }}
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /var/lib/rabbitmq/plugins /opt/rabbitmq/plugins
+              {{- range .Values.installPlugins }}
+              echo "Downloading plugin from {{ . }}"
+              wget -O /var/lib/rabbitmq/plugins/$(basename {{ . }}) {{ . }}
+              {{- end }}
+              echo "Copying plugins to RabbitMQ plugin directory"
+              cp /var/lib/rabbitmq/plugins/*.ez /opt/rabbitmq/plugins/
+              chown -R {{ .Values.securityContext.runAsUser | default 999 }}:{{ .Values.securityContext.runAsGroup | default 999 }} /var/lib/rabbitmq/plugins /opt/rabbitmq/plugins
+              chmod -R 755 /var/lib/rabbitmq/plugins /opt/rabbitmq/plugins
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/rabbitmq
+            - name: plugins
+              mountPath: /opt/rabbitmq/plugins
+        {{- end }}
+      {{- end }}
+      containers:
+        - name: rabbitmq
+          {{- if .Values.securityContext }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- end }}
+          image: {{ include "rabbitmq.image" . | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: amqp
+              protocol: TCP
+              containerPort: {{ .Values.containerPorts.amqp }}
+            - name: mgmt
+              protocol: TCP
+              containerPort: {{ .Values.containerPorts.mgmt }}
+            - name: epmd
+              protocol: TCP
+              containerPort: {{ .Values.containerPorts.epmd }}
+            - name: dist
+              protocol: TCP
+              containerPort: {{ .Values.containerPorts.dist }}
+            {{- if .Values.metrics.enabled }}
+            - name: metrics
+              containerPort: {{ .Values.containerPorts.metrics }}
+            {{- end }}
+          env:
+            {{- if .Values.auth.enabled }}
+            - name: RABBITMQ_DEFAULT_USER
+              value: {{ .Values.auth.username | quote }}
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "rabbitmq.secretName" . }}
+                  key: {{ include "rabbitmq.secretPasswordKey" . }}
+            - name: RABBITMQ_ERLANG_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "rabbitmq.secretName" . }}
+                  key: {{ include "rabbitmq.secretErlangCookieKey" . }}
+            {{- end }}
+            - name: RABBITMQ_USE_LONGNAME
+              value: {{ .Values.peerDiscoveryK8sPlugin.useLongname | quote }}
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            {{- if .Values.peerDiscoveryK8sPlugin.useLongname }}
+            - name: RABBITMQ_NODENAME
+              value: rabbit@$(NODE_NAME).{{ include "rabbitmq.serviceNameHeadless" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+            {{- else }}
+            - name: RABBITMQ_NODENAME
+              value: rabbit@$(NODE_NAME)
+            {{- end }}
+            {{- with .Values.extraEnv }}
+              {{- toYaml . | nindent 12 }}
+            {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/rabbitmq
+            - name: config
+              mountPath: /etc/rabbitmq
+            - name: logs
+              mountPath: /var/log/rabbitmq
+            {{- if .Values.installPlugins }}
+            - name: plugins
+              mountPath: /opt/rabbitmq/plugins
+            {{- end }}
+            {{- if .Values.extraVolumeMounts }}
+            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+      volumes:
+        - name: logs
+          emptyDir: {}
+        {{- if not .Values.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+        {{- end }}
+        {{- if .Values.installPlugins }}
+        - name: plugins
+          emptyDir: {}
+        {{- end }}
+        - name: config
+          configMap:
+            name: {{ include "rabbitmq.configMapName" . }}
+        {{- if .Values.extraVolumes }}
+        {{- toYaml .Values.extraVolumes | nindent 8 }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "rabbitmq.selectorLabels" . | nindent 10 }}
+        {{- with .Values.persistence.annotations }}
+        annotations:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+        {{- if .Values.persistence.storageClass }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        {{- end }}
+        accessModes:
+          - {{ .Values.persistence.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size | quote }}
+  {{- if (eq (include "shared.pvc.persistentVolumeClaimRetentionPolicySupported" .) "true") }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ ternary "Retain" "Delete" .Values.persistence.retainDeleted }}
+    whenScaled: {{ ternary "Retain" "Delete" .Values.persistence.retainScaled }}
+  {{- end }}
+  {{- end }}

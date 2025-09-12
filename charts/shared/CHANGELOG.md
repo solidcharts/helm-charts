@@ -14,6 +14,13 @@
 
 ## [UNRELEASED]
 
+## [v0.2.0] - 2025-09-10
+
+### Added
+
+- Image utility functions (`shared.image`).
+- PVC volume claim retention policy support (`shared.pvc.persistentVolumeClaimRetentionPolicySupported`).
+
 ## [v0.1.0] - 2025-09-10
 
 ### Added

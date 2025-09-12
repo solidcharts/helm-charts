@@ -1,9 +1,17 @@
+## -- Global parameters
+global:
+  ## -- Global Image registry
+  imageRegistry: ""
+
 nameOverride: ~
 fullnameOverride: ~
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  repository: quay.io/thanos/thanos
+  # -- Image registry
+  registry: quay.io
+  # -- Image repository
+  repository: thanos/thanos
   # -- Pull policy for images.
   pullPolicy: IfNotPresent
   # -- Overrides the image tag whose default is the chart appVersion.
@@ -71,7 +79,7 @@ serviceMonitor:
   # -- If `true`, create `ServiceMonitor` resources to support collecting metrics via the Prometheus Operator
   enabled: false
   # -- Additional labels for the service monitor.
-  additionalLabels: {}
+  labels: {}
   # -- Label to use as the `jobLabel`.
   jobLabel: app.kubernetes.io/component
   # -- Endpoint configuration for the service monitor endpoint.
@@ -113,11 +121,13 @@ query:
     annotations: {}
     # -- Ingress class name for the query service ingress.
     ingressClassName:
-    # -- Path for the query service ingress.
-    path: /
     # -- Hosts for the query service ingress.
     # @default -- See _values.yaml_
-    hosts: []
+    hosts:
+      - host: thanos-query.local
+        paths:
+          - path: /
+            pathType: Prefix
     #   - chart-example.local
     # -- TLS configuration for the query service ingress.
     # @default -- See _values.yaml_
@@ -283,11 +293,13 @@ queryFrontend:
     annotations: {}
     # -- Ingress class name for the query frontend service ingress.
     ingressClassName:
-    # -- Path for the query frontend service ingress.
-    path: /
     # -- Hosts for the query frontend service ingress.
     # @default -- See _values.yaml_
-    hosts: []
+    hosts:
+      - host: thanos-query-frontend.local
+        paths:
+          - path: /
+            pathType: Prefix
     #   - chart-example.local
     # -- TLS configuration for the query frontend service ingress.
     # @default -- See _values.yaml_
@@ -754,11 +766,13 @@ ruler:
     annotations: {}
     # -- Ingress class name for the ruler service ingress.
     ingressClassName:
-    # -- Path for the ruler service ingress.
-    path: /
     # -- Hosts for the ruler service ingress.
     # @default -- See _values.yaml_
-    hosts: []
+    hosts:
+      - host: thanos-ruler.local
+        paths:
+          - path: /
+            pathType: Prefix
     #   - chart-example.local
     # -- TLS configuration for the ruler service ingress.
     # @default -- See _values.yaml_
@@ -1115,11 +1129,23 @@ receiver:
       annotations: {}
       # -- Ingress class name for the receiver router service ingress.
       ingressClassName:
-      # -- Path for the receiver router service ingress.
-      path: /
       # -- Hosts for the receiver router service ingress.
       # @default -- See _values.yaml_
-      hosts: []
+      hosts:
+        - host: thanos-receiver-router.local
+          paths:
+            - path: "/api/v1/receive"
+              pathType: Prefix
+              backend:
+                service:
+                  port:
+                    name: http-rem-write
+            - path: "/"
+              pathType: Prefix
+              backend:
+                service:
+                  port:
+                    name: http
       #   - chart-example.local
       # -- TLS configuration for the receiver router service ingress.
       # @default -- See _values.yaml_
@@ -1288,11 +1314,13 @@ bucketweb:
     annotations: {}
     # -- Ingress class name for the bucket web service ingress.
     ingressClassName:
-    # -- Path for the bucket web service ingress.
-    path: /
     # -- Hosts for the bucket web service ingress.
     # @default -- See _values.yaml_
-    hosts: []
+    hosts:
+      - host: thanos-bucketweb.local
+        paths:
+          - path: /
+            pathType: Prefix
     #   - chart-example.local
     # -- TLS configuration for the bucket web service ingress.
     # @default -- See _values.yaml_

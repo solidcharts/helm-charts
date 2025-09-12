@@ -12,6 +12,11 @@
   {{- eq (include "shared.ingress.apiVersion" .) "networking.k8s.io/v1" -}}
 {{- end -}}
 
+{{/* PVC volume claim retention policy support */}}
+{{- define "shared.pvc.persistentVolumeClaimRetentionPolicySupported" -}}
+  {{- (semverCompare ">= 1.27-0" .Capabilities.KubeVersion.Version) -}}
+{{- end -}}
+
 {{/* Check Ingress supports pathType */}}
 {{/* pathType was added to networking.k8s.io/v1beta1 in Kubernetes 1.18 */}}
 {{- define "shared.ingress.supportsPathType" -}}

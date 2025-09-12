@@ -19,37 +19,25 @@ spec:
 {{- end }}
   rules:
   {{- range .Values.receiver.router.ingress.hosts }}
-    - host: {{ quote . }}
+    - host: {{ .host | quote }}
       http:
         paths:
-          - path: {{ printf "%s/api/v1/receive" $.Values.receiver.router.ingress.path | replace "//" "/" }}
+          {{- range .paths }}
+          - path: {{ .path }}
             {{- if $ingressSupportsPathType }}
-            pathType: Prefix
+            pathType: {{ .pathType }}
             {{- end }}
             backend:
-            {{- if $apiIsStable }}
+              {{- if $apiIsStable }}
               service:
                 name: {{ $serviceName }}
                 port:
-                  name: http-rem-write
-            {{- else }}
-              serviceName: {{ $serviceName }}
-              servicePort: http-rem-write
-            {{- end }}
-          - path: {{ $.Values.receiver.router.ingress.path }}
-            {{- if $ingressSupportsPathType }}
-            pathType: Prefix
-            {{- end }}
-            backend:
-            {{- if $apiIsStable }}
-              service:
-                name: {{ $serviceName }}
-                port:
-                  name: http
-            {{- else }}
-              serviceName: {{ $serviceName }}
-              servicePort: http
-            {{- end }}
+                  name: {{ .backend.service.port.name }}
+              {{- else }}
+                serviceName: {{ $serviceName }}
+                servicePort: {{ .backend.service.port.name }}
+              {{- end }}
+          {{- end }}
   {{- end }}
 {{- if .Values.receiver.router.ingress.tls }}
   tls:

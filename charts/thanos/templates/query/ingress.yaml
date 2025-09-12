@@ -19,23 +19,25 @@ spec:
 {{- end }}
   rules:
   {{- range .Values.query.ingress.hosts }}
-    - host: {{ quote . }}
+    - host: {{ .host | quote }}
       http:
         paths:
-          - path: {{ $.Values.query.ingress.path }}
+          {{- range .paths }}
+          - path: {{ .path }}
             {{- if $ingressSupportsPathType }}
-            pathType: Prefix
+            pathType: {{ .pathType }}
             {{- end }}
             backend:
-            {{- if $apiIsStable }}
+              {{- if $apiIsStable }}
               service:
                 name: {{ $serviceName }}
                 port:
                   name: http
-            {{- else }}
-              serviceName: {{ $serviceName }}
-              servicePort: http
-            {{- end }}
+              {{- else }}
+                serviceName: {{ $serviceName }}
+                servicePort: http
+              {{- end }}
+          {{- end }}
   {{- end }}
 {{- if .Values.query.ingress.tls }}
   tls:

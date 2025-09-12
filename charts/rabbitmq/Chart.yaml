@@ -1,0 +1,16 @@
+apiVersion: v2
+name: rabbitmq
+description: A Helm chart for RabbitMQ
+type: application
+version: 0.1.0
+appVersion: "4.1.4-management"
+icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/rabbitmq/icon.png
+sources:
+  - https://github.com/solidcharts/helm-charts/
+maintainers:
+  - name: pnowy
+    email: solidcharts@przemeknowak.com
+dependencies:
+  - name: shared
+    version: 0.X.X
+    repository: oci://ghcr.io/solidcharts/helm-charts

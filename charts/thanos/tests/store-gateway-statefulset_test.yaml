@@ -51,6 +51,20 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: quay.io/thanos/thanos:v0.99.0
+  - it: should use global image registry
+    set:
+      global:
+        imageRegistry: "registry.example.com"
+      image:
+        tag: v0.99.0
+      storeGateway:
+        enabled: true
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: registry.example.com/thanos/thanos:v0.99.0
   - it: should use custom update strategy
     set:
       storeGateway:

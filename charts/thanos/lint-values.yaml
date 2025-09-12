@@ -24,6 +24,9 @@ compactor:
     storageClass: "ssd"
 receiver:
   enabled: true
+  router:
+    ingress:
+      enabled: true
 bucketweb:
   enabled: true
   tolerations: [ ]

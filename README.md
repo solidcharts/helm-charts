@@ -2,13 +2,16 @@
 
 ## Mission
 
-Set of helm charts which use official images from given tool providers. This repository has been created as a Bitnami charts alternative, due to the paywall
-introduced for Bitnami images.
+Set of helm charts which use official images from given tool providers.
 
-The second problem with Bitnami charts was that they are using custom images and quite often different environment variables and configurations than the official
-tools. It's quite hard to use them official image with the provided helm charts.
+This repository has been created due to a couple of reasons:
 
-These charts will always be free and open source. Feel free to contribute or copy repo and use them internally.
+- as a Bitnami charts alternative, due to the paywall introduced for Bitnami images
+- charts are using official open-source tools images, so there are no issues with configuration settings and environment variables (often issue with Bitnami
+  charts)
+- these charts are hosted on GitHub, so no rate limits issues 🙂
+
+**These charts will always be free and open source.** Feel free to contribute or copy repo and use them internally.
 
 ## Charts
 
@@ -16,5 +19,6 @@ For the tools that have official helm charts, we recommend them, and instead of 
 
 ## Inspiration and credits
 
-- [stevehipwell/helm-charts/](https://github.com/stevehipwell/helm-charts/)
-- [bitnami](https://github.com/bitnami/charts)
+- [bitnami/charts](https://github.com/bitnami/charts)
+- [stevehipwell/helm-charts/helm-charts](https://github.com/stevehipwell/helm-charts/)
+- [CloudPirates-io/helm-charts](https://github.com/CloudPirates-io/helm-charts)

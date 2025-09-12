@@ -1,0 +1,15 @@
+{{- if .Values.rbac.create }}
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "rabbitmq.peerDiscoveryRoleName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "rabbitmq.labels" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create"]
+{{- end }}

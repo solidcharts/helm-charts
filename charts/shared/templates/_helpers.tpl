@@ -49,3 +49,29 @@ Selector labels
 app.kubernetes.io/name: {{ include "shared.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Image to use. Allow overrides with global valus image registry.
+Usage: {{- include "shared.image" (dict "chart" .Chart "image" .Values.image "global" .Values.global) | nindent 8 }}
+*/}}
+{{- define "shared.image" -}}
+{{- $registryName := .image.registry -}}
+{{- if .global }}
+    {{- if .global.imageRegistry }}
+        {{- $registryName = .global.imageRegistry -}}
+    {{- end -}}
+{{- end -}}
+{{- $repositoryName := .image.repository -}}
+{{- $separator := ":" -}}
+{{- $versionMarker := printf "%s" (default (printf "v%s" .chart.AppVersion) .image.tag) }}
+{{- $digest := ternary (printf "%s" .image.digest) "" (not (empty .image.digest)) }}
+{{- if not (empty $digest) }}
+    {{- $separator = "@" -}}
+    {{- $versionMarker = $digest }}
+{{- end -}}
+{{- if $registryName }}
+{{- printf "%s/%s%s%s" $registryName $repositoryName $separator $versionMarker -}}
+{{- else -}}
+{{- printf "%s%s%s" $repositoryName $separator $versionMarker -}}
+{{- end -}}
+{{- end }}

@@ -1,24 +1,24 @@
-{{- if and .Values.bucketweb.enabled .Values.bucketweb.ingress.enabled -}}
+{{- if .Values.ingress.enabled -}}
 {{- $apiIsStable := eq (include "shared.ingress.isStable" .) "true" -}}
 {{- $ingressSupportsPathType := eq (include "shared.ingress.supportsPathType" .) "true" -}}
-{{- $serviceName := include "thanos.bucketweb.fullname" . -}}
+{{- $serviceName := include "rabbitmq.fullname" . -}}
 apiVersion: {{ include "shared.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ $serviceName }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "thanos.bucketweb.labels" . | nindent 4 }}
-  {{- with .Values.bucketweb.ingress.annotations }}
+    {{- include "rabbitmq.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if and $apiIsStable .Values.bucketweb.ingress.ingressClassName }}
-  ingressClassName: {{ .Values.bucketweb.ingress.ingressClassName }}
+{{- if and $apiIsStable .Values.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
 {{- end }}
   rules:
-  {{- range .Values.bucketweb.ingress.hosts }}
+  {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
@@ -32,16 +32,16 @@ spec:
               service:
                 name: {{ $serviceName }}
                 port:
-                  name: http
+                  name: mgmt
               {{- else }}
                 serviceName: {{ $serviceName }}
-                servicePort: http
+                servicePort: mgmt
               {{- end }}
           {{- end }}
   {{- end }}
-{{- if .Values.bucketweb.ingress.tls }}
+{{- if .Values.ingress.tls }}
   tls:
-  {{- range .Values.bucketweb.ingress.tls }}
+  {{- range .Values.ingress.tls }}
     - hosts:
     {{- range .hosts }}
         - {{ quote . }}
