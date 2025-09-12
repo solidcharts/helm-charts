@@ -76,13 +76,16 @@ metrics:
     # -- If `true`, create a ServiceMonitor for the Prometheus Operator
     enabled: false
     ## -- Additional labels for the ServiceMonitor
-    additionalLabels: {}
-    ## @param metrics.serviceMonitor.annotations Annotations for ServiceMonitor
+    labels: {}
+    ## -- Additional annotations for the ServiceMonitor
     annotations: {}
-    ## @param metrics.serviceMonitor.interval Scrape interval
-    interval: 30s
-    ## @param metrics.serviceMonitor.scrapeTimeout Scrape timeout
-    scrapeTimeout: 10s
+    # -- Label to use as the `jobLabel`.
+    jobLabel: ~
+    # -- Endpoint configuration for the service monitor endpoint.
+    endpointConfig:
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:

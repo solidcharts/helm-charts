@@ -17,6 +17,7 @@
 ### Changed
 
 - Ingress settings (dropped `ingress.path` for `ingress.tls` array with paths included)
+- Changed `serviceMonitor.additionalLabels` to `serviceMonitor.labels`
 
 ## [v0.1.0] - 2025-09-10
 

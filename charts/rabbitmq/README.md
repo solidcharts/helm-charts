@@ -49,11 +49,11 @@ helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq -
 | livenessProbe.httpGet.port | string | `"http"` |  |
 | managementPlugin.enabled | bool | `true` |  |
 | metrics.enabled | bool | `false` |  |
-| metrics.serviceMonitor.additionalLabels | object | `{}` |  |
 | metrics.serviceMonitor.annotations | object | `{}` |  |
 | metrics.serviceMonitor.enabled | bool | `false` | If `true`, create a ServiceMonitor for the Prometheus Operator |
-| metrics.serviceMonitor.interval | string | `"30s"` |  |
-| metrics.serviceMonitor.scrapeTimeout | string | `"10s"` |  |
+| metrics.serviceMonitor.endpointConfig | object | `{"interval":"30s","path":"/metrics","scrapeTimeout":"10s"}` | Endpoint configuration for the service monitor endpoint. |
+| metrics.serviceMonitor.jobLabel | string | `nil` | Label to use as the `jobLabel`. |
+| metrics.serviceMonitor.labels | object | `{}` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |

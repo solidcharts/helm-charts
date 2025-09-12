@@ -365,10 +365,10 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 | ruler.serviceAccount.name | string | `nil` | If this is set and `compact.serviceAccount.create` is `true` this will be used for the created ruler component service account name, if this is set and `compact.serviceAccount.create` is `false` then this will define an existing service account to use for the ruler component. |
 | ruler.terminationGracePeriodSeconds | int | `nil` | Termination grace period for the ruler pod; in seconds. |
 | ruler.updateStrategy | object | `{}` | Update strategy for the ruler stateful set. |
-| serviceMonitor.additionalLabels | object | `{}` | Additional labels for the service monitor. |
 | serviceMonitor.enabled | bool | `false` | If `true`, create `ServiceMonitor` resources to support collecting metrics via the Prometheus Operator |
 | serviceMonitor.endpointConfig | object | `{"path":"/metrics"}` | Endpoint configuration for the service monitor endpoint. |
 | serviceMonitor.jobLabel | string | `"app.kubernetes.io/component"` | Label to use as the `jobLabel`. |
+| serviceMonitor.labels | object | `{}` | Additional labels for the service monitor. |
 | storeEndpointGroup | bool | `false` | If `true`, configure the store endpoints with `--endpoint-group` so they're queried round-robin rather than fanout. |
 | storeGateway.containerPorts.grpc | int | `10901` |  |
 | storeGateway.containerPorts.http | int | `10902` |  |

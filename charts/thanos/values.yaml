@@ -71,7 +71,7 @@ serviceMonitor:
   # -- If `true`, create `ServiceMonitor` resources to support collecting metrics via the Prometheus Operator
   enabled: false
   # -- Additional labels for the service monitor.
-  additionalLabels: {}
+  labels: {}
   # -- Label to use as the `jobLabel`.
   jobLabel: app.kubernetes.io/component
   # -- Endpoint configuration for the service monitor endpoint.
