@@ -14,6 +14,10 @@
 
 ## [UNRELEASED]
 
+## [v0.3.0] - 2025-09-15
+
+- Changed version of a shared library with an option to provide appVersion prefix for image tags
+
 ## [v0.2.0] - 2025-09-12
 
 ### Changed
