@@ -14,6 +14,12 @@
 
 ## [UNRELEASED]
 
+## [v0.3.0] - 2025-09-15
+
+### Changed
+
+- Option to add app version prefix in utility functions `shared.image` instead of hardcoding it to `v`.
+
 ## [v0.2.0] - 2025-09-10
 
 ### Added
