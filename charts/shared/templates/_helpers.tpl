@@ -63,7 +63,7 @@ Usage: {{- include "shared.image" (dict "chart" .Chart "image" .Values.image "gl
 {{- end -}}
 {{- $repositoryName := .image.repository -}}
 {{- $separator := ":" -}}
-{{- $versionMarker := printf "%s" (default (printf "v%s" .chart.AppVersion) .image.tag) }}
+{{- $versionMarker := printf "%s" (default (printf "%s" .chart.AppVersion) .image.tag) }}
 {{- $digest := ternary (printf "%s" .image.digest) "" (not (empty .image.digest)) }}
 {{- if not (empty $digest) }}
     {{- $separator = "@" -}}
