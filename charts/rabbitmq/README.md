@@ -1,6 +1,6 @@
 # rabbitmq
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.1.4-management](https://img.shields.io/badge/AppVersion-4.1.4--management-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.1.4-management](https://img.shields.io/badge/AppVersion-4.1.4--management-informational?style=flat-square)
 
 A Helm chart for RabbitMQ
 
@@ -21,7 +21,7 @@ A Helm chart for RabbitMQ
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.1.0
+helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.2.0
 ```
 
 ## Requirements
@@ -38,9 +38,10 @@ helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq -
 | affinity | object | `{}` | Affinity settings for scheduling. |
 | auth.enabled | bool | `true` |  |
 | auth.erlangCookie | string | `""` |  |
-| auth.existingErlangCookieKey | string | `"erlang-cookie"` |  |
-| auth.existingPasswordKey | string | `"password"` |  |
-| auth.existingSecret | string | `""` |  |
+| auth.existingErlangCookieSecret | string | `""` |  |
+| auth.existingErlangCookieSecretKey | string | `"erlang-cookie"` |  |
+| auth.existingPasswordSecret | string | `""` |  |
+| auth.existingPasswordSecretKey | string | `"password"` |  |
 | auth.password | string | `""` |  |
 | auth.username | string | `"admin"` |  |
 | clusterDomain | string | `"cluster.local"` | _Kubernetes_ cluster domain. |

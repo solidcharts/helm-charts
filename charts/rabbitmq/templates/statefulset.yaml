@@ -54,7 +54,7 @@ spec:
             - name: RABBITMQ_ERLANG_COOKIE
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "rabbitmq.secretName" . }}
+                  name: {{ include "rabbitmq.secretNameErlangCookie" . }}
                   key: {{ include "rabbitmq.secretErlangCookieKey" . }}
           volumeMounts:
             - name: data
@@ -120,12 +120,12 @@ spec:
             - name: RABBITMQ_DEFAULT_PASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "rabbitmq.secretName" . }}
+                  name: {{ include "rabbitmq.secretNamePassword" . }}
                   key: {{ include "rabbitmq.secretPasswordKey" . }}
             - name: RABBITMQ_ERLANG_COOKIE
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "rabbitmq.secretName" . }}
+                  name: {{ include "rabbitmq.secretNameErlangCookie" . }}
                   key: {{ include "rabbitmq.secretErlangCookieKey" . }}
             {{- end }}
             - name: RABBITMQ_USE_LONGNAME

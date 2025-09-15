@@ -80,11 +80,11 @@ Name of the config map for RabbitMQ configuration
 {{- end }}
 
 {{/*
-Get the secret name for RabbitMQ credentials
+Get the secret name for RabbitMQ password
 */}}
-{{- define "rabbitmq.secretName" -}}
-{{- if .Values.auth.existingSecret }}
-{{- .Values.auth.existingSecret }}
+{{- define "rabbitmq.secretNamePassword" -}}
+{{- if .Values.auth.existingPasswordSecret }}
+{{- .Values.auth.existingPasswordSecret }}
 {{- else }}
 {{- include "rabbitmq.fullname" . }}
 {{- end }}
@@ -94,9 +94,20 @@ Get the secret name for RabbitMQ credentials
 Get the secret key for RabbitMQ password
 */}}
 {{- define "rabbitmq.secretPasswordKey" -}}
-{{- if .Values.auth.existingPasswordKey }}
-{{- .Values.auth.existingPasswordKey }}
+{{- if .Values.auth.existingPasswordSecretKey }}
+{{- .Values.auth.existingPasswordSecretKey }}
 {{- else }}password
+{{- end }}
+{{- end }}
+
+{{/*
+Get the secret name for RabbitMQ earlang cookie
+*/}}
+{{- define "rabbitmq.secretNameErlangCookie" -}}
+{{- if .Values.auth.existingErlangCookieSecret }}
+{{- .Values.auth.existingErlangCookieSecret }}
+{{- else }}
+{{- include "rabbitmq.fullname" . }}
 {{- end }}
 {{- end }}
 
@@ -104,8 +115,8 @@ Get the secret key for RabbitMQ password
 Get the secret key for Erlang cookie
 */}}
 {{- define "rabbitmq.secretErlangCookieKey" -}}
-{{- if .Values.auth.existingErlangCookieKey }}
-{{- .Values.auth.existingErlangCookieKey }}
+{{- if .Values.auth.existingErlangCookieSecretKey }}
+{{- .Values.auth.existingErlangCookieSecretKey }}
 {{- else }}erlang-cookie
 {{- end }}
 {{- end }}
