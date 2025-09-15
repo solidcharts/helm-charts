@@ -14,6 +14,12 @@
 
 ## [UNRELEASED]
 
+## [v0.2.0] - 2025-09-15
+
+### Changed
+
+- Separated keys for existing password and erlang cookie secrets (`auth.existingPasswordSecret` and `auth.existingErlangCookieSecret`)
+
 ## [v0.1.0] - 2025-09-15
 
 ### Added

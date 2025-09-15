@@ -79,12 +79,14 @@ auth:
   password: ""
   ## -- Erlang cookie for clustering (if empty, random cookie will be generated)
   erlangCookie: ""
-  ## -- Name of existing secret containing RabbitMQ credentials
-  existingSecret: ""
+  ## -- Name of existing secret containing RabbitMQ password
+  existingPasswordSecret: ""
   ## -- Key in existing secret containing RabbitMQ password
-  existingPasswordKey: "password"
+  existingPasswordSecretKey: "password"
+  ## -- Name of existing secret containing RabbitMQ erlang cookie
+  existingErlangCookieSecret: ""
   ## -- Key in existing secret containing Erlang cookie
-  existingErlangCookieKey: "erlang-cookie"
+  existingErlangCookieSecretKey: "erlang-cookie"
 
 ## @section Init Container configuration
 initContainer:
