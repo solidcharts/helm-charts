@@ -52,7 +52,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 {{/*
 Image to use. Allow overrides with global valus image registry.
-Usage: {{- include "shared.image" (dict "chart" .Chart "image" .Values.image "global" .Values.global) | nindent 8 }}
+Usage: {{- include "shared.image" (dict "chart" .Chart "image" .Values.image "global" .Values.global "appVersionPrefix" "v") | nindent 8 }}
 */}}
 {{- define "shared.image" -}}
 {{- $registryName := .image.registry -}}
@@ -63,7 +63,8 @@ Usage: {{- include "shared.image" (dict "chart" .Chart "image" .Values.image "gl
 {{- end -}}
 {{- $repositoryName := .image.repository -}}
 {{- $separator := ":" -}}
-{{- $versionMarker := printf "%s" (default (printf "%s" .chart.AppVersion) .image.tag) }}
+{{- $appVersionPrefix := default "" .appVersionPrefix -}}
+{{- $versionMarker := printf "%s" (default (printf "%s%s" $appVersionPrefix .chart.AppVersion) .image.tag) }}
 {{- $digest := ternary (printf "%s" .image.digest) "" (not (empty .image.digest)) }}
 {{- if not (empty $digest) }}
     {{- $separator = "@" -}}
