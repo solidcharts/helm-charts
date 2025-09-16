@@ -21,11 +21,22 @@ auth:
   ## -- Key in an existing secret containing RabbitMQ password
   existingRootPasswordSecretKey: "root-password"
 
+## -- MinIO configuration
+config:
+  ## -- MinIO server default region
+  region: ""
+  ## -- Enable MinIO web browser
+  browserEnabled: true
+  ## -- MinIO server domain
+  domain: ""
+  ## -- MinIO server URL for console
+  serverUrl: ""
+
 image:
   # -- Image registry
   registry: docker.io
   # -- Image repository
-  repository: nginx
+  repository: minio/minio
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion
@@ -38,7 +49,8 @@ imagePullSecrets: []
 replicaCount: 1
 
 # This sets the update strategy for deployment.
-updateStrategy: {}
+updateStrategy:
+  type: Recreate
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -57,16 +69,33 @@ podAnnotations: {}
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 podLabels: {}
 
-podSecurityContext: {}
-  # fsGroup: 2000
+containerPorts:
+  minio: 9000
+  console: 9090
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+# -- Additional environment variables for the minio container.
+extraEnv: []
+
+## -- Pod security Context
+podSecurityContext:
+  ## -- Group ID for the volumes of the pod
+  fsGroup: 1001
+
+securityContext:
+  ## -- Enable container privilege escalation
+  allowPrivilegeEscalation: false
+  ## -- Configure the container to run as a non-root user
+  runAsNonRoot: true
+  ## -- User ID for the MinIO container
+  runAsUser: 1001
+  ## -- Group ID for the MinIO container
+  runAsGroup: 1001
+  ## -- Mount container root filesystem as read-only
+  readOnlyRootFilesystem: true
+  ## -- Linux capabilities to be dropped
+  capabilities:
+    drop:
+      - ALL
 
 service:
   # -- Service type
@@ -112,10 +141,6 @@ ingress:
     #      - chart-example.local
 
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
@@ -123,23 +148,38 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
   httpGet:
-    path: /
-    port: http
+    path: /minio/health/live
+    port: minio
+    scheme: HTTP
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1
+
 readinessProbe:
   httpGet:
-    path: /
-    port: http
+    path: /minio/health/ready
+    port: minio
+    scheme: HTTP
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+  successThreshold: 1
 
-# This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+startupProbe:
+  httpGet:
+    path: /minio/health/live
+    port: minio
+    scheme: HTTP
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 30
+  successThreshold: 1
 
 persistence:
   ## -- Enable persistent storage
@@ -154,26 +194,14 @@ persistence:
   accessMode: ReadWriteOnce
   ## -- Size of persistent volume
   size: 8Gi
-  # -- If `true`, retain the PVC after the pod is deleted.
-  retainDeleted: true
-  # -- If `true`, retain the PVC after the pod is scaled down.
-  retainScaled: true
-
-# Additional volumes on the output Deployment definition.
-volumes: []
-# - name: foo
-#   secret:
-#     secretName: mysecret
-#     optional: false
-
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-# - name: foo
-#   mountPath: "/etc/foo"
-#   readOnly: true
+  ## -- The path where to mount the data volume
+  mountPath: /mnt/data
 
 nodeSelector: {}
 
 tolerations: []
+
+# -- Topology spread constraints for scheduling.
+topologySpreadConstraints: []
 
 affinity: {}

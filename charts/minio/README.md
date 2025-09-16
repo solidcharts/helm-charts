@@ -1,6 +1,6 @@
 # minio
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2025-09-07T16-13-09Z](https://img.shields.io/badge/AppVersion-RELEASE.2025--09--07T16--13--09Z-informational?style=flat-square)
 
 A Helm chart for MinIO
 
@@ -41,15 +41,18 @@ helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --versi
 | auth.existingRootUsernameSecretKey | string | `"root-user"` |  |
 | auth.rootPassword | string | `""` |  |
 | auth.rootUsername | string | `"minio"` |  |
-| autoscaling.enabled | bool | `false` |  |
-| autoscaling.maxReplicas | int | `100` |  |
-| autoscaling.minReplicas | int | `1` |  |
-| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| config.browserEnabled | bool | `true` |  |
+| config.domain | string | `""` |  |
+| config.region | string | `""` |  |
+| config.serverUrl | string | `""` |  |
+| containerPorts.console | int | `9090` |  |
+| containerPorts.minio | int | `9000` |  |
+| extraEnv | list | `[]` | Additional environment variables for the minio container. |
 | fullnameOverride | string | `""` |  |
 | global.imageRegistry | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` | Image registry |
-| image.repository | string | `"nginx"` | Image repository |
+| image.repository | string | `"minio/minio"` | Image repository |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` | Image pull secrets for pulling an image from a private repository |
 | ingress.console.annotations | object | `{}` | Annotations to add to the ingress |
@@ -66,26 +69,42 @@ helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --versi
 | ingress.minio.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` |  |
 | ingress.minio.ingressClassName | string | `""` | Ingress class name |
 | ingress.minio.tls | list | `[]` |  |
-| livenessProbe.httpGet.path | string | `"/"` |  |
-| livenessProbe.httpGet.port | string | `"http"` |  |
+| livenessProbe.failureThreshold | int | `3` |  |
+| livenessProbe.httpGet.path | string | `"/minio/health/live"` |  |
+| livenessProbe.httpGet.port | string | `"minio"` |  |
+| livenessProbe.httpGet.scheme | string | `"HTTP"` |  |
+| livenessProbe.initialDelaySeconds | int | `30` |  |
+| livenessProbe.periodSeconds | int | `10` |  |
+| livenessProbe.successThreshold | int | `1` |  |
+| livenessProbe.timeoutSeconds | int | `5` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.annotations | object | `{}` | Annotations to add to the pod PVC. |
 | persistence.enabled | bool | `true` |  |
 | persistence.existingClaim | string | `nil` |  |
-| persistence.retainDeleted | bool | `true` | If `true`, retain the PVC after the pod is deleted. |
-| persistence.retainScaled | bool | `true` | If `true`, retain the PVC after the pod is scaled down. |
+| persistence.mountPath | string | `"/mnt/data"` |  |
 | persistence.size | string | `"8Gi"` |  |
 | persistence.storageClass | string | `""` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
-| podSecurityContext | object | `{}` |  |
-| readinessProbe.httpGet.path | string | `"/"` |  |
-| readinessProbe.httpGet.port | string | `"http"` |  |
+| podSecurityContext.fsGroup | int | `1001` |  |
+| readinessProbe.failureThreshold | int | `3` |  |
+| readinessProbe.httpGet.path | string | `"/minio/health/ready"` |  |
+| readinessProbe.httpGet.port | string | `"minio"` |  |
+| readinessProbe.httpGet.scheme | string | `"HTTP"` |  |
+| readinessProbe.initialDelaySeconds | int | `5` |  |
+| readinessProbe.periodSeconds | int | `5` |  |
+| readinessProbe.successThreshold | int | `1` |  |
+| readinessProbe.timeoutSeconds | int | `3` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
-| securityContext | object | `{}` |  |
+| securityContext.allowPrivilegeEscalation | bool | `false` |  |
+| securityContext.capabilities.drop[0] | string | `"ALL"` |  |
+| securityContext.readOnlyRootFilesystem | bool | `true` |  |
+| securityContext.runAsGroup | int | `1001` |  |
+| securityContext.runAsNonRoot | bool | `true` |  |
+| securityContext.runAsUser | int | `1001` |  |
 | service.annotations | object | `{}` | Service annotations |
 | service.ports.console | int | `9090` |  |
 | service.ports.minio | int | `9000` |  |
@@ -94,10 +113,17 @@ helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --versi
 | serviceAccount.automountToken | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` | If this is set and `serviceAccount.create` is `true` this will be used for the created component service account name, if this is set and `serviceAccount.create` is `false` then this will define an existing service account to use for the pod |
+| startupProbe.failureThreshold | int | `30` |  |
+| startupProbe.httpGet.path | string | `"/minio/health/live"` |  |
+| startupProbe.httpGet.port | string | `"minio"` |  |
+| startupProbe.httpGet.scheme | string | `"HTTP"` |  |
+| startupProbe.initialDelaySeconds | int | `10` |  |
+| startupProbe.periodSeconds | int | `10` |  |
+| startupProbe.successThreshold | int | `1` |  |
+| startupProbe.timeoutSeconds | int | `5` |  |
 | tolerations | list | `[]` |  |
-| updateStrategy | object | `{}` |  |
-| volumeMounts | list | `[]` |  |
-| volumes | list | `[]` |  |
+| topologySpreadConstraints | list | `[]` | Topology spread constraints for scheduling. |
+| updateStrategy.type | string | `"Recreate"` |  |
 
 ----------------------------------------------
 
