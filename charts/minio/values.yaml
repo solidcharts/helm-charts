@@ -1,35 +1,54 @@
-# Default values for minio.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+## -- Global parameters
+global:
+  ## -- Global Image registry
+  imageRegistry: ""
+
+nameOverride: ""
+fullnameOverride: ""
+
+## -- MinIO Authentication
+auth:
+  ## -- MinIO default username
+  rootUsername: minio
+  ## -- MinIO password (if empty, a random password will be generated)
+  rootPassword: ""
+  ## -- Name of existing secret containing RabbitMQ erlang cookie
+  existingRootUsernameSecret: ""
+  ## -- Key in an existing secret containing Erlang cookie
+  existingRootUsernameSecretKey: "root-user"
+  ## -- Name of existing secret containing RabbitMQ password
+  existingRootPasswordSecret: ""
+  ## -- Key in an existing secret containing RabbitMQ password
+  existingRootPasswordSecretKey: "root-password"
+
+image:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
+  repository: nginx
+  # This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion
+  tag: ""
+
+# -- Image pull secrets for pulling an image from a private repository
+imagePullSecrets: []
 
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1
 
-# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
-image:
-  repository: nginx
-  # This sets the pull policy for images.
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+# This sets the update strategy for deployment.
+updateStrategy: {}
 
-# This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-imagePullSecrets: []
-# This is to override the chart name.
-nameOverride: ""
-fullnameOverride: ""
-
-# This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
-  # Automatically mount a ServiceAccount's API credentials?
-  automount: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  # -- (string) If this is set and `serviceAccount.create` is `true` this will be used for the created component service account name, if this is set and `serviceAccount.create` is `false` then this will define an existing service account to use for the pod
   name: ""
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automountToken: true
 
 # This is for setting Kubernetes Annotations to a Pod.
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
@@ -49,29 +68,48 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
-  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  # -- Service type
   type: ClusterIP
-  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  port: 80
-
-# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
-ingress:
-  enabled: false
-  className: ""
+  # -- Service annotations
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  ports:
+    minio: 9000
+    console: 9090
+
+ingress:
+  minio:
+    # -- If `true`, create an Ingress for MinIO API
+    enabled: false
+    # -- Annotations to add to the ingress
+    annotations: {}
+    # -- Ingress class name
+    ingressClassName: ""
+    hosts:
+      - host: minio.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+  console:
+    # -- If `true`, create an Ingress for MinIO Console
+    enabled: false
+    # -- Annotations to add to the ingress
+    annotations: {}
+    # -- Ingress class name
+    ingressClassName: ""
+    hosts:
+      - host: minio-console.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -102,6 +140,24 @@ autoscaling:
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+persistence:
+  ## -- Enable persistent storage
+  enabled: true
+  ## -- If `true`, use an existing PVC instead of creating a new one.
+  existingClaim: ~
+  # -- Annotations to add to the pod PVC.
+  annotations: {}
+  ## -- Storage class to use for persistent volume
+  storageClass: ""
+  ## -- Persistent Volume access modes
+  accessMode: ReadWriteOnce
+  ## -- Size of persistent volume
+  size: 8Gi
+  # -- If `true`, retain the PVC after the pod is deleted.
+  retainDeleted: true
+  # -- If `true`, retain the PVC after the pod is scaled down.
+  retainScaled: true
 
 # Additional volumes on the output Deployment definition.
 volumes: []

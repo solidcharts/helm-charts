@@ -35,26 +35,49 @@ helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --versi
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
+| auth.existingRootPasswordSecret | string | `""` |  |
+| auth.existingRootPasswordSecretKey | string | `"root-password"` |  |
+| auth.existingRootUsernameSecret | string | `""` |  |
+| auth.existingRootUsernameSecretKey | string | `"root-user"` |  |
+| auth.rootPassword | string | `""` |  |
+| auth.rootUsername | string | `"minio"` |  |
 | autoscaling.enabled | bool | `false` |  |
 | autoscaling.maxReplicas | int | `100` |  |
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | fullnameOverride | string | `""` |  |
+| global.imageRegistry | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"nginx"` |  |
+| image.registry | string | `"docker.io"` | Image registry |
+| image.repository | string | `"nginx"` | Image repository |
 | image.tag | string | `""` |  |
-| imagePullSecrets | list | `[]` |  |
-| ingress.annotations | object | `{}` |  |
-| ingress.className | string | `""` |  |
-| ingress.enabled | bool | `false` |  |
-| ingress.hosts[0].host | string | `"chart-example.local"` |  |
-| ingress.hosts[0].paths[0].path | string | `"/"` |  |
-| ingress.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` |  |
-| ingress.tls | list | `[]` |  |
+| imagePullSecrets | list | `[]` | Image pull secrets for pulling an image from a private repository |
+| ingress.console.annotations | object | `{}` | Annotations to add to the ingress |
+| ingress.console.enabled | bool | `false` | If `true`, create an Ingress for MinIO Console |
+| ingress.console.hosts[0].host | string | `"minio-console.local"` |  |
+| ingress.console.hosts[0].paths[0].path | string | `"/"` |  |
+| ingress.console.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` |  |
+| ingress.console.ingressClassName | string | `""` | Ingress class name |
+| ingress.console.tls | list | `[]` |  |
+| ingress.minio.annotations | object | `{}` | Annotations to add to the ingress |
+| ingress.minio.enabled | bool | `false` | If `true`, create an Ingress for MinIO API |
+| ingress.minio.hosts[0].host | string | `"minio.local"` |  |
+| ingress.minio.hosts[0].paths[0].path | string | `"/"` |  |
+| ingress.minio.hosts[0].paths[0].pathType | string | `"ImplementationSpecific"` |  |
+| ingress.minio.ingressClassName | string | `""` | Ingress class name |
+| ingress.minio.tls | list | `[]` |  |
 | livenessProbe.httpGet.path | string | `"/"` |  |
 | livenessProbe.httpGet.port | string | `"http"` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
+| persistence.accessMode | string | `"ReadWriteOnce"` |  |
+| persistence.annotations | object | `{}` | Annotations to add to the pod PVC. |
+| persistence.enabled | bool | `true` |  |
+| persistence.existingClaim | string | `nil` |  |
+| persistence.retainDeleted | bool | `true` | If `true`, retain the PVC after the pod is deleted. |
+| persistence.retainScaled | bool | `true` | If `true`, retain the PVC after the pod is scaled down. |
+| persistence.size | string | `"8Gi"` |  |
+| persistence.storageClass | string | `""` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
@@ -63,13 +86,16 @@ helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --versi
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | securityContext | object | `{}` |  |
-| service.port | int | `80` |  |
-| service.type | string | `"ClusterIP"` |  |
-| serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.automount | bool | `true` |  |
+| service.annotations | object | `{}` | Service annotations |
+| service.ports.console | int | `9090` |  |
+| service.ports.minio | int | `9000` |  |
+| service.type | string | `"ClusterIP"` | Service type |
+| serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
+| serviceAccount.automountToken | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
 | serviceAccount.create | bool | `true` |  |
-| serviceAccount.name | string | `""` |  |
+| serviceAccount.name | string | `""` | If this is set and `serviceAccount.create` is `true` this will be used for the created component service account name, if this is set and `serviceAccount.create` is `false` then this will define an existing service account to use for the pod |
 | tolerations | list | `[]` |  |
+| updateStrategy | object | `{}` |  |
 | volumeMounts | list | `[]` |  |
 | volumes | list | `[]` |  |
 

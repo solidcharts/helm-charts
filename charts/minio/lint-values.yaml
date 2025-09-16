@@ -1,0 +1,4 @@
+
+ingress:
+  minio:
+    enabled: true
