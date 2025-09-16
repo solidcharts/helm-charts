@@ -1,0 +1,196 @@
+## -- Global parameters
+global:
+  ## -- Global Image registry
+  imageRegistry: ""
+
+nameOverride: ""
+fullnameOverride: ""
+
+## -- MinIO Authentication
+auth:
+  ## -- MinIO default username
+  rootUsername: minio
+  ## -- MinIO password (if empty, a random password will be generated)
+  rootPassword: ""
+  ## -- Name of existing secret containing RabbitMQ erlang cookie
+  existingRootUsernameSecret: ""
+  ## -- Key in an existing secret containing Erlang cookie
+  existingRootUsernameSecretKey: "root-user"
+  ## -- Name of existing secret containing RabbitMQ password
+  existingRootPasswordSecret: ""
+  ## -- Key in an existing secret containing RabbitMQ password
+  existingRootPasswordSecretKey: "root-password"
+
+## -- MinIO configuration
+config:
+  ## -- MinIO server default region
+  region: ""
+  ## -- Enable MinIO web browser
+  browserEnabled: true
+  ## -- MinIO server domain
+  domain: ""
+  ## -- MinIO server URL for console
+  serverUrl: ""
+
+image:
+  # -- Image registry
+  registry: docker.io
+  # -- Image repository
+  repository: minio/minio
+  # This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion
+  tag: ""
+
+# -- Image pull secrets for pulling an image from a private repository
+imagePullSecrets: []
+
+# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 1
+
+# This sets the update strategy for deployment.
+updateStrategy:
+  type: Recreate
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # -- (string) If this is set and `serviceAccount.create` is `true` this will be used for the created component service account name, if this is set and `serviceAccount.create` is `false` then this will define an existing service account to use for the pod
+  name: ""
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- Automatically mount a ServiceAccount's API credentials?
+  automountToken: true
+
+# This is for setting Kubernetes Annotations to a Pod.
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+podAnnotations: {}
+# This is for setting Kubernetes Labels to a Pod.
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+podLabels: {}
+
+containerPorts:
+  minio: 9000
+  console: 9090
+
+# -- Additional environment variables for the minio container.
+extraEnv: []
+
+## -- Pod security Context
+podSecurityContext:
+  ## -- Group ID for the volumes of the pod
+  fsGroup: 1001
+
+securityContext:
+  ## -- Enable container privilege escalation
+  allowPrivilegeEscalation: false
+  ## -- Configure the container to run as a non-root user
+  runAsNonRoot: true
+  ## -- User ID for the MinIO container
+  runAsUser: 1001
+  ## -- Group ID for the MinIO container
+  runAsGroup: 1001
+  ## -- Mount container root filesystem as read-only
+  readOnlyRootFilesystem: true
+  ## -- Linux capabilities to be dropped
+  capabilities:
+    drop:
+      - ALL
+
+service:
+  # -- Service type
+  type: ClusterIP
+  # -- Service annotations
+  annotations: {}
+  ports:
+    minio: 9000
+    console: 9090
+
+ingress:
+  minio:
+    # -- If `true`, create an Ingress for MinIO API
+    enabled: false
+    # -- Annotations to add to the ingress
+    annotations: {}
+    # -- Ingress class name
+    ingressClassName: ""
+    hosts:
+      - host: minio.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+  console:
+    # -- If `true`, create an Ingress for MinIO Console
+    enabled: false
+    # -- Annotations to add to the ingress
+    annotations: {}
+    # -- Ingress class name
+    ingressClassName: ""
+    hosts:
+      - host: minio-console.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+livenessProbe:
+  httpGet:
+    path: /minio/health/live
+    port: minio
+    scheme: HTTP
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1
+
+readinessProbe:
+  httpGet:
+    path: /minio/health/ready
+    port: minio
+    scheme: HTTP
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+  successThreshold: 1
+
+persistence:
+  ## -- Enable persistent storage
+  enabled: true
+  ## -- If `true`, use an existing PVC instead of creating a new one.
+  existingClaim: ~
+  # -- Annotations to add to the pod PVC.
+  annotations: {}
+  ## -- Storage class to use for persistent volume
+  storageClass: ""
+  ## -- Persistent Volume access modes
+  accessMode: ReadWriteOnce
+  ## -- Size of persistent volume
+  size: 8Gi
+  ## -- The path where to mount the data volume
+  mountPath: /mnt/data
+
+nodeSelector: {}
+
+tolerations: []
+
+# -- Topology spread constraints for scheduling.
+topologySpreadConstraints: []
+
+affinity: {}

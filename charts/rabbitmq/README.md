@@ -138,11 +138,10 @@ helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq -
 | serviceAccount.annotations | object | `{}` | Annotations to add to the account. |
 | serviceAccount.automountToken | bool | `true` | Automount API credentials for the account. |
 | serviceAccount.create | bool | `true` | If `true`, create a new `ServiceAccount` for the component. |
-| serviceAccount.labels | object | `{}` | Labels to add to the account. |
 | serviceAccount.name | string | `nil` | If this is set and `serviceAccount.create` is `true` this will be used for the created component service account name, if this is set and `serviceAccount.create` is `false` then this will define an existing service account to use for the component. |
 | tolerations | list | `[]` | Node taints the query pod will tolerate for scheduling. |
 | topologySpreadConstraints | list | `[]` | Topology spread constraints for scheduling. |
-| updateStrategy | object | `{}` | Update strategy for the compactor stateful set. |
+| updateStrategy | object | `{}` | Update strategy for the stateful set. |
 
 ----------------------------------------------
 

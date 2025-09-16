@@ -26,7 +26,7 @@ imagePullSecrets: []
 # -- Number of replicas to create.
 replicas: 1
 
-# -- Update strategy for the compactor stateful set.
+# -- Update strategy for the stateful set.
 updateStrategy: {}
 
 managementPlugin:
@@ -120,8 +120,6 @@ serviceAccount:
   create: true
   # -- (string) If this is set and `serviceAccount.create` is `true` this will be used for the created component service account name, if this is set and `serviceAccount.create` is `false` then this will define an existing service account to use for the component.
   name: ~
-  # -- Labels to add to the account.
-  labels: {}
   # -- Annotations to add to the account.
   annotations: {}
   # -- Automount API credentials for the account.
