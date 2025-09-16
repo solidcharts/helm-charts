@@ -1,6 +1,6 @@
 # minio
 
-![Version: 0.1.0-rc.1](https://img.shields.io/badge/Version-0.1.0--rc.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2025-09-07T16-13-09Z](https://img.shields.io/badge/AppVersion-RELEASE.2025--09--07T16--13--09Z-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2025-09-07T16-13-09Z](https://img.shields.io/badge/AppVersion-RELEASE.2025--09--07T16--13--09Z-informational?style=flat-square)
 
 A Helm chart for MinIO
 
@@ -21,7 +21,7 @@ A Helm chart for MinIO
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --version 0.1.0-rc.1
+helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --version 0.1.0
 ```
 
 ## Requirements
@@ -113,14 +113,6 @@ helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --versi
 | serviceAccount.automountToken | bool | `true` | Automatically mount a ServiceAccount's API credentials? |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` | If this is set and `serviceAccount.create` is `true` this will be used for the created component service account name, if this is set and `serviceAccount.create` is `false` then this will define an existing service account to use for the pod |
-| startupProbe.failureThreshold | int | `30` |  |
-| startupProbe.httpGet.path | string | `"/minio/health/live"` |  |
-| startupProbe.httpGet.port | string | `"minio"` |  |
-| startupProbe.httpGet.scheme | string | `"HTTP"` |  |
-| startupProbe.initialDelaySeconds | int | `10` |  |
-| startupProbe.periodSeconds | int | `10` |  |
-| startupProbe.successThreshold | int | `1` |  |
-| startupProbe.timeoutSeconds | int | `5` |  |
 | tolerations | list | `[]` |  |
 | topologySpreadConstraints | list | `[]` | Topology spread constraints for scheduling. |
 | updateStrategy.type | string | `"Recreate"` |  |
