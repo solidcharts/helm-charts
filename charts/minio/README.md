@@ -2,7 +2,7 @@
 
 ![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.16.0](https://img.shields.io/badge/AppVersion-1.16.0-informational?style=flat-square)
 
-A Helm chart for Kubernetes
+A Helm chart for MinIO
 
 ## Maintainers
 
@@ -23,6 +23,12 @@ To install the chart you can use the following command:
 ```shell
 helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --version 0.1.0
 ```
+
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| oci://ghcr.io/solidcharts/helm-charts | shared | 0.X.X |
 
 ## Values
 
