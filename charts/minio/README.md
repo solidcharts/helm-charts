@@ -1,6 +1,6 @@
 # minio
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2025-09-07T16-13-09Z](https://img.shields.io/badge/AppVersion-RELEASE.2025--09--07T16--13--09Z-informational?style=flat-square)
+![Version: 0.1.0-rc.1](https://img.shields.io/badge/Version-0.1.0--rc.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2025-09-07T16-13-09Z](https://img.shields.io/badge/AppVersion-RELEASE.2025--09--07T16--13--09Z-informational?style=flat-square)
 
 A Helm chart for MinIO
 
@@ -21,7 +21,7 @@ A Helm chart for MinIO
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --version 0.1.0
+helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --version 0.1.0-rc.1
 ```
 
 ## Requirements

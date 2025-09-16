@@ -14,7 +14,7 @@
 
 ## [UNRELEASED]
 
-## [v0.1.0] - 2025-09-16
+## [v0.1.0-rc.1] - 2025-09-16
 
 ### Added
 
@@ -23,5 +23,5 @@
 <!--
 RELEASE LINKS
 -->
-[UNRELEASED]: https://github.com/solidcharts/helm-charts/tree/main/charts/rabbitmq
-[v0.1.0]: https://github.com/solidcharts/helm-charts/releases/tag/rabbitmq-0.1.0
+[UNRELEASED]: https://github.com/solidcharts/helm-charts/tree/main/charts/minio
+[v0.1.0]: https://github.com/solidcharts/helm-charts/releases/tag/minio-0.1.0
