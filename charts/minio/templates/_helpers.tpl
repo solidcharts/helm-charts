@@ -45,7 +45,7 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Rabbit image to use
+MinIO image to use
 */}}
 {{- define "minio.image" -}}
 {{- include "shared.image" (dict "chart" .Chart "image" .Values.image "global" .Values.global) -}}
