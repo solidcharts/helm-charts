@@ -28,7 +28,7 @@ jobs:
           fetch-depth: 2
       - name: Chart changes
         id: changed
-        uses: tj-actions/changed-files@v46
+        uses: tj-actions/changed-files@v47
         with:
           files: charts/**
       - name: Setup k8s version
