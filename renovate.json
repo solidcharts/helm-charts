@@ -2,5 +2,36 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "enabledManagers": [
+    "helm-values",
+    "regex"
+  ],
+  "helm-values": {
+    "managerFilePatterns": [
+      "/^charts/.*values\\.yaml$/"
+    ],
+    "versioning": "semver",
+    "rangeStrategy": "replace"
+  },
+  "regexManagers": [
+    {
+      "description": "Update minio docker image references",
+      "fileMatch": ["^charts\\/minio\\/Chart\\.yaml$"],
+      "matchStrings": [
+        "appVersion:\\s*\"?(?<currentValue>[0-9a-zA-Z._-]+)\"?"
+      ],
+      "depNameTemplate": "minio/minio",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "description": "Update rabbitmq docker image references",
+      "fileMatch": ["^charts\\/rabbitmq\\/Chart\\.yaml$"],
+      "matchStrings": [
+        "appVersion:\\s*\"?(?<currentValue>[0-9a-zA-Z._-]+)\"?"
+      ],
+      "depNameTemplate": "rabbitmq",
+      "datasourceTemplate": "docker"
+    }
   ]
 }
