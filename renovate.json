@@ -4,54 +4,25 @@
     "config:recommended"
   ],
   "enabledManagers": [
-    "helm-values"
+    "helm-values",
+    "regex"
   ],
   "helm-values": {
     "managerFilePatterns": [
       "/^charts/.*values\\.yaml$/"
     ],
-    "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(?<prerelease>-[^@]*)?@(?<compatibility>.+)$",
-    "extractVersion": "(?<version>[^@]+)@(?<sha>sha256:[a-f0-9]{64})",
+    "versioning": "semver",
     "rangeStrategy": "replace"
   },
-  "packageRules": [
+  "regexManagers": [
     {
-      "matchManagers": [
-        "helm-values"
+      "description": "Update minio docker image references",
+      "fileMatch": ["^charts\\/minio\\/Chart\\.yaml$"],
+      "matchStrings": [
+        "appVersion:\\s*\"?(?<currentValue>[0-9a-zA-Z._-]+)\"?"
       ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "digest"
-      ],
-      "matchPackageNames": [
-        "/^docker\\.io\\/.+/"
-      ],
-      "labels": [
-        "dependencies",
-        "renovate"
-      ],
-      "commitMessagePrefix": "[{{{ replace \"docker.io/\" \"\" packageName }}}]",
-      "commitMessageAction": "chore(deps): update"
-    },
-    {
-      "matchManagers": [
-        "helm-values"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "digest"
-      ],
-      "labels": [
-        "dependencies",
-        "renovate"
-      ],
-      "commitMessagePrefix": "[{{{ packageName }}}]",
-      "commitMessageAction": "chore(deps): update",
-      "matchPackageNames": [
-        "!/^docker\\.io\\/.+/"
-      ]
+      "depNameTemplate": "minio/minio",
+      "datasourceTemplate": "docker"
     }
   ]
 }
