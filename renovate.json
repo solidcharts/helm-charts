@@ -23,6 +23,15 @@
       ],
       "depNameTemplate": "minio/minio",
       "datasourceTemplate": "docker"
+    },
+    {
+      "description": "Update rabbitmq docker image references",
+      "fileMatch": ["^charts\\/rabbitmq\\/Chart\\.yaml$"],
+      "matchStrings": [
+        "appVersion:\\s*\"?(?<currentValue>[0-9a-zA-Z._-]+)\"?"
+      ],
+      "depNameTemplate": "rabbitmq",
+      "datasourceTemplate": "docker"
     }
   ]
 }
