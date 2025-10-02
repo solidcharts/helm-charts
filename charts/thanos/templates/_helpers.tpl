@@ -2,7 +2,7 @@
 Thanos image to use
 */}}
 {{- define "thanos.image" -}}
-{{- include "shared.image" (dict "chart" .Chart "image" .Values.image "global" .Values.global "appVersionPrefix" "v") -}}
+{{- include "shared.image" (dict "chart" .Chart "image" .Values.image "global" .Values.global) -}}
 {{- end }}
 
 {{/*
