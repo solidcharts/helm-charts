@@ -32,6 +32,15 @@
       ],
       "depNameTemplate": "rabbitmq",
       "datasourceTemplate": "docker"
+    },
+    {
+      "description": "Update thanos image references from quay.io",
+      "fileMatch": ["^charts\\/thanos\\/Chart\\.yaml$"],
+      "matchStrings": [
+        "appVersion:\\s*\"?(?<currentValue>[0-9a-zA-Z._-]+)\"?"
+      ],
+      "depNameTemplate": "quay.io/thanos/thanos",
+      "datasourceTemplate": "docker"
     }
   ]
 }

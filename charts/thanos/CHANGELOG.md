@@ -14,6 +14,10 @@
 
 ## [UNRELEASED]
 
+## [v0.4.0] - 2025-10-02
+
+- Changed appVersion to `v0.39.2` (do not add prefix automatically to image tags) to be consistent with other charts
+
 ## [v0.3.0] - 2025-09-15
 
 - Changed version of a shared library with an option to provide appVersion prefix for image tags
