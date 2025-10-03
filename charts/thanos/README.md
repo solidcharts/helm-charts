@@ -1,6 +1,6 @@
 # thanos
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.39.2](https://img.shields.io/badge/AppVersion-v0.39.2-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.39.2](https://img.shields.io/badge/AppVersion-v0.39.2-informational?style=flat-square)
 
 ## Description
 
@@ -27,7 +27,7 @@ This chart is a replacement for Bitnami Thanos chart.
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.4.0
+helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.5.0
 ```
 
 ## Requirements
@@ -130,7 +130,7 @@ helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --ver
 | image.pullPolicy | string | `"IfNotPresent"` | Pull policy for images. |
 | image.registry | string | `"quay.io"` | Image registry |
 | image.repository | string | `"thanos/thanos"` | Image repository |
-| image.tag | string | `nil` | Overrides the image tag whose default is the chart appVersion. |
+| image.tag | string | `"v0.39.2"` | Image tag version (if not specified, it will use the chart appVersion) |
 | imagePullSecrets | list | `[]` |  |
 | logFormat | string | `"logfmt"` | Log format for _Thanos_ components. |
 | logLevel | string | `"info"` | Log level for _Thanos_ components. |

@@ -39,8 +39,8 @@ image:
   repository: minio/minio
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion
-  tag: ""
+  # -- Image tag version (if not specified, it will use the chart appVersion)
+  tag: RELEASE.2025-09-07T16-13-09Z
 
 # -- Image pull secrets for pulling an image from a private repository
 imagePullSecrets: []

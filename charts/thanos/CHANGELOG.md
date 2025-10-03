@@ -14,13 +14,23 @@
 
 ## [UNRELEASED]
 
+## [v0.5.0] - 2025-10-03
+
+### Changed
+
+- Set `image.tag` and use `appVersion` as fallback
+
 ## [v0.4.0] - 2025-10-02
 
-- Changed appVersion to `v0.39.2` (do not add prefix automatically to image tags) to be consistent with other charts
+### Changed
+
+- Set `appVersion` to `v0.39.2` (do not add prefix automatically to image tags) to be consistent with other charts
 
 ## [v0.3.0] - 2025-09-15
 
-- Changed version of a shared library with an option to provide appVersion prefix for image tags
+### Changed
+
+- Version of a shared library with an option to provide appVersion prefix for image tags
 
 ## [v0.2.0] - 2025-09-12
 
@@ -37,9 +47,3 @@
 ### Added
 
 - Initial release based on [v0.39.2](https://github.com/thanos-io/thanos/releases/tag/v0.39.2).
-
-<!--
-RELEASE LINKS
--->
-[UNRELEASED]: https://github.com/solidcharts/helm-charts/tree/main/charts/thanos
-[v0.1.0]: https://github.com/solidcharts/helm-charts/releases/tag/thanos-0.1.0

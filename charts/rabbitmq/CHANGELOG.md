@@ -14,6 +14,12 @@
 
 ## [UNRELEASED]
 
+## [v0.3.0] - 2025-10-03
+
+### Changed
+
+- Set `image.tag` and use `appVersion` as fallback
+
 ## [v0.2.0] - 2025-09-15
 
 ### Changed
@@ -25,9 +31,3 @@
 ### Added
 
 - Initial release.
-
-<!--
-RELEASE LINKS
--->
-[UNRELEASED]: https://github.com/solidcharts/helm-charts/tree/main/charts/rabbitmq
-[v0.1.0]: https://github.com/solidcharts/helm-charts/releases/tag/rabbitmq-0.1.0

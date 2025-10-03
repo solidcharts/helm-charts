@@ -14,8 +14,8 @@ image:
   repository: thanos/thanos
   # -- Pull policy for images.
   pullPolicy: IfNotPresent
-  # -- Overrides the image tag whose default is the chart appVersion.
-  tag: ~
+  # -- Image tag version (if not specified, it will use the chart appVersion)
+  tag: v0.39.2
   # -- Set image digest
   digest: ~
 
