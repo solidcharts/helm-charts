@@ -1,6 +1,6 @@
 # rabbitmq
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.1.4-management](https://img.shields.io/badge/AppVersion-4.1.4--management-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.1.4-management](https://img.shields.io/badge/AppVersion-4.1.4--management-informational?style=flat-square)
 
 A Helm chart for RabbitMQ
 
@@ -21,7 +21,7 @@ A Helm chart for RabbitMQ
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.2.0
+helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.3.0
 ```
 
 ## Requirements
@@ -61,10 +61,10 @@ helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq -
 | extraVolumes | list | `[]` | Extra volumes for the pod. |
 | fullnameOverride | string | `""` |  |
 | global.imageRegistry | string | `""` |  |
-| image.pullPolicy | string | `"IfNotPresent"` |  |
+| image.pullPolicy | string | `"IfNotPresent"` | Sets the pull policy for images |
 | image.registry | string | `"docker.io"` | Image registry |
 | image.repository | string | `"rabbitmq"` | Image repository |
-| image.tag | string | `""` |  |
+| image.tag | string | `"4.1.4-management"` | Image tag version (if not specified, it will use the chart appVersion) |
 | imagePullSecrets | list | `[]` | Image pull secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/ |
 | ingress.annotations | object | `{}` | Annotations to add to the ingress |
 | ingress.enabled | bool | `false` | If `true`, create an `Ingress` |

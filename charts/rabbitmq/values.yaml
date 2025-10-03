@@ -12,10 +12,10 @@ image:
   registry: docker.io
   # -- Image repository
   repository: rabbitmq
-  # This sets the pull policy for images.
+  # -- Sets the pull policy for images
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  # -- Image tag version (if not specified, it will use the chart appVersion)
+  tag: 4.1.4-management
 
 # -- _Kubernetes_ cluster domain.
 clusterDomain: cluster.local
