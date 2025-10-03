@@ -14,6 +14,15 @@
     "versioning": "semver",
     "rangeStrategy": "replace"
   },
+  "bumpVersions": [
+    {
+      "filePatterns": [
+        "/^({{#each (distinct (lookupArray upgrades \"packageFileDir\"))}}{{{.}}}{{#unless @last}}|{{/unless}}{{/each}})/Chart\\.(yaml|yml)$/"
+      ],
+      "matchStrings": ["version:\\s(?<version>[^\\s]+)"],
+      "bumpType": "{{#if isPatch}}patch{{else}}minor{{/if}}"
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
