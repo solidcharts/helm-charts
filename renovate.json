@@ -5,7 +5,7 @@
   ],
   "enabledManagers": [
     "helm-values",
-    "regex"
+    "custom.regex"
   ],
   "helm-values": {
     "managerFilePatterns": [
@@ -14,10 +14,13 @@
     "versioning": "semver",
     "rangeStrategy": "replace"
   },
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "description": "Update minio docker image references",
-      "fileMatch": ["^charts\\/minio\\/Chart\\.yaml$"],
+      "managerFilePatterns": [
+        "/^charts\\/minio\\/Chart\\.yaml$/"
+      ],
       "matchStrings": [
         "appVersion:\\s*\"?(?<currentValue>[0-9a-zA-Z._-]+)\"?"
       ],
@@ -25,8 +28,11 @@
       "datasourceTemplate": "docker"
     },
     {
+      "customType": "regex",
       "description": "Update rabbitmq docker image references",
-      "fileMatch": ["^charts\\/rabbitmq\\/Chart\\.yaml$"],
+      "managerFilePatterns": [
+        "/^charts\\/rabbitmq\\/Chart\\.yaml$/"
+      ],
       "matchStrings": [
         "appVersion:\\s*\"?(?<currentValue>[0-9a-zA-Z._-]+)\"?"
       ],
@@ -34,8 +40,11 @@
       "datasourceTemplate": "docker"
     },
     {
+      "customType": "regex",
       "description": "Update thanos image references from quay.io",
-      "fileMatch": ["^charts\\/thanos\\/Chart\\.yaml$"],
+      "managerFilePatterns": [
+        "/^charts\\/thanos\\/Chart\\.yaml$/"
+      ],
       "matchStrings": [
         "appVersion:\\s*\"?(?<currentValue>[0-9a-zA-Z._-]+)\"?"
       ],
