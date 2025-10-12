@@ -2,7 +2,7 @@ apiVersion: v2
 name: rabbitmq
 description: A Helm chart for RabbitMQ
 type: application
-version: 0.3.0
+version: 0.4.0
 appVersion: "4.1.4-management"
 icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/rabbitmq/icon.png
 sources:
