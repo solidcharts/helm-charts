@@ -1,6 +1,6 @@
 # rabbitmq
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.1.4-management](https://img.shields.io/badge/AppVersion-4.1.4--management-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.1.4-management](https://img.shields.io/badge/AppVersion-4.1.4--management-informational?style=flat-square)
 
 A Helm chart for RabbitMQ
 
@@ -21,7 +21,7 @@ A Helm chart for RabbitMQ
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.3.0
+helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.4.0
 ```
 
 ## Requirements

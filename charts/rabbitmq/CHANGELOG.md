@@ -14,6 +14,12 @@
 
 ## [UNRELEASED]
 
+## [v0.4.0] - 2025-10-03
+
+### Added
+
+- Artifacthub repository metadata
+
 ## [v0.3.0] - 2025-10-03
 
 ### Changed
