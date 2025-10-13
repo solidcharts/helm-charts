@@ -42,22 +42,25 @@ jobs:
           # Parse changed_charts (comma-separated list)
           IFS=',' read -ra CHARTS <<< "${{ steps.publish.outputs.changed_charts }}"
 
-          for chart in "${CHARTS[@]}"; do
-            chart=$(echo "$chart" | xargs)  # Trim whitespace
-            if [ -z "$chart" ]; then
+          for chart_path in "${CHARTS[@]}"; do
+            chart_path=$(echo "$chart_path" | xargs)  # Trim whitespace
+
+            if [ -z "$chart_path" ]; then
               continue
             fi
-            echo "Processing chart: $chart"
+            # Extract chart name (remove charts/ prefix if present)
+            chart_name=$(basename "$chart_path")
+            echo "Processing chart: $chart_name"
             # Get version from Chart.yaml
-            version=$(yq eval '.version' "charts/$chart/Chart.yaml")
+            version=$(yq eval '.version' "$chart_path/Chart.yaml")
             if [ -z "$version" ]; then
-              echo "⚠️  Could not find version for $chart"
+              echo "⚠️  Could not find version for $chart_name"
               continue
             fi
-            release_tag="${chart}-${version}"
+            release_tag="${chart_name}-${version}"
             echo "Updating release: $release_tag"
             # Generate description with markdown links
-            description="See the full [changelog](https://github.com/$REPO/blob/main/charts/$chart/CHANGELOG.md) and [readme](https://github.com/$REPO/blob/main/charts/$chart/README.md)."
+            description="See the full [changelog](https://github.com/$REPO/blob/main/charts/$chart_name/CHANGELOG.md) and [readme](https://github.com/$REPO/blob/main/charts/$chart_name/README.md)."
             # Update the release notes
             gh release edit "$release_tag" --repo "$REPO" --notes "$description"
             echo "✓ Updated $release_tag"
