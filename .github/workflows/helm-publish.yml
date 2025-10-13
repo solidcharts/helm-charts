@@ -74,15 +74,15 @@ jobs:
                 echo "Pushing chart $chartPackageName"
                 helm push "${d}$chartPackageName" oci://${REGISTRY,,}
                 echo "🎉 Chart $chartPackageName pushed successfully"
-#               # Create git tag for non-RC versions
-#                if [[ $rcVersion == "false" ]]; then
-#                  echo "📌 Creating git tag $chartVersionName"
-#                  git tag -a "$chartVersionName" -m "Release $chartVersionName"
-#                  git push origin "$chartVersionName"
-#                  echo "✅ Git tag $chartVersionName created and pushed"
-#                else
-#                  echo "⏭️  Skipping git tag creation for RC version"
-#                fi
+                # # Create git tag for non-RC versions
+                #  if [[ $rcVersion == "false" ]]; then
+                #    echo "📌 Creating git tag $chartVersionName"
+                #    git tag -a "$chartVersionName" -m "Release $chartVersionName"
+                #    git push origin "$chartVersionName"
+                #    echo "✅ Git tag $chartVersionName created and pushed"
+                #  else
+                #    echo "⏭️  Skipping git tag creation for RC version"
+                #  fi
               fi
             fi
           done
