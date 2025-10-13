@@ -74,24 +74,23 @@ jobs:
                 echo "Pushing chart $chartPackageName"
                 helm push "${d}$chartPackageName" oci://${REGISTRY,,}
                 echo "🎉 Chart $chartPackageName pushed successfully"
+                if [[ $rcVersion == "false" ]]; then
+                  echo "📌 Creating git tag $chartVersionName"
+                  git tag -a "$chartVersionName" -m "Release $chartVersionName"
+                  git push origin "$chartVersionName"
+                  echo "✅ Git tag $chartVersionName created and pushed"
+                  echo "📝 Creating GitHub release for $chartVersionName"
+                  changelogUrl="https://github.com/${{ github.repository }}/blob/main/charts/$chartName/CHANGELOG.md"
+                  releaseBody="See changelog here: [$chartName CHANGELOG.md]($changelogUrl)"
+                  gh release create "$chartVersionName" \
+                    --title "Release $chartVersionName" \
+                    --notes "$releaseBody" \
+                    --repo "${{ github.repository }}"
+                  echo "✅ GitHub release $chartVersionName created successfully"
+                else
+                  echo "⏭️  Skipping git tag creation for RC version"
+                fi
               fi
-               # Create git tag for non-RC versions
-               if [[ $rcVersion == "false" ]]; then
-                 echo "📌 Creating git tag $chartVersionName"
-                 git tag -a "$chartVersionName" -m "Release $chartVersionName"
-                 git push origin "$chartVersionName"
-                 echo "✅ Git tag $chartVersionName created and pushed"
-                 echo "📝 Creating GitHub release for $chartVersionName"
-                 changelogUrl="https://github.com/${{ github.repository }}/blob/main/charts/$chartName/CHANGELOG.md"
-                 releaseBody="See changelog here: [$chartName CHANGELOG.md]($changelogUrl)"
-                 gh release create "$chartVersionName" \
-                   --title "Release $chartVersionName" \
-                   --notes "$releaseBody" \
-                   --repo "${{ github.repository }}"
-                 echo "✅ GitHub release $chartVersionName created successfully"
-               else
-                 echo "⏭️  Skipping git tag creation for RC version"
-               fi
             fi
           done
       - name: Publish Index
