@@ -3,6 +3,27 @@ entries:
   minio:
   - apiVersion: v2
     appVersion: RELEASE.2025-09-07T16-13-09Z
+    created: "2025-10-13T15:45:52.374267572Z"
+    dependencies:
+    - name: shared
+      repository: oci://ghcr.io/solidcharts/helm-charts
+      version: 0.X.X
+    description: 'A Helm chart for MinIO.  See the full changelog: [CHANGELOG.md](https://github.com/solidcharts/helm-charts/blob/main/charts/minio/CHANGELOG.md)  See
+      the readme: [README.md](https://github.com/solidcharts/helm-charts/blob/main/charts/minio/README.md) '
+    digest: 5011b6efd5d1390aaf20288850eac0690808510a03b717c42533dcf281c9bdec
+    icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/minio/icon.svg
+    maintainers:
+    - email: solidcharts@przemeknowak.com
+      name: pnowy
+    name: minio
+    sources:
+    - https://github.com/solidcharts/helm-charts/
+    type: application
+    urls:
+    - https://github.com/solidcharts/helm-charts/releases/download/minio-0.4.0/minio-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
+    appVersion: RELEASE.2025-09-07T16-13-09Z
     created: "2025-10-13T14:08:33.545438359Z"
     dependencies:
     - name: shared
@@ -21,4 +42,71 @@ entries:
     urls:
     - https://github.com/solidcharts/helm-charts/releases/download/minio-0.3.2/minio-0.3.2.tgz
     version: 0.3.2
-generated: "2025-10-13T14:08:33.545443859Z"
+  rabbitmq:
+  - apiVersion: v2
+    appVersion: 4.1.4-management
+    created: "2025-10-13T15:45:52.588258636Z"
+    dependencies:
+    - name: shared
+      repository: oci://ghcr.io/solidcharts/helm-charts
+      version: 0.X.X
+    description: A Helm chart for RabbitMQ
+    digest: 358fa30a578cc589665b9fb614a5eba10316a87df8420b677c2219dce96751fc
+    icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/rabbitmq/icon.png
+    maintainers:
+    - email: solidcharts@przemeknowak.com
+      name: pnowy
+    name: rabbitmq
+    sources:
+    - https://github.com/solidcharts/helm-charts/
+    type: application
+    urls:
+    - https://github.com/solidcharts/helm-charts/releases/download/rabbitmq-0.4.0/rabbitmq-0.4.0.tgz
+    version: 0.4.0
+  shared:
+  - apiVersion: v2
+    created: "2025-10-13T15:45:52.843866628Z"
+    description: A Helm chart library for solidcharts
+    digest: 8927c91abb2eb3bdbb6f656ab0368dfd6c43a70942e8ec182418274d759c8e59
+    maintainers:
+    - email: solidcharts@przemeknowak.com
+      name: pnowy
+    name: shared
+    sources:
+    - https://github.com/solidcharts/helm-charts/
+    type: library
+    urls:
+    - https://github.com/solidcharts/helm-charts/releases/download/shared-0.3.0/shared-0.3.0.tgz
+    version: 0.3.0
+  thanos:
+  - apiVersion: v2
+    appVersion: v0.39.2
+    created: "2025-10-13T15:45:53.121068962Z"
+    dependencies:
+    - name: shared
+      repository: oci://ghcr.io/solidcharts/helm-charts
+      version: 0.X.X
+    description: Thanos Helm chart for Kubernetes
+    digest: 1f9e4b18b4992f21c60ea0430d2cbe3f0790aab53b4c52b29675222ef1fd4823
+    home: https://thanos.io/
+    icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/thanos/icon.png
+    keywords:
+    - kubernetes
+    - thanos
+    - prometheus
+    - monitoring
+    - alerting
+    - metrics
+    maintainers:
+    - email: solidcharts@przemeknowak.com
+      name: pnowy
+    name: thanos
+    sources:
+    - https://github.com/thanos-io/thanos
+    - https://github.com/thanos-io/kube-thanos
+    - https://github.com/solidcharts/helm-charts/
+    type: application
+    urls:
+    - https://github.com/solidcharts/helm-charts/releases/download/thanos-0.5.0/thanos-0.5.0.tgz
+    version: 0.5.0
+generated: "2025-10-13T15:45:53.121113575Z"
