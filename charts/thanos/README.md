@@ -30,6 +30,16 @@ To install the chart you can use the following command:
 helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.5.0
 ```
 
+### Non-OCI Repository
+
+Alternatively, you can use the legacy non-OCI method via the following commands:
+
+```shell
+helm repo add solidcharts https://solidcharts.github.io/helm-charts/
+helm repo update
+helm upgrade --install thanos solidcharts/thanos --version 0.5.0
+```
+
 ## Requirements
 
 | Repository | Name | Version |

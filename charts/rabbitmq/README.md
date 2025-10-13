@@ -24,6 +24,16 @@ To install the chart you can use the following command:
 helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.4.0
 ```
 
+### Non-OCI Repository
+
+Alternatively, you can use the legacy non-OCI method via the following commands:
+
+```shell
+helm repo add solidcharts https://solidcharts.github.io/helm-charts/
+helm repo update
+helm upgrade --install rabbitmq solidcharts/rabbitmq --version 0.4.0
+```
+
 ## Requirements
 
 | Repository | Name | Version |

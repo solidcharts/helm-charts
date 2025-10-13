@@ -14,15 +14,27 @@
 
 ## [UNRELEASED]
 
+## [v0.4.0] - 2025-10-13
+
+### Changed
+
+- Update description and readme
+
 ## [v0.3.2] - 2025-10-13
+
+### Changed
 
 - Add GitHub release (Helm Chart index)
 
 ## [v0.3.1] - 2025-10-13
 
+### Changed
+
 - Add GitHub release (Helm Chart index)
 
 ## [v0.3.0] - 2025-10-13
+
+### Changed
 
 - Add GitHub release (Helm Chart index)
 
