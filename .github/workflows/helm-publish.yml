@@ -5,14 +5,12 @@ on:
     branches:
       - main
     paths-ignore:
-      - '.github/**'
       - '.git*'
       - 'README.md'
   push:
     branches:
       - 'main'
     paths-ignore:
-      - '.github/**'
       - '.git*'
       - 'README.md'
   workflow_dispatch: {}
