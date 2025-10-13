@@ -1,0 +1,24 @@
+apiVersion: v1
+entries:
+  minio:
+  - apiVersion: v2
+    appVersion: RELEASE.2025-09-07T16-13-09Z
+    created: "2025-10-13T14:08:33.545438359Z"
+    dependencies:
+    - name: shared
+      repository: oci://ghcr.io/solidcharts/helm-charts
+      version: 0.X.X
+    description: A Helm chart for MinIO
+    digest: 6f08c6a963216eaff3f470568d56c2410f929238e1ec126bafb2e051f5f5653c
+    icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/minio/icon.svg
+    maintainers:
+    - email: solidcharts@przemeknowak.com
+      name: pnowy
+    name: minio
+    sources:
+    - https://github.com/solidcharts/helm-charts/
+    type: application
+    urls:
+    - https://github.com/solidcharts/helm-charts/releases/download/minio-0.3.2/minio-0.3.2.tgz
+    version: 0.3.2
+generated: "2025-10-13T14:08:33.545443859Z"
