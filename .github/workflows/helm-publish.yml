@@ -42,6 +42,8 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
       - name: Publish
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${REGISTRY} --username ${GITHUB_ACTOR} --password-stdin
           for d in ${CHARTS_PATH}*/ ; do
