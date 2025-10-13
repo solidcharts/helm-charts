@@ -14,6 +14,13 @@
 
 ## [UNRELEASED]
 
+## [v0.4.2] - 2025-10-13
+
+### Changed
+
+- Update description
+- Add ArtifactHub registry reference
+
 ## [v0.4.1] - 2025-10-13
 
 ### Changed

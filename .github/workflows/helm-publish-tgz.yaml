@@ -20,10 +20,46 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-#      - name: Add dependencies
-#        run: |
-#          helm repo add solidcharts https://solidcharts.github.io/helm-charts
+      - name: Setup yq
+        uses: dcarbone/install-yq-action@v1
+        with:
+          version: 'v4.44.3'
+      - name: Add dependencies
+        run: |
+          helm repo add solidcharts https://solidcharts.github.io/helm-charts
       - name: Publish
+        id: publish
         uses: helm/chart-releaser-action@v1.7.0
         env:
           CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      - name: Update release descriptions
+        if: steps.publish.outputs.changed_charts != ''
+        env:
+          GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        run: |
+          REPO="${{ github.repository }}"
+
+          # Parse changed_charts (comma-separated list)
+          IFS=',' read -ra CHARTS <<< "${{ steps.publish.outputs.changed_charts }}"
+
+          for chart in "${CHARTS[@]}"; do
+            chart=$(echo "$chart" | xargs)  # Trim whitespace
+            if [ -z "$chart" ]; then
+              continue
+            fi
+            echo "Processing chart: $chart"
+            # Get version from Chart.yaml
+            version=$(yq eval '.version' "charts/$chart/Chart.yaml")
+            if [ -z "$version" ]; then
+              echo "⚠️  Could not find version for $chart"
+              continue
+            fi
+            release_tag="${chart}-${version}"
+            echo "Updating release: $release_tag"
+            # Generate description with markdown links
+            description="See the full [changelog](https://github.com/$REPO/blob/main/charts/$chart/CHANGELOG.md) and [readme](https://github.com/$REPO/blob/main/charts/$chart/README.md)."
+            # Update the release notes
+            gh release edit "$release_tag" --repo "$REPO" --notes "$description"
+            echo "✓ Updated $release_tag"
+          done
+          echo "All release descriptions updated!"
