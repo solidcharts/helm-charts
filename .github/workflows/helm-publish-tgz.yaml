@@ -3,7 +3,7 @@ name: Helm Publish TGZ
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   helm-publish-tgz:
