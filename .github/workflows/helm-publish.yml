@@ -38,6 +38,10 @@ jobs:
         uses: dcarbone/install-yq-action@v1
         with:
           version: 'v4.44.3'
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
       - name: Publish OCI
         shell: bash
         run: |
@@ -70,15 +74,18 @@ jobs:
                 echo "Pushing chart $chartPackageName"
                 helm push "${d}$chartPackageName" oci://${REGISTRY,,}
                 echo "🎉 Chart $chartPackageName pushed successfully"
-                # TODO - CREATE RELEASE with changelog
+                # Create git tag for non-RC versions
+                if [[ $rcVersion == "false" ]]; then
+                  echo "📌 Creating git tag $chartVersionName"
+                  git tag -a "$chartVersionName" -m "Release $chartVersionName"
+                  git push origin "$chartVersionName"
+                  echo "✅ Git tag $chartVersionName created and pushed"
+                else
+                  echo "⏭️  Skipping git tag creation for RC version"
+                fi
               fi
             fi
           done
-      - name: Configure Git
-        if: github.ref == 'refs/heads/main'
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 #      - name: Add dependencies
 #        if: github.ref == 'refs/heads/main'
 #        run: |
