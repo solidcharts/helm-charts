@@ -14,6 +14,10 @@
 
 ## [UNRELEASED]
 
+## [v0.3.2] - 2025-10-13
+
+- Add GitHub release (Helm Chart index)
+
 ## [v0.3.1] - 2025-10-13
 
 - Add GitHub release (Helm Chart index)
