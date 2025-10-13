@@ -1,5 +1,9 @@
 # Solid Helm Charts
 
+<p align="center">
+  <img src="logo.png" alt="Solid Helm Charts Logo" width="200"/>
+</p>
+
 ## Mission
 
 Set of helm charts which use official images from given tool providers.

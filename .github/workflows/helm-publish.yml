@@ -38,7 +38,7 @@ jobs:
         uses: dcarbone/install-yq-action@v1
         with:
           version: 'v4.44.3'
-      - name: Package Helm Charts
+      - name: Publish OCI
         shell: bash
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${REGISTRY} --username ${GITHUB_ACTOR} --password-stdin
@@ -74,3 +74,17 @@ jobs:
               fi
             fi
           done
+      - name: Configure Git
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+#      - name: Add dependencies
+#        if: github.ref == 'refs/heads/main'
+#        run: |
+#          helm repo add solidcharts https://solidcharts.github.io/helm-charts
+      - name: Publish Index
+        if: github.ref == 'refs/heads/main'
+        uses: helm/chart-releaser-action@v1.7.0
+        env:
+          CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
