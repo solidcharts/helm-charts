@@ -1,4 +1,4 @@
-name: Helm Publish
+name: Helm Publish OCI
 
 on:
   pull_request:
@@ -20,7 +20,7 @@ env:
   REGISTRY: "ghcr.io/${{ github.repository }}"
 
 jobs:
-  helm:
+  helm-publish-oci:
     permissions:
       contents: write
       packages: write
@@ -83,42 +83,6 @@ jobs:
                 echo "Pushing chart $chartPackageName"
                 helm push "${d}$chartPackageName" oci://${REGISTRY,,}
                 echo "🎉 Chart $chartPackageName pushed successfully"
-                if [[ $rcVersion == "false" ]]; then
-                  echo "📄 Preparing release notes"
-                  changelogUrl="https://github.com/${{ github.repository }}/blob/main/charts/$chartName/CHANGELOG.md"
-                  releaseNotesFile="/tmp/release-notes-$chartVersionName.md"
-                  echo "See changelog here: [$chartName CHANGELOG.md]($changelogUrl)" > "$releaseNotesFile"
-                  echo "📄 Uploading chart to GitHub Pages"
-                  cr upload \
-                    --owner "$(echo ${{ github.repository }} | cut -d'/' -f1)" \
-                    --git-repo "$(echo ${{ github.repository }} | cut -d'/' -f2)" \
-                    --package-path "${d}" \
-                    --token "$CR_TOKEN" \
-                    --release-name-template "$chartVersionName" \
-                    --release-notes-file "$releaseNotesFile" \
-                    --skip-existing
-                  echo "✅ Chart uploaded to GitHub Pages with release notes"
-                  echo "📌 Creating git tag $chartVersionName"
-                  git tag -a "$chartVersionName" -m "Release $chartVersionName"
-                  git push origin "$chartVersionName"
-                  echo "✅ Git tag $chartVersionName created and pushed"
-                else
-                  echo "⏭️  Skipping git tag creation for RC version"
-                fi
               fi
             fi
           done
-
-          # Update index.yaml for GitHub Pages
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "📚 Updating Helm repository index"
-            cr index \
-              --owner "$(echo ${{ github.repository }} | cut -d'/' -f1)" \
-              --git-repo "$(echo ${{ github.repository }} | cut -d'/' -f2)" \
-              --charts-repo "https://$(echo ${{ github.repository }} | cut -d'/' -f1).github.io/$(echo ${{ github.repository }} | cut -d'/' -f2)" \
-              --index-path ./index.yaml \
-              --package-path "${CHARTS_PATH}" \
-              --token "$CR_TOKEN" \
-              --push
-            echo "✅ Helm repository index updated"
-          fi
