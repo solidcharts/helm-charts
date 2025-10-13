@@ -2,7 +2,7 @@ apiVersion: v2
 name: minio
 description: A Helm chart for MinIO
 type: application
-version: 0.3.0
+version: 0.3.1
 appVersion: "RELEASE.2025-09-07T16-13-09Z"
 icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/minio/icon.svg
 sources:
