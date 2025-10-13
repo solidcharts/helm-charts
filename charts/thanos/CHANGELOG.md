@@ -14,6 +14,12 @@
 
 ## [UNRELEASED]
 
+## [v0.5.1] - 2025-10-13
+
+### Changed
+
+- Update description
+
 ## [v0.5.0] - 2025-10-03
 
 ### Changed

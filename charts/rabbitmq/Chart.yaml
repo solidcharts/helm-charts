@@ -1,8 +1,9 @@
 apiVersion: v2
 name: rabbitmq
-description: A Helm chart for RabbitMQ
+description: |
+  A Helm chart for RabbitMQ. See the full [changelog](https://github.com/solidcharts/helm-charts/blob/main/charts/rabbitmq/CHANGELOG.md) and [readme](https://github.com/solidcharts/helm-charts/blob/main/charts/rabbitmq/README.md).
 type: application
-version: 0.4.0
+version: 0.4.1
 appVersion: "4.1.4-management"
 icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/rabbitmq/icon.png
 sources:

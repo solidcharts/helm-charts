@@ -1,8 +1,8 @@
 # shared
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
+![Version: 0.3.1](https://img.shields.io/badge/Version-0.3.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square)
 
-A Helm chart library for solidcharts
+A Helm chart library for solidcharts. See the full [changelog](https://github.com/solidcharts/helm-charts/blob/main/charts/shared/CHANGELOG.md) and [readme](https://github.com/solidcharts/helm-charts/blob/main/charts/shared/README.md).
 
 ## Maintainers
 
@@ -21,7 +21,7 @@ A Helm chart library for solidcharts
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install shared oci://ghcr.io/solidcharts/helm-charts/shared --version 0.3.0
+helm upgrade --install shared oci://ghcr.io/solidcharts/helm-charts/shared --version 0.3.1
 ```
 
 ### Non-OCI Repository
@@ -31,7 +31,7 @@ Alternatively, you can use the legacy non-OCI method via the following commands:
 ```shell
 helm repo add solidcharts https://solidcharts.github.io/helm-charts/
 helm repo update
-helm upgrade --install shared solidcharts/shared --version 0.3.0
+helm upgrade --install shared solidcharts/shared --version 0.3.1
 ```
 
 ----------------------------------------------
