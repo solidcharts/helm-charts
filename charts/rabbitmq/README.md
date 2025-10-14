@@ -1,8 +1,8 @@
 # rabbitmq
 
-![Version: 0.4.1](https://img.shields.io/badge/Version-0.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.1.4-management](https://img.shields.io/badge/AppVersion-4.1.4--management-informational?style=flat-square)
+![Version: 0.4.2](https://img.shields.io/badge/Version-0.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.1.4-management](https://img.shields.io/badge/AppVersion-4.1.4--management-informational?style=flat-square)
 
-A Helm chart for RabbitMQ. See the full [changelog](https://github.com/solidcharts/helm-charts/blob/main/charts/rabbitmq/CHANGELOG.md) and [readme](https://github.com/solidcharts/helm-charts/blob/main/charts/rabbitmq/README.md).
+A Helm chart for RabbitMQ.
 
 ## Maintainers
 
@@ -21,7 +21,7 @@ A Helm chart for RabbitMQ. See the full [changelog](https://github.com/solidchar
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.4.1
+helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.4.2
 ```
 
 ### Non-OCI Repository
@@ -31,7 +31,7 @@ Alternatively, you can use the legacy non-OCI method via the following commands:
 ```shell
 helm repo add solidcharts https://solidcharts.github.io/helm-charts/
 helm repo update
-helm upgrade --install rabbitmq solidcharts/rabbitmq --version 0.4.1
+helm upgrade --install rabbitmq solidcharts/rabbitmq --version 0.4.2
 ```
 
 ## Requirements
