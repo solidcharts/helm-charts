@@ -1,5 +1,7 @@
 # Solid Helm Charts
 
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
+
 <p align="center">
   <img src="logo.png" alt="Solid Helm Charts Logo" width="200"/>
 </p>

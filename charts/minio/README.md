@@ -1,6 +1,6 @@
 # minio
 
-![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: RELEASE.2025-09-07T16-13-09Z](https://img.shields.io/badge/AppVersion-RELEASE.2025--09--07T16--13--09Z-informational?style=flat-square)
+![Version: 0.4.3](https://img.shields.io/badge/Version-0.4.3-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: RELEASE.2025-09-07T16-13-09Z](https://img.shields.io/badge/AppVersion-RELEASE.2025--09--07T16--13--09Z-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
 
 A Helm chart for MinIO.
 

@@ -1,6 +1,6 @@
 # thanos
 
-![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.39.2](https://img.shields.io/badge/AppVersion-v0.39.2-informational?style=flat-square)
+![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: v0.39.2](https://img.shields.io/badge/AppVersion-v0.39.2-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
 
 ## Description
 

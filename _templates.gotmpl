@@ -6,3 +6,11 @@
 {{ template "chart.description" . }}
 {{- end }}
 {{- end -}}
+
+{{- define "chart.artifactoryBadge" -}}
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
+{{- end -}}
+
+{{- define "chart.badgesSection" -}}
+{{ template "chart.versionBadge" . }} {{ template "chart.typeBadge" . }} {{ template "chart.appVersionBadge" . }} {{ template "chart.artifactoryBadge" . }}
+{{- end -}}
