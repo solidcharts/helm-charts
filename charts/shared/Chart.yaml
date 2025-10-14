@@ -3,7 +3,8 @@ name: shared
 description: |
   A Helm chart library for solidcharts.
 type: library
-version: 0.3.2
+version: 0.3.3
+icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/shared/icon.png
 sources:
   - https://github.com/solidcharts/helm-charts/
 maintainers:

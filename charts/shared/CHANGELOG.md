@@ -14,6 +14,12 @@
 
 ## [UNRELEASED]
 
+## [v0.3.3] - 2025-10-14
+
+### Added
+
+- Icon for artifacthub
+
 ## [v0.3.2] - 2025-10-14
 
 ### Changed
