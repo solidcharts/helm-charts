@@ -1,9 +1,9 @@
 apiVersion: v2
 name: shared
 description: |
-  A Helm chart library for solidcharts. See the full [changelog](https://github.com/solidcharts/helm-charts/blob/main/charts/shared/CHANGELOG.md) and [readme](https://github.com/solidcharts/helm-charts/blob/main/charts/shared/README.md).
+  A Helm chart library for solidcharts.
 type: library
-version: 0.3.1
+version: 0.3.2
 sources:
   - https://github.com/solidcharts/helm-charts/
 maintainers:

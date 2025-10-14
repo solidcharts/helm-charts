@@ -14,6 +14,12 @@
 
 ## [UNRELEASED]
 
+## [v0.3.2] - 2025-10-14
+
+### Changed
+
+- Update description and artifacthub configuration
+
 ## [v0.3.1] - 2025-10-13
 
 ### Changed
