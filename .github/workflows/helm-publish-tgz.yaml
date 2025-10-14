@@ -30,6 +30,8 @@ jobs:
       - name: Publish
         id: publish
         uses: helm/chart-releaser-action@v1.7.0
+        with:
+          skip_existing: true
         env:
           CR_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
       - name: Update release descriptions
