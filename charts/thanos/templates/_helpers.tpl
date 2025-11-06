@@ -49,19 +49,36 @@ Objstore config hash
   {{- or (and .Values.queryFrontend.enabled .Values.queryFrontend.ingress.enabled) (.Values.query.enabled .Values.query.ingress.enabled) -}}
 {{- end -}}
 
+{{/*
+Check if we have required ingress parameters are set
+Usage: {{- include "thanos.ingress.checkParams" (dict "componentPath" "queryFrontend" "ingress" .Values.component.ingress) }}
+*/}}
+{{- define "thanos.ingress.checkParams" -}}
+    {{- if and .ingress.enabled -}}
+    {{- if not .ingress.hosts -}}
+      {{- fail (printf "At least one ingress host must be provided in .Values.%s.ingress.hosts" .componentPath) -}}
+    {{- end -}}
+    {{- if not (first .ingress.hosts).paths -}}
+      {{- fail (printf "At least one path element must be provided in .Values.%s.ingress.hosts.paths" .componentPath) -}}
+    {{- end -}}
+    {{- end -}}
+{{- end -}}
+
 {{/* Get the query ingress url */}}
 {{- define "thanos.queryIngress.url" -}}
   {{- if and .Values.queryFrontend.enabled .Values.queryFrontend.ingress.enabled -}}
+    {{- include "thanos.ingress.checkParams" (dict "componentPath" "queryFrontend" "ingress" .Values.queryFrontend.ingress) }}
     {{- if .Values.queryFrontend.ingress.tls -}}
-      {{- printf "https://%s%s" (first (first .Values.queryFrontend.ingress.tls).hosts) .Values.queryFrontend.ingress.path -}}
+      {{- printf "https://%s%s" (first (first .Values.queryFrontend.ingress.tls).hosts) (first (first .Values.queryFrontend.ingress.hosts).paths).path -}}
     {{- else -}}
-      {{- printf "http://%s%s" (first .Values.queryFrontend.ingress.hosts) .Values.queryFrontend.ingress.path -}}
+      {{- printf "http://%s%s" (first .Values.queryFrontend.ingress.hosts).host (first (first .Values.queryFrontend.ingress.hosts).paths).path -}}
     {{- end -}}
   {{- else if and .Values.query.enabled .Values.query.ingress.enabled -}}
+    {{- include "thanos.ingress.checkParams" (dict "componentPath" "query" "ingress" .Values.query.ingress) }}
     {{- if .Values.query.ingress.tls -}}
-      {{- printf "https://%s%s" (first (first .Values.query.ingress.tls).hosts) .Values.query.ingress.path -}}
+      {{- printf "https://%s%s" (first (first .Values.query.ingress.tls).hosts) (first (first .Values.query.ingress.hosts).paths).path -}}
     {{- else -}}
-      {{- printf "http://%s%s" (first .Values.query.ingress.hosts) .Values.query.ingress.path -}}
+      {{- printf "http://%s%s" (first .Values.query.ingress.hosts).host (first (first .Values.query.ingress.hosts).paths).path -}}
     {{- end -}}
   {{- else -}}
     {{- print "" -}}

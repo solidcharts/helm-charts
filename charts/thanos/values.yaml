@@ -51,8 +51,7 @@ objstoreConfig:
     config:
       directory: /var/thanos/store/s3
 
-## Array of extra K8s manifests to deploy
-##
+## -- Array of extra K8s manifests to deploy
 extraObjects: []
 # - apiVersion: external-secrets.io/v1
 #   kind: ExternalSecret
@@ -154,7 +153,7 @@ query:
       - host: thanos-query.local
         paths:
           - path: /
-            pathType: Prefix
+            # pathType: ImplementationSpecific
     #   - chart-example.local
     # -- TLS configuration for the query service ingress.
     # @default -- See _values.yaml_
@@ -326,7 +325,7 @@ queryFrontend:
       - host: thanos-query-frontend.local
         paths:
           - path: /
-            pathType: Prefix
+            # pathType: ImplementationSpecific
     #   - chart-example.local
     # -- TLS configuration for the query frontend service ingress.
     # @default -- See _values.yaml_
@@ -799,7 +798,7 @@ ruler:
       - host: thanos-ruler.local
         paths:
           - path: /
-            pathType: Prefix
+            # pathType: Prefix
     #   - chart-example.local
     # -- TLS configuration for the ruler service ingress.
     # @default -- See _values.yaml_
@@ -1162,13 +1161,13 @@ receiver:
         - host: thanos-receiver-router.local
           paths:
             - path: "/api/v1/receive"
-              pathType: Prefix
+              # pathType: ImplementationSpecific
               backend:
                 service:
                   port:
                     name: http-rem-write
             - path: "/"
-              pathType: Prefix
+              # pathType: ImplementationSpecific
               backend:
                 service:
                   port:
@@ -1347,7 +1346,7 @@ bucketweb:
       - host: thanos-bucketweb.local
         paths:
           - path: /
-            pathType: Prefix
+            # pathType: ImplementationSpecific
     #   - chart-example.local
     # -- TLS configuration for the bucket web service ingress.
     # @default -- See _values.yaml_

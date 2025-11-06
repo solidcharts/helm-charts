@@ -1,7 +1,8 @@
 # Thanos Helm Chart Changelog
 
 > [!NOTE]
-> All notable changes to this project will be documented in this file; the format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+> All notable changes to this project will be documented in this file; the format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
+> project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!--
 ### Added - For new features.
@@ -13,6 +14,16 @@
 -->
 
 ## [UNRELEASED]
+
+## [v0.6.1] - 2025-11-07
+
+### Fixed
+
+- Correct generation of thanos ruler query url when ingress of query or query frontend is enabled (should be first paths path taken instead of assumption of
+  single path element). If you set `queryFrontend.ingress.path` as workaround right now correct value from `queryFrontend.ingress.hosts[0].paths[0].path` will
+  be used.
+- Extra fail messages when `ruler.rules.value` is not set and `ruler.enabled` with `ruler.rules.create` is set to `true`.
+- Small documentation fixes.
 
 ## [v0.6.0] - 2025-11-06
 
