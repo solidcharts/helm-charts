@@ -14,6 +14,12 @@
 
 ## [UNRELEASED]
 
+## [v0.6.0] - 2025-11-06
+
+### Changed
+
+- Add support for additional resources
+
 ## [v0.5.2] - 2025-10-14
 
 ### Changed
