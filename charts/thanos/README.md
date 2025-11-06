@@ -1,6 +1,6 @@
 # thanos
 
-![Version: 0.5.2](https://img.shields.io/badge/Version-0.5.2-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: v0.39.2](https://img.shields.io/badge/AppVersion-v0.39.2-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: v0.39.2](https://img.shields.io/badge/AppVersion-v0.39.2-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
 
 ## Description
 
@@ -27,7 +27,7 @@ This chart is a replacement for Bitnami Thanos chart.
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.5.2
+helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.6.0
 ```
 
 ### Non-OCI Repository
@@ -37,7 +37,7 @@ Alternatively, you can use the legacy non-OCI method via the following commands:
 ```shell
 helm repo add solidcharts https://solidcharts.github.io/helm-charts/
 helm repo update
-helm upgrade --install thanos solidcharts/thanos --version 0.5.2
+helm upgrade --install thanos solidcharts/thanos --version 0.6.0
 ```
 
 ## Requirements
@@ -134,6 +134,7 @@ helm upgrade --install thanos solidcharts/thanos --version 0.5.2
 | components.nodeSelector | object | `{}` | Node selector labels for scheduling for all components. |
 | components.tolerations | list | `[]` | Node taints the query pod will tolerate for scheduling for all components. |
 | components.topologySpreadConstraints | list | `[]` | Topology spread constraints for scheduling for all components. |
+| extraObjects | list | `[]` |  |
 | fullnameOverride | string | `nil` |  |
 | global.imageRegistry | string | `""` |  |
 | image.digest | string | `nil` | Set image digest |

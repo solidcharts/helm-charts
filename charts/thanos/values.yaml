@@ -51,6 +51,33 @@ objstoreConfig:
     config:
       directory: /var/thanos/store/s3
 
+## Array of extra K8s manifests to deploy
+##
+extraObjects: []
+# - apiVersion: external-secrets.io/v1
+#   kind: ExternalSecret
+#   metadata:
+#     name: thanos-objstore-config
+#   spec:
+#     refreshInterval: 1h
+#     secretStoreRef:
+#       kind: SecretStore
+#       name: my-secret-store
+#     target:
+#       template:
+#         data:
+#           objstore.yml: |-
+#             type: AZURE
+#             config:
+#               storage_account: my-storage-account
+#               storage_account_key: {{ .password }}
+#               container: thanos
+#               endpoint: blob.core.windows.net
+#               max_retries: 0
+#     dataFrom:
+#     - extract:
+#         key: my-secret-store-record
+
 # -- Log level for _Thanos_ components.
 logLevel: info
 
