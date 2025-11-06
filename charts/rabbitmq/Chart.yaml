@@ -4,7 +4,7 @@ description: |
   A Helm chart for RabbitMQ.
 type: application
 version: 0.5.0
-appVersion: "4.1.4-management"
+appVersion: "4.2.0-management"
 icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/rabbitmq/icon.png
 sources:
   - https://github.com/solidcharts/helm-charts/
