@@ -2,6 +2,7 @@
 {{- $apiIsStable := eq (include "shared.ingress.isStable" .) "true" -}}
 {{- $ingressSupportsPathType := eq (include "shared.ingress.supportsPathType" .) "true" -}}
 {{- $serviceName := include "thanos.ruler.fullname" . -}}
+{{- include "thanos.ingress.checkParams" (dict "componentPath" "ruler" "ingress" .Values.ruler.ingress) }}
 apiVersion: {{ include "shared.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
@@ -25,7 +26,7 @@ spec:
           {{- range .paths }}
           - path: {{ .path }}
             {{- if $ingressSupportsPathType }}
-            pathType: {{ .pathType }}
+            pathType: {{ .pathType | default "ImplementationSpecific" }}
             {{- end }}
             backend:
               {{- if $apiIsStable }}

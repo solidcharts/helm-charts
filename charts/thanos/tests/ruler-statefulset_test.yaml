@@ -1,0 +1,269 @@
+suite: test ruler statefulset
+templates:
+  - ruler/statefulset.yaml
+tests:
+  - it: should skip statefulset with default values
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should generate statefulset when enabled
+    set:
+      ruler:
+        enabled: true
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - matchRegex:
+          path: metadata.name
+          pattern: RELEASE-NAME-thanos-ruler
+      - equal:
+          path: spec.replicas
+          value: 1
+
+  - it: should not have alert.query-url when no ingress enabled
+    set:
+      ruler:
+        enabled: true
+      query:
+        enabled: true
+        ingress:
+          enabled: false
+      queryFrontend:
+        enabled: false
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --alert.query-url=
+
+  - it: should have alert.query-url when query-frontend ingress enabled
+    set:
+      ruler:
+        enabled: true
+      query:
+        enabled: true
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query-frontend.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --alert.query-url=http://thanos-query-frontend.example.com/
+
+  - it: should have alert.query-url with HTTPS when query-frontend ingress has TLS
+    set:
+      ruler:
+        enabled: true
+      query:
+        enabled: true
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query-frontend.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - hosts:
+                - thanos-query-frontend.example.com
+              secretName: thanos-query-frontend-tls
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --alert.query-url=https://thanos-query-frontend.example.com/
+
+  - it: should have alert.query-url with custom path when query-frontend ingress has custom path
+    set:
+      ruler:
+        enabled: true
+      query:
+        enabled: true
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query-frontend.example.com
+              paths:
+                - path: /query
+                  pathType: Prefix
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --alert.query-url=http://thanos-query-frontend.example.com/query
+
+  - it: should have alert.query-url when query ingress enabled and query-frontend disabled
+    set:
+      ruler:
+        enabled: true
+      query:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+      queryFrontend:
+        enabled: false
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --alert.query-url=http://thanos-query.example.com/
+
+  - it: should have alert.query-url with HTTPS when query ingress has TLS
+    set:
+      ruler:
+        enabled: true
+      query:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query.example.com
+              paths:
+                - path: /api
+                  pathType: Prefix
+          tls:
+            - hosts:
+                - thanos-query.example.com
+              secretName: thanos-query-tls
+      queryFrontend:
+        enabled: false
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --alert.query-url=https://thanos-query.example.com/api
+
+  - it: should prefer query-frontend ingress over query ingress when both enabled
+    set:
+      ruler:
+        enabled: true
+      query:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query-frontend.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --alert.query-url=http://thanos-query-frontend.example.com/
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --alert.query-url=http://thanos-query.example.com/
+
+  - it: should use custom replica count
+    set:
+      ruler:
+        enabled: true
+        replicas: 3
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - equal:
+          path: spec.replicas
+          value: 3
+
+  - it: should have config-reloader container when enabled
+    set:
+      ruler:
+        enabled: true
+        configReloader:
+          enabled: true
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: config-reloader
+
+  - it: should not have config-reloader container when disabled
+    set:
+      ruler:
+        enabled: true
+        configReloader:
+          enabled: false
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 1
+
+  - it: should use custom image tag
+    set:
+      image:
+        tag: v0.99.0
+      ruler:
+        enabled: true
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: quay.io/thanos/thanos:v0.99.0
+
+  - it: should have persistence volume claim when persistence enabled
+    set:
+      ruler:
+        enabled: true
+        persistence:
+          enabled: true
+          size: 10Gi
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - equal:
+          path: spec.volumeClaimTemplates[0].metadata.name
+          value: data
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
+          value: 10Gi
+
+  - it: should not have volumeClaimTemplates when persistence disabled
+    set:
+      ruler:
+        enabled: true
+        persistence:
+          enabled: false
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - notExists:
+          path: spec.volumeClaimTemplates

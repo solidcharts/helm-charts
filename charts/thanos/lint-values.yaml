@@ -17,6 +17,36 @@ serviceMonitor:
   enabled: true
 storeGateway:
   enabled: true
+query:
+  enabled: true
+queryFrontend:
+  enabled: true
+  ingress:
+    enabled: true
+    hosts:
+      - host: query.example.com
+        paths:
+          - path: /
+    tls:
+       - hosts:
+           - query.example.com
+         secretName: chart-example-tls
+ruler:
+  enabled: true
+  rules:
+    value: |
+      groups:
+          - name: general.rules
+            interval: 30s
+            rules:
+              - alert: InstanceDown
+                expr: up == 0
+                for: 5m
+                labels:
+                  severity: critical
+                annotations:
+                  summary: "Instance {{ $labels.instance }} down"
+                  description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."
 compactor:
   enabled: true
   persistence:
@@ -30,3 +60,11 @@ receiver:
 bucketweb:
   enabled: true
   tolerations: [ ]
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hosts:
+      - host: thanos-bucketweb.example.com
+        paths:
+          - path: /
+            pathType: Prefix
