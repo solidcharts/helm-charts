@@ -1,0 +1,133 @@
+suite: test bucketweb ingress
+templates:
+  - bucketweb/ingress.yaml
+tests:
+  - it: should skip ingress with default values
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should skip ingress when bucketweb enabled but ingress disabled
+    set:
+      bucketweb:
+        enabled: true
+        ingress:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should generate ingress when enabled with valid parameters
+    set:
+      bucketweb:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-bucketweb.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+    asserts:
+      - isKind:
+          of: Ingress
+      - matchRegex:
+          path: metadata.name
+          pattern: RELEASE-NAME-thanos-bucketweb
+      - equal:
+          path: spec.rules[0].host
+          value: thanos-bucketweb.example.com
+      - equal:
+          path: spec.rules[0].http.paths[0].path
+          value: /
+
+  - it: should fail when ingress enabled but hosts missing
+    set:
+      bucketweb:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts: []
+    asserts:
+      - failedTemplate:
+          errorMessage: "At least one ingress host must be provided in .Values.bucketweb.ingress.hosts"
+
+  - it: should fail when ingress enabled but paths missing
+    set:
+      bucketweb:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-bucketweb.example.com
+              paths: []
+    asserts:
+      - failedTemplate:
+          errorMessage: "At least one path element must be provided in .Values.bucketweb.ingress.hosts.paths"
+
+  - it: should generate ingress with TLS
+    set:
+      bucketweb:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-bucketweb.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - hosts:
+                - thanos-bucketweb.example.com
+              secretName: thanos-bucketweb-tls
+    asserts:
+      - isKind:
+          of: Ingress
+      - equal:
+          path: spec.tls[0].hosts[0]
+          value: thanos-bucketweb.example.com
+      - equal:
+          path: spec.tls[0].secretName
+          value: thanos-bucketweb-tls
+
+  - it: should generate ingress with custom annotations
+    set:
+      bucketweb:
+        enabled: true
+        ingress:
+          enabled: true
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /
+          hosts:
+            - host: thanos-bucketweb.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+    asserts:
+      - isKind:
+          of: Ingress
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/rewrite-target"]
+          value: /
+
+  - it: should generate ingress with custom ingressClassName
+    capabilities:
+      apiVersions:
+        - networking.k8s.io/v1
+    set:
+      bucketweb:
+        enabled: true
+        ingress:
+          enabled: true
+          ingressClassName: traefik
+          hosts:
+            - host: thanos-bucketweb.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+    asserts:
+      - isKind:
+          of: Ingress
+      - equal:
+          path: spec.ingressClassName
+          value: traefik

@@ -2,7 +2,7 @@
 {{- $apiIsStable := eq (include "shared.ingress.isStable" .) "true" -}}
 {{- $ingressSupportsPathType := eq (include "shared.ingress.supportsPathType" .) "true" -}}
 {{- $serviceName := include "thanos.query.fullname" . -}}
-{{- include "thanos.ingress.checkParams" (dict "componentPath" "queryFrontend" "ingress" .Values.queryFrontend.ingress) }}
+{{- include "thanos.ingress.checkParams" (dict "componentPath" "query" "ingress" .Values.query.ingress) }}
 apiVersion: {{ include "shared.ingress.apiVersion" . }}
 kind: Ingress
 metadata:

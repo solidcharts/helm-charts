@@ -17,11 +17,12 @@ serviceMonitor:
   enabled: true
 storeGateway:
   enabled: true
+query:
+  enabled: true
 queryFrontend:
   enabled: true
   ingress:
     enabled: true
-    ingressClassName: nginx
     hosts:
       - host: query.example.com
         paths:
@@ -59,3 +60,11 @@ receiver:
 bucketweb:
   enabled: true
   tolerations: [ ]
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hosts:
+      - host: thanos-bucketweb.example.com
+        paths:
+          - path: /
+            pathType: Prefix

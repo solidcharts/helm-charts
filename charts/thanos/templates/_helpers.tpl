@@ -46,7 +46,7 @@ Objstore config hash
 
 {{/* Check if we have query ingress */}}
 {{- define "thanos.queryIngress.enabled" -}}
-  {{- or (and .Values.queryFrontend.enabled .Values.queryFrontend.ingress.enabled) (.Values.query.enabled .Values.query.ingress.enabled) -}}
+{{- or (and .Values.queryFrontend.enabled .Values.queryFrontend.ingress.enabled) (and .Values.query.enabled .Values.query.ingress.enabled) -}}
 {{- end -}}
 
 {{/*

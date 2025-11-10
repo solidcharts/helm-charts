@@ -1,0 +1,208 @@
+suite: test query-frontend ingress
+templates:
+  - query-frontend/ingress.yaml
+tests:
+  - it: should skip ingress with default values
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should skip ingress when query-frontend enabled but ingress disabled
+    set:
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should generate ingress when enabled with valid parameters
+    set:
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query-frontend.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+    asserts:
+      - isKind:
+          of: Ingress
+      - matchRegex:
+          path: metadata.name
+          pattern: RELEASE-NAME-thanos-query-frontend
+      - equal:
+          path: spec.rules[0].host
+          value: thanos-query-frontend.example.com
+      - equal:
+          path: spec.rules[0].http.paths[0].path
+          value: /
+
+  - it: should fail when ingress enabled but hosts missing
+    set:
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts: []
+    asserts:
+      - failedTemplate:
+          errorMessage: "At least one ingress host must be provided in .Values.queryFrontend.ingress.hosts"
+
+  - it: should fail when ingress enabled but paths missing
+    set:
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query-frontend.example.com
+              paths: []
+    asserts:
+      - failedTemplate:
+          errorMessage: "At least one path element must be provided in .Values.queryFrontend.ingress.hosts.paths"
+
+  - it: should fail when ingress enabled with hosts null
+    set:
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "At least one ingress host must be provided in .Values.queryFrontend.ingress.hosts"
+
+  - it: should generate ingress with multiple hosts
+    set:
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query-frontend.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+            - host: thanos-query-frontend-alt.example.com
+              paths:
+                - path: /query
+                  pathType: Prefix
+    asserts:
+      - isKind:
+          of: Ingress
+      - equal:
+          path: spec.rules[0].host
+          value: thanos-query-frontend.example.com
+      - equal:
+          path: spec.rules[1].host
+          value: thanos-query-frontend-alt.example.com
+      - equal:
+          path: spec.rules[1].http.paths[0].path
+          value: /query
+
+  - it: should generate ingress with multiple paths
+    capabilities:
+      apiVersions:
+        - networking.k8s.io/v1
+    set:
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query-frontend.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+                - path: /api
+                  pathType: Exact
+    asserts:
+      - isKind:
+          of: Ingress
+      - equal:
+          path: spec.rules[0].http.paths[0].path
+          value: /
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: Prefix
+      - equal:
+          path: spec.rules[0].http.paths[1].path
+          value: /api
+      - equal:
+          path: spec.rules[0].http.paths[1].pathType
+          value: Exact
+
+  - it: should generate ingress with TLS
+    set:
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          hosts:
+            - host: thanos-query-frontend.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - hosts:
+                - thanos-query-frontend.example.com
+              secretName: thanos-query-frontend-tls
+    asserts:
+      - isKind:
+          of: Ingress
+      - equal:
+          path: spec.tls[0].hosts[0]
+          value: thanos-query-frontend.example.com
+      - equal:
+          path: spec.tls[0].secretName
+          value: thanos-query-frontend-tls
+
+  - it: should generate ingress with custom annotations
+    set:
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          annotations:
+            nginx.ingress.kubernetes.io/rewrite-target: /
+            cert-manager.io/cluster-issuer: letsencrypt
+          hosts:
+            - host: thanos-query-frontend.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+    asserts:
+      - isKind:
+          of: Ingress
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/rewrite-target"]
+          value: /
+      - equal:
+          path: metadata.annotations["cert-manager.io/cluster-issuer"]
+          value: letsencrypt
+
+  - it: should generate ingress with custom ingressClassName
+    capabilities:
+      apiVersions:
+        - networking.k8s.io/v1
+    set:
+      queryFrontend:
+        enabled: true
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+          hosts:
+            - host: thanos-query-frontend.example.com
+              paths:
+                - path: /
+                  pathType: Prefix
+    asserts:
+      - isKind:
+          of: Ingress
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
