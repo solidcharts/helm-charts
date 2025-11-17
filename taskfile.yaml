@@ -59,3 +59,8 @@ tasks:
     desc: Run renovate full
     cmds:
       - docker run --rm -e RENOVATE_PLATFORM=local -e RENOVATE_DRY_RUN=full -e LOG_LEVEL=debug -v $(pwd):/usr/src/app  renovate/renovate:latest
+  ct-install:
+    desc: Run chart-testing tool locally
+    dir: '{{.USER_WORKING_DIR}}'
+    cmds:
+      - ct install --chart-dirs . --charts .
