@@ -2,6 +2,26 @@ apiVersion: v1
 entries:
   minio:
   - apiVersion: v2
+    appVersion: RELEASE.2025-10-15T17-29-55Z
+    created: "2025-11-17T15:48:25.350975767Z"
+    dependencies:
+    - name: shared
+      repository: oci://ghcr.io/solidcharts/helm-charts
+      version: 0.X.X
+    description: 'A Helm chart for MinIO. '
+    digest: ebadd29ecdafced71d91d0aeb55e423096b501f62fa2c2288c268c2936aaf245
+    icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/minio/icon.svg
+    maintainers:
+    - email: solidcharts@przemeknowak.com
+      name: pnowy
+    name: minio
+    sources:
+    - https://github.com/solidcharts/helm-charts/
+    type: application
+    urls:
+    - https://github.com/solidcharts/helm-charts/releases/download/minio-0.5.0/minio-0.5.0.tgz
+    version: 0.5.0
+  - apiVersion: v2
     appVersion: RELEASE.2025-09-07T16-13-09Z
     created: "2025-10-13T18:46:28.11717413Z"
     dependencies:
@@ -426,4 +446,4 @@ entries:
     urls:
     - https://github.com/solidcharts/helm-charts/releases/download/thanos-0.5.0/thanos-0.5.0.tgz
     version: 0.5.0
-generated: "2025-11-17T12:31:24.218444689Z"
+generated: "2025-11-17T15:48:25.351029378Z"
