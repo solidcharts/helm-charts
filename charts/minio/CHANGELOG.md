@@ -23,7 +23,7 @@
 - Switch from `quay.io/minio/minio` to `ghcr.io/coollabsio/minio` image repository due
   to [MinIO decision about stopping publishing official Docker images](https://github.com/minio/minio/issues/21647) - new image is built
   from [official MinIO sources](https://github.com/coollabsio/minio)
-- Upgrade from `RELEASE.2025-09-07T16-13-09Z` to `2025-10-15T17-29-55Z` MinIO release
+- Upgrade from `RELEASE.2025-09-07T16-13-09Z` to `RELEASE.2025-10-15T17-29-55Z` MinIO release
 
 ## [v0.4.3] - 2025-10-13
 

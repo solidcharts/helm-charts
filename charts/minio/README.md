@@ -1,6 +1,6 @@
 # minio
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: 2025-10-15T17-29-55Z](https://img.shields.io/badge/AppVersion-2025--10--15T17--29--55Z-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: RELEASE.2025-10-15T17-29-55Z](https://img.shields.io/badge/AppVersion-RELEASE.2025--10--15T17--29--55Z-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
 
 A Helm chart for MinIO.
 
@@ -63,7 +63,7 @@ helm upgrade --install minio solidcharts/minio --version 0.5.0
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"ghcr.io"` | Image registry |
 | image.repository | string | `"coollabsio/minio"` | Image repository |
-| image.tag | string | `"2025-10-15T17-29-55Z"` | Image tag version (if not specified, it will use the chart appVersion) |
+| image.tag | string | `"RELEASE.2025-10-15T17-29-55Z"` | Image tag version (if not specified, it will use the chart appVersion) |
 | imagePullSecrets | list | `[]` | Image pull secrets for pulling an image from a private repository |
 | ingress.console.annotations | object | `{}` | Annotations to add to the ingress |
 | ingress.console.enabled | bool | `false` | If `true`, create an Ingress for MinIO Console |
