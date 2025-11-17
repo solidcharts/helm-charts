@@ -13,7 +13,7 @@ We are trying to maintain a consistent chart changelog to simplify the maintenan
 Each chart has a `README.md` file describing the usage of the chart. Documentation is generated
 using [helm-docs](https://github.com/norwoodj/helm-docs) so please document your changes (`values.yaml`) accordingly.
 
-To automatically re-generate docs use pre-commit hooks. See more details in the [CONTRIBUTING.md](../CONTRIBUTING.md) file.
+To automatically re-generate docs use pre-commit hooks. See more details in the [CONTRIBUTING.md](https://github.com/solidcharts/helm-charts/blob/main/CONTRIBUTING.md) file.
 
 ### Helm chart release
 
