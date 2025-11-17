@@ -63,4 +63,4 @@ tasks:
     desc: Run chart-testing tool locally
     dir: '{{.USER_WORKING_DIR}}'
     cmds:
-      - ct install --chart-dirs . --charts .
+      - ct install --chart-dirs . --charts . --debug

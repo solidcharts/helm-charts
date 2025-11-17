@@ -34,13 +34,13 @@ config:
 
 image:
   # -- Image registry
-  registry: docker.io
+  registry: ghcr.io
   # -- Image repository
-  repository: minio/minio
+  repository: coollabsio/minio
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # -- Image tag version (if not specified, it will use the chart appVersion)
-  tag: RELEASE.2025-09-07T16-13-09Z
+  tag: "RELEASE.2025-10-15T17-29-55Z"
 
 # -- Image pull secrets for pulling an image from a private repository
 imagePullSecrets: []
