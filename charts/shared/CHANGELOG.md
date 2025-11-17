@@ -12,8 +12,6 @@
 ### Security - In case of vulnerabilities.
 -->
 
-## [UNRELEASED]
-
 ## [v0.3.3] - 2025-10-14
 
 ### Added
