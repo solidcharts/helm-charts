@@ -3,8 +3,8 @@ name: minio
 description: |
   A Helm chart for MinIO.
 type: application
-version: 0.4.3
-appVersion: "RELEASE.2025-09-07T16-13-09Z"
+version: 0.5.0
+appVersion: "2025-10-15T17-29-55Z"
 icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/minio/icon.svg
 sources:
   - https://github.com/solidcharts/helm-charts/
