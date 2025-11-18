@@ -15,7 +15,7 @@ image:
   # -- Sets the pull policy for images
   pullPolicy: IfNotPresent
   # -- Image tag version (if not specified, it will use the chart appVersion)
-  tag: 4.2.0-management
+  tag: 4.2.1-management
 
 # -- _Kubernetes_ cluster domain.
 clusterDomain: cluster.local
