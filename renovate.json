@@ -60,5 +60,17 @@
       "depNameTemplate": "quay.io/thanos/thanos",
       "datasourceTemplate": "docker"
     }
+  ],
+  "packageRules": [
+    {
+      "groupName": "Chart + values image upgrade",
+      "matchManagers": [
+        "helm-values",
+        "custom.regex"
+      ],
+      "matchDatasources": [
+        "docker"
+      ]
+    }
   ]
 }
