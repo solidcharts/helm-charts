@@ -63,7 +63,7 @@
   ],
   "packageRules": [
     {
-      "groupName": "Chart + values image upgrade",
+      "groupName": "chart-image-upgrade",
       "matchManagers": [
         "helm-values",
         "custom.regex"
