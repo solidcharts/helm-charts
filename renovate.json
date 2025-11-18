@@ -64,13 +64,19 @@
   "packageRules": [
     {
       "groupName": "chart-image-upgrade",
+      "matchFileNames": [
+        "charts/**"
+      ],
       "matchManagers": [
         "helm-values",
         "custom.regex"
       ],
       "matchDatasources": [
         "docker"
-      ]
+      ],
+      "branchName": "renovate/{{{packageFileDir}}}",
+      "commitMessagePrefix": "deps({{{packageFileDir}}}): ",
+      "commitMessageTopic": "upgrade image to {{{newVersion}}}"
     }
   ]
 }
