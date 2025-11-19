@@ -15,6 +15,12 @@
 
 ## [UNRELEASED]
 
+## [v0.8.0] - 2025-11-19
+
+### Added
+
+- Support setting annotations on objstore secret
+
 ## [v0.7.0] - 2025-11-17
 
 ### Changed

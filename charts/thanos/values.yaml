@@ -41,6 +41,8 @@ clusterDomain: cluster.local
 objstoreConfig:
   # -- If `true`, create a `Secret` for the objstore store configuration.
   create: true
+  # -- Annotations to add to the objstore secret, if it is created.
+  annotations: {}
   # -- (string) If this is set and `objstoreConfig.create` is `true` this will be used for the created secret name, if this is set and `objstoreConfig.create` is `false` then this will define an existing secret to use.
   name:
   # -- Secret key for the objstore configuration.
