@@ -31,6 +31,12 @@ queryFrontend:
        - hosts:
            - query.example.com
          secretName: chart-example-tls
+  # Example init container used for linting
+  initContainers:
+    - name: lint-init
+      image: busybox
+      command: ["/bin/sh","-c"]
+      args: ["echo lint"]
 ruler:
   enabled: true
   rules:

@@ -138,6 +138,10 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      {{- with .Values.ruler.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- if .Values.ruler.configReloader.enabled }}
         - name: config-reloader
           image: {{ include "thanos.configReloaderImage" . }}
