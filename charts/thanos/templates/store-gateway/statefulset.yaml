@@ -111,6 +111,10 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      {{- with .Values.storeGateway.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
         - name: objstore-config
           secret:
