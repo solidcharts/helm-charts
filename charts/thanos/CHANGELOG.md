@@ -15,6 +15,8 @@
 
 ## [UNRELEASED]
 
+## [v0.8.1] - 2025-11-20
+
 ### Added
 - Support for per-component `initContainers` (query, queryFrontend, compactor, ruler, bucketweb, receiver.ingestor, receiver.router, storeGateway). Default values are empty arrays.
 
