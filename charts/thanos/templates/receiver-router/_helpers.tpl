@@ -1,8 +1,15 @@
+{{/* 
+Name of the component 
+*/}}
+{{- define "thanos.receiverRouter.name" -}}
+{{- default "receiver-router" .Values.receiver.router.nameOverride -}}
+{{- end }}
+
 {{/*
 Fullname
 */}}
 {{- define "thanos.receiverRouter.fullname" -}}
-{{ include "shared.fullname" . }}-receiver-router
+{{ include "shared.fullname" . }}-{{ include "thanos.receiverRouter.name" . }}
 {{- end }}
 
 {{/*
@@ -10,7 +17,7 @@ Common labels
 */}}
 {{- define "thanos.receiverRouter.labels" -}}
 {{ include "shared.labels" . }}
-app.kubernetes.io/component: receiver-router
+app.kubernetes.io/component: {{ include "thanos.receiverRouter.name" . }}
 {{- end }}
 
 {{/*
@@ -18,7 +25,7 @@ Selector labels
 */}}
 {{- define "thanos.receiverRouter.selectorLabels" -}}
 {{ include "shared.selectorLabels" . }}
-app.kubernetes.io/component: receiver-router
+app.kubernetes.io/component: {{ include "thanos.receiverRouter.name" . }}
 {{- end }}
 
 {{/*

@@ -17,6 +17,7 @@ serviceMonitor:
   enabled: true
 storeGateway:
   enabled: true
+  nameOverride: storegateway
 query:
   enabled: true
 queryFrontend:

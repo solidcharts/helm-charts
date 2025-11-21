@@ -1,8 +1,15 @@
 {{/*
+Name of the component
+*/}}
+{{- define "thanos.compactor.name" -}}
+{{- default "compactor" .Values.compactor.nameOverride -}}
+{{- end }}
+
+{{/*
 Fullname
 */}}
 {{- define "thanos.compactor.fullname" -}}
-{{ include "shared.fullname" . }}-compactor
+{{ include "shared.fullname" . }}-{{ include "thanos.compactor.name" . }}
 {{- end }}
 
 {{/*
@@ -10,7 +17,7 @@ Common labels
 */}}
 {{- define "thanos.compactor.labels" -}}
 {{ include "shared.labels" . }}
-app.kubernetes.io/component: compactor
+app.kubernetes.io/component: {{ include "thanos.compactor.name" . }}
 {{- end }}
 
 {{/*
@@ -18,7 +25,7 @@ Selector labels
 */}}
 {{- define "thanos.compactor.selectorLabels" -}}
 {{ include "shared.selectorLabels" . }}
-app.kubernetes.io/component: compactor
+app.kubernetes.io/component: {{ include "thanos.compactor.name" . }}
 {{- end }}
 
 {{/*

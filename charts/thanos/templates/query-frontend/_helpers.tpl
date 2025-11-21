@@ -1,8 +1,15 @@
 {{/*
+Name of the component
+*/}}
+{{- define "thanos.queryFrontend.name" -}}
+{{- default "query-frontend" .Values.queryFrontend.nameOverride -}}
+{{- end }}
+
+{{/*
 Fullname
 */}}
 {{- define "thanos.queryFrontend.fullname" -}}
-{{ include "shared.fullname" . }}-query-frontend
+{{ include "shared.fullname" . }}-{{ include "thanos.queryFrontend.name" . }}
 {{- end }}
 
 {{/*
@@ -10,7 +17,7 @@ Common labels
 */}}
 {{- define "thanos.queryFrontend.labels" -}}
 {{ include "shared.labels" . }}
-app.kubernetes.io/component: query-frontend
+app.kubernetes.io/component: {{ include "thanos.queryFrontend.name" . }}
 {{- end }}
 
 {{/*
@@ -18,7 +25,7 @@ Selector labels
 */}}
 {{- define "thanos.queryFrontend.selectorLabels" -}}
 {{ include "shared.selectorLabels" . }}
-app.kubernetes.io/component: query-frontend
+app.kubernetes.io/component: {{ include "thanos.queryFrontend.name" . }}
 {{- end }}
 
 {{/*

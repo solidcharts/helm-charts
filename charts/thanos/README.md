@@ -1,6 +1,6 @@
 # thanos
 
-![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: v0.40.1](https://img.shields.io/badge/AppVersion-v0.40.1-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
+![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: v0.40.1](https://img.shields.io/badge/AppVersion-v0.40.1-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
 
 ## Description
 
@@ -27,7 +27,7 @@ This chart is a replacement for Bitnami Thanos chart.
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.9.0
+helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.10.0
 ```
 
 ### Non-OCI Repository
@@ -37,7 +37,7 @@ Alternatively, you can use the legacy non-OCI method via the following commands:
 ```shell
 helm repo add solidcharts https://solidcharts.github.io/helm-charts/
 helm repo update
-helm upgrade --install thanos solidcharts/thanos --version 0.9.0
+helm upgrade --install thanos solidcharts/thanos --version 0.10.0
 ```
 
 ## Requirements
@@ -73,6 +73,7 @@ helm upgrade --install thanos solidcharts/thanos --version 0.9.0
 | bucketweb.ingress.tls | list | See _values.yaml_ | TLS configuration for the bucket web service ingress. |
 | bucketweb.initContainers | list | `[]` | Optional init containers for the bucket web pod. |
 | bucketweb.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the bucket web pod default container. |
+| bucketweb.nameOverride | string | `nil` | If set, overrides the name of the component and labels. |
 | bucketweb.pdb.enabled | bool | `false` | If `true`, create a `PodDisruptionBudget` for the bucket web deployment. |
 | bucketweb.pdb.maxUnavailable | string | `nil` | Maximum number of bucket web replicas that the PDB should allow to be unavailable. |
 | bucketweb.pdb.minAvailable | string | `nil` | Minimum number of bucket web replicas that the PDB should require to be available. |
@@ -109,6 +110,7 @@ helm upgrade --install thanos solidcharts/thanos --version 0.9.0
 | compactor.extraVolumes | list | `[]` | Extra volumes for the compactor pod. |
 | compactor.initContainers | list | `[]` | Optional init containers for the compactor pod. |
 | compactor.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the compactor pod default container. |
+| compactor.nameOverride | string | `nil` | If set, overrides the name of the component and labels. |
 | compactor.persistence.accessMode | string | `"ReadWriteOnce"` | Access mode for the compactor pod PVC. |
 | compactor.persistence.annotations | object | `{}` | Annotations to add to the compactor pod PVC. |
 | compactor.persistence.enabled | bool | `false` | If `true`, create a `PersistentVolumeClaim` for the compactor pod data. |
@@ -173,6 +175,7 @@ helm upgrade --install thanos solidcharts/thanos --version 0.9.0
 | query.ingress.tls | list | See _values.yaml_ | TLS configuration for the query service ingress. |
 | query.initContainers | list | `[]` | Optional init containers for the query pod. |
 | query.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the query pod default container. |
+| query.nameOverride | string | `nil` | If set, overrides the name of the component and labels. |
 | query.pdb.enabled | bool | `false` | If `true`, create a `PodDisruptionBudget` for the query deployment. |
 | query.pdb.maxUnavailable | string | `nil` | Maximum number of query replicas that the PDB should allow to be unavailable. |
 | query.pdb.minAvailable | string | `nil` | Minimum number of query replicas that the PDB should require to be available. |
@@ -214,6 +217,7 @@ helm upgrade --install thanos solidcharts/thanos --version 0.9.0
 | queryFrontend.ingress.tls | list | See _values.yaml_ | TLS configuration for the query frontend service ingress. |
 | queryFrontend.initContainers | list | `[]` | Optional init containers for the queryFrontend pod. |
 | queryFrontend.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the query frontend pod default container. |
+| queryFrontend.nameOverride | string | `nil` | If set, overrides the name of the component and labels. |
 | queryFrontend.pdb.enabled | bool | `false` | If `true`, create a `PodDisruptionBudget` for the query frontend deployment. |
 | queryFrontend.pdb.maxUnavailable | string | `nil` | Maximum number of query frontend replicas that the PDB should allow to be unavailable. |
 | queryFrontend.pdb.minAvailable | string | `nil` | Minimum number of query frontend replicas that the PDB should require to be available. |
@@ -280,6 +284,7 @@ helm upgrade --install thanos solidcharts/thanos --version 0.9.0
 | receiver.ingestor.topologySpreadConstraints | list | `[]` | Topology spread constraints for scheduling for the receiver ingestor pod. If an explicit label selector is not provided one will be created from the pod selector labels. |
 | receiver.ingestor.updateStrategy | object | `{}` | Update strategy for the receiver ingestor stateful set. |
 | receiver.initContainers | list | `[]` | Optional init containers for the receiver router pod. |
+| receiver.nameOverride | string | `nil` | If set, overrides the name of the component and labels. |
 | receiver.replicationFactor | int | `1` | Replication factor for the receiver components. |
 | receiver.retention | string | `"48h"` | Retention for the receiver components. |
 | receiver.router.affinity | object | `{}` | Affinity settings for scheduling the receiver router pod. If an explicit label selector is not provided for pod affinity or pod anti-affinity one will be created from the pod selector labels. |
@@ -352,6 +357,7 @@ helm upgrade --install thanos solidcharts/thanos --version 0.9.0
 | ruler.initContainers | list | `[]` | Optional init containers for the ruler pod. |
 | ruler.instanceLabel | bool | `false` | If `true`, add a `thanos_rule` label to `<NAMESPACE>/<RULE_FULLNAME>` on a `Rule` metrics. |
 | ruler.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the ruler pod default container. |
+| ruler.nameOverride | string | `nil` | If set, overrides the name of the component and labels. |
 | ruler.pdb.enabled | bool | `false` | If `true`, create a `PodDisruptionBudget` for the ruler stateful set. |
 | ruler.pdb.maxUnavailable | string | `nil` | Maximum number of ruler replicas that the PDB should allow to be unavailable. |
 | ruler.pdb.minAvailable | string | `nil` | Minimum number of ruler replicas that the PDB should require to be available. |
@@ -400,6 +406,7 @@ helm upgrade --install thanos solidcharts/thanos --version 0.9.0
 | storeGateway.extraVolumes | list | `[]` | Extra volumes for the store gateway pod. |
 | storeGateway.initContainers | list | `[]` | Init containers for the store gateway pod. |
 | storeGateway.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the store gateway pod default container. |
+| storeGateway.nameOverride | string | `nil` | If set, overrides the name of the component and labels. |
 | storeGateway.pdb.enabled | bool | `false` | If `true`, create a `PodDisruptionBudget` for the store gateway stateful set. |
 | storeGateway.pdb.maxUnavailable | string | `nil` | Maximum number of store gateway replicas that the PDB should allow to be unavailable. |
 | storeGateway.pdb.minAvailable | string | `nil` | Minimum number of store gateway replicas that the PDB should require to be available. |

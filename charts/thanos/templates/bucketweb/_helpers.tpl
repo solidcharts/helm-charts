@@ -1,8 +1,15 @@
 {{/*
+Name of the component
+*/}}
+{{- define "thanos.bucketweb.name" -}}
+{{- default "bucketweb" .Values.bucketweb.nameOverride -}}
+{{- end }}
+
+{{/*
 Fullname
 */}}
 {{- define "thanos.bucketweb.fullname" -}}
-{{ include "shared.fullname" . }}-bucketweb
+{{ include "shared.fullname" . }}-{{ include "thanos.bucketweb.name" . }}
 {{- end }}
 
 {{/*
@@ -10,7 +17,7 @@ Common labels
 */}}
 {{- define "thanos.bucketweb.labels" -}}
 {{ include "shared.labels" . }}
-app.kubernetes.io/component: bucketweb
+app.kubernetes.io/component: {{ include "thanos.bucketweb.name" . }}
 {{- end }}
 
 {{/*
@@ -18,7 +25,7 @@ Selector labels
 */}}
 {{- define "thanos.bucketweb.selectorLabels" -}}
 {{ include "shared.selectorLabels" . }}
-app.kubernetes.io/component: bucketweb
+app.kubernetes.io/component: {{ include "thanos.bucketweb.name" . }}
 {{- end }}
 
 {{/*

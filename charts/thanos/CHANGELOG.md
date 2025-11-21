@@ -15,6 +15,12 @@
 
 ## [UNRELEASED]
 
+## [v.10.0] - 2025-11-21
+
+### Added
+
+- Possibility to add an overrideName on each component
+
 ## [v0.9.0] - 2025-11-20
 
 ### Added

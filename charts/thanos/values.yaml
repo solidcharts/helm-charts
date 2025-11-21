@@ -118,6 +118,9 @@ query:
   # -- If `true`, create component.
   enabled: true
 
+  # -- If set, overrides the name of the component and labels.
+  nameOverride: 
+
   serviceAccount:
     # -- If `true`, create a new `ServiceAccount` for the query component.
     create: true
@@ -305,6 +308,9 @@ queryFrontend:
   # -- If `true`, create the _Thanos Query Frontend_ component.
   enabled: false
 
+  # -- If set, overrides the name of the component and labels.
+  nameOverride: 
+
   serviceAccount:
     # -- If `true`, create a new `ServiceAccount` for the query frontend component.
     create: true
@@ -476,6 +482,9 @@ storeGateway:
   # -- If `true`, create the store gateway component.
   enabled: true
 
+  # -- If set, overrides the name of the component and labels.
+  nameOverride:
+
   serviceAccount:
     # -- If `true`, create a new `ServiceAccount` for the store gateway component.
     create: true
@@ -629,7 +638,10 @@ storeGateway:
 compactor:
   # -- If `true`, create component.
   enabled: false
-
+    
+  # -- If set, overrides the name of the component and labels.
+  nameOverride: 
+  
   deduplication:
     # -- If `true`, enable deduplication via the compactor component.
     enabled: true
@@ -772,7 +784,10 @@ compactor:
 ruler:
   # -- If `true`, create the ruler component.
   enabled: false
-
+    
+  # -- If set, overrides the name of the component and labels.
+  nameOverride: 
+  
   # -- If `true`, add a `thanos_rule` label to `<NAMESPACE>/<RULE_FULLNAME>` on a `Rule` metrics.
   instanceLabel: false
 
@@ -998,7 +1013,10 @@ ruler:
 receiver:
   # -- If `true`, create the receiver ingestor & receiver router components.
   enabled: false
-
+    
+  # -- If set, overrides the name of the component and labels.
+  nameOverride: 
+  
   # -- Replication factor for the receiver components.
   replicationFactor: 1
 
@@ -1342,7 +1360,10 @@ bucketweb:
   refresh: "30m"
   # -- Timeout to download metadata from remote storage
   timeout: "5m"
-
+    
+  # -- If set, overrides the name of the component and labels.
+  nameOverride: 
+  
   serviceAccount:
     # -- If `true`, create a new `ServiceAccount` for the component.
     create: true
