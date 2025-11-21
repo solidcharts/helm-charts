@@ -33,7 +33,7 @@ Create the name of the service account to use
 */}}
 {{- define "thanos.bucketweb.serviceAccountName" -}}
 {{- if .Values.bucketweb.serviceAccount.create -}}
-{{- default (printf "%s-bucketweb" (include "shared.fullname" .)) .Values.bucketweb.serviceAccount.name }}
+{{- default (printf "%s-%s" (include "shared.fullname" .) (include "thanos.bucketweb.name" .)) .Values.bucketweb.serviceAccount.name }}
 {{- else -}}
 {{- default "default" .Values.bucketweb.serviceAccount.name }}
 {{- end -}}

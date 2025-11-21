@@ -33,7 +33,7 @@ Create the name of the service account to use
 */}}
 {{- define "thanos.receiverRouter.serviceAccountName" -}}
 {{- if .Values.receiver.router.serviceAccount.create -}}
-{{- default (printf "%s-receiver-router" (include "shared.fullname" .)) .Values.receiver.router.serviceAccount.name }}
+{{- default (printf "%s-%s" (include "shared.fullname" .) (include "thanos.receiverRouter.name" .)) .Values.receiver.router.serviceAccount.name }}
 {{- else -}}
 {{- default "default" .Values.receiver.router.serviceAccount.name }}
 {{- end -}}

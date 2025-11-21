@@ -33,7 +33,7 @@ Create the name of the service account to use
 */}}
 {{- define "thanos.compactor.serviceAccountName" -}}
 {{- if .Values.compactor.serviceAccount.create -}}
-{{- default (printf "%s-compactor" (include "shared.fullname" .)) .Values.compactor.serviceAccount.name }}
+{{- default (printf "%s-%s" (include "shared.fullname" .) (include "thanos.compactor.name" .)) .Values.compactor.serviceAccount.name }}
 {{- else -}}
 {{- default "default" .Values.compactor.serviceAccount.name }}
 {{- end -}}

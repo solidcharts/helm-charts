@@ -33,7 +33,7 @@ Create the name of the service account to use
 */}}
 {{- define "thanos.storeGateway.serviceAccountName" -}}
 {{- if .Values.storeGateway.serviceAccount.create -}}
-{{- default (printf "%s-store-gateway" (include "shared.fullname" .)) .Values.storeGateway.serviceAccount.name }}
+{{- default (printf "%s-%s" (include "shared.fullname" .) (include "thanos.storeGateway.name" .)) .Values.storeGateway.serviceAccount.name }}
 {{- else -}}
 {{- default "default" .Values.storeGateway.serviceAccount.name }}
 {{- end -}}

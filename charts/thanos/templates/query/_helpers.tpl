@@ -33,7 +33,7 @@ Create the name of the service account to use
 */}}
 {{- define "thanos.query.serviceAccountName" -}}
 {{- if .Values.query.serviceAccount.create -}}
-{{- default (printf "%s-query" (include "shared.fullname" .)) .Values.query.serviceAccount.name }}
+{{- default (printf "%s-%s" (include "shared.fullname" .) (include "thanos.query.name" .)) .Values.query.serviceAccount.name }}
 {{- else -}}
 {{- default "default" .Values.query.serviceAccount.name }}
 {{- end -}}
