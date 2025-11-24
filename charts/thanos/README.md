@@ -1,6 +1,6 @@
 # thanos
 
-![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: v0.40.1](https://img.shields.io/badge/AppVersion-v0.40.1-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
+![Version: 0.10.0-rc.3](https://img.shields.io/badge/Version-0.10.0--rc.3-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: v0.40.1](https://img.shields.io/badge/AppVersion-v0.40.1-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
 
 ## Description
 
@@ -27,7 +27,7 @@ This chart is a replacement for Bitnami Thanos chart.
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.10.0
+helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.10.0-rc.3
 ```
 
 ### Non-OCI Repository
@@ -37,7 +37,7 @@ Alternatively, you can use the legacy non-OCI method via the following commands:
 ```shell
 helm repo add solidcharts https://solidcharts.github.io/helm-charts/
 helm repo update
-helm upgrade --install thanos solidcharts/thanos --version 0.10.0
+helm upgrade --install thanos solidcharts/thanos --version 0.10.0-rc.3
 ```
 
 ## Requirements
@@ -406,6 +406,7 @@ helm upgrade --install thanos solidcharts/thanos --version 0.10.0
 | storeGateway.extraVolumes | list | `[]` | Extra volumes for the store gateway pod. |
 | storeGateway.initContainers | list | `[]` | Init containers for the store gateway pod. |
 | storeGateway.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the store gateway pod default container. |
+| storeGateway.mountPath | string | `"/var/thanos/store"` | Mount path for the store gateway data volume. |
 | storeGateway.nameOverride | string | `nil` | If set, overrides the name of the component and labels. |
 | storeGateway.pdb.enabled | bool | `false` | If `true`, create a `PodDisruptionBudget` for the store gateway stateful set. |
 | storeGateway.pdb.maxUnavailable | string | `nil` | Maximum number of store gateway replicas that the PDB should allow to be unavailable. |

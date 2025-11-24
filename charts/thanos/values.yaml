@@ -607,6 +607,9 @@ storeGateway:
   # -- Init containers for the store gateway pod.
   initContainers: []
 
+  # -- Mount path for the store gateway data volume.
+  mountPath: /var/thanos/store
+
   persistence:
     # -- If `true`, create a `PersistentVolumeClaim` for the store gateway pod data.
     enabled: false

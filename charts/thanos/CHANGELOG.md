@@ -19,7 +19,8 @@
 
 ### Added
 
-- Possibility to add an overrideName on each component
+- Support to override name for each component
+- Support to modify the mount path for data volume in Store Gateway
 
 ## [v0.9.0] - 2025-11-20
 

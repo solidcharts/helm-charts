@@ -45,3 +45,10 @@ Fullname
 {{- define "thanos.storeGateway.serviceNameHeadless" -}}
 {{ printf "%s-headless" (include "thanos.storeGateway.fullname" .) }}
 {{- end }}
+
+{{/*
+Mount path for data volume
+*/}}
+{{- define "thanos.storeGateway.dataMountPath" -}}
+{{- default "/var/thanos/store" .Values.storeGateway.mountPath -}}
+{{- end }}
