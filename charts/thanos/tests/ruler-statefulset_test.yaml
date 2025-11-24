@@ -281,3 +281,41 @@ tests:
       - equal:
           path: metadata.labels["app.kubernetes.io/component"]
           value: custom-ruler
+
+  - it: should use default objstore config mount path
+    set:
+      ruler:
+        enabled: true
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --objstore.config-file=/etc/thanos/objstore.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /etc/thanos/objstore.yaml
+            name: objstore-config
+            subPath: config
+            readOnly: true
+
+  - it: should use custom objstore config mount path
+    set:
+      ruler:
+        enabled: true
+      objstoreConfig:
+        mountPath: /custom/ruler/config.yaml
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --objstore.config-file=/custom/ruler/config.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /custom/ruler/config.yaml
+            name: objstore-config
+            subPath: config
+            readOnly: true

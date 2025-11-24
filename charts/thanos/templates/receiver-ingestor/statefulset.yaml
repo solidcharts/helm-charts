@@ -75,7 +75,7 @@ spec:
             - {{ printf "--grpc-address=0.0.0.0:%d" (int .Values.receiver.ingestor.containerPorts.grpc) }}
             - {{ printf "--http-address=0.0.0.0:%d" (int .Values.receiver.ingestor.containerPorts.http) }}
             - {{ printf "--remote-write.address=0.0.0.0:%d" (int .Values.receiver.httpRemoteWritePort) }}
-            - --objstore.config-file=/etc/thanos/objstore.yaml
+            - --objstore.config-file={{ include "thanos.objstoreConfigMountPath" . }}
           {{- if .Values.autoGomemlimit.enabled }}
             - --enable-auto-gomemlimit
           {{- with .Values.autoGomemlimit.ratio }}
@@ -105,7 +105,7 @@ spec:
             {{- toYaml .Values.receiver.ingestor.readinessProbe | nindent 12 }}
           volumeMounts:
             - name: objstore-config
-              mountPath: /etc/thanos/objstore.yaml
+              mountPath: {{ include "thanos.objstoreConfigMountPath" . }}
               subPath: {{ .Values.objstoreConfig.key }}
               readOnly: true
             - name: data

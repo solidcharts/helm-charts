@@ -401,3 +401,41 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: --data-dir=/data
+
+  - it: should use default objstore config mount path
+    set:
+      storeGateway:
+        enabled: true
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --objstore.config-file=/etc/thanos/objstore.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /etc/thanos/objstore.yaml
+            name: objstore-config
+            subPath: config
+            readOnly: true
+
+  - it: should use custom objstore config mount path
+    set:
+      storeGateway:
+        enabled: true
+      objstoreConfig:
+        mountPath: /my/custom/store-config.yaml
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --objstore.config-file=/my/custom/store-config.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /my/custom/store-config.yaml
+            name: objstore-config
+            subPath: config
+            readOnly: true

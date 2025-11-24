@@ -1,6 +1,6 @@
 # thanos
 
-![Version: 0.10.0-rc.3](https://img.shields.io/badge/Version-0.10.0--rc.3-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: v0.40.1](https://img.shields.io/badge/AppVersion-v0.40.1-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
+![Version: 0.10.0-rc.4](https://img.shields.io/badge/Version-0.10.0--rc.4-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: v0.40.1](https://img.shields.io/badge/AppVersion-v0.40.1-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
 
 ## Description
 
@@ -27,7 +27,7 @@ This chart is a replacement for Bitnami Thanos chart.
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.10.0-rc.3
+helm upgrade --install thanos oci://ghcr.io/solidcharts/helm-charts/thanos --version 0.10.0-rc.4
 ```
 
 ### Non-OCI Repository
@@ -37,7 +37,7 @@ Alternatively, you can use the legacy non-OCI method via the following commands:
 ```shell
 helm repo add solidcharts https://solidcharts.github.io/helm-charts/
 helm repo update
-helm upgrade --install thanos solidcharts/thanos --version 0.10.0-rc.3
+helm upgrade --install thanos solidcharts/thanos --version 0.10.0-rc.4
 ```
 
 ## Requirements
@@ -153,6 +153,7 @@ helm upgrade --install thanos solidcharts/thanos --version 0.10.0-rc.3
 | objstoreConfig.annotations | object | `{}` | Annotations to add to the objstore secret, if it is created. |
 | objstoreConfig.create | bool | `true` | If `true`, create a `Secret` for the objstore store configuration. |
 | objstoreConfig.key | string | `"config"` | Secret key for the objstore configuration. |
+| objstoreConfig.mountPath | string | `"/etc/thanos/objstore.yaml"` | Mount path for the objstore configuration file. |
 | objstoreConfig.name | string | `nil` | If this is set and `objstoreConfig.create` is `true` this will be used for the created secret name, if this is set and `objstoreConfig.create` is `false` then this will define an existing secret to use. |
 | objstoreConfig.value | string | `"type: FILESYSTEM\nconfig:\n  directory: /var/thanos/store/s3"` | Objstore configuration; this can either be a string or a map. The default values are not suitable for production. |
 | query.autoscaling.enabled | bool | `false` | If `true`, create a `HorizontalPodAutoscaler` for the query deployment. |
@@ -252,6 +253,7 @@ helm upgrade --install thanos solidcharts/thanos --version 0.10.0-rc.3
 | receiver.ingestor.extraVolumes | list | `[]` | Extra volumes for the receiver ingestor pod. |
 | receiver.ingestor.initContainers | list | `[]` | Optional init containers for the receiver ingestor pod. |
 | receiver.ingestor.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the receiver ingestor pod default container. |
+| receiver.ingestor.nameOverride | string | `nil` | If set, overrides the name of the component and labels. |
 | receiver.ingestor.nodeSelector | object | `{}` | Node selector labels for scheduling the receiver ingestor pod. |
 | receiver.ingestor.pdb.enabled | bool | `false` | If `true`, create a `PodDisruptionBudget` for the receiver ingestor stateful set. |
 | receiver.ingestor.pdb.maxUnavailable | string | `nil` | Maximum number of receiver ingestor replicas that the PDB should allow to be unavailable. |
@@ -283,8 +285,6 @@ helm upgrade --install thanos solidcharts/thanos --version 0.10.0-rc.3
 | receiver.ingestor.tolerations | list | `[]` | Node taints the receiver ingestor pod will tolerate for scheduling. |
 | receiver.ingestor.topologySpreadConstraints | list | `[]` | Topology spread constraints for scheduling for the receiver ingestor pod. If an explicit label selector is not provided one will be created from the pod selector labels. |
 | receiver.ingestor.updateStrategy | object | `{}` | Update strategy for the receiver ingestor stateful set. |
-| receiver.initContainers | list | `[]` | Optional init containers for the receiver router pod. |
-| receiver.nameOverride | string | `nil` | If set, overrides the name of the component and labels. |
 | receiver.replicationFactor | int | `1` | Replication factor for the receiver components. |
 | receiver.retention | string | `"48h"` | Retention for the receiver components. |
 | receiver.router.affinity | object | `{}` | Affinity settings for scheduling the receiver router pod. If an explicit label selector is not provided for pod affinity or pod anti-affinity one will be created from the pod selector labels. |
@@ -304,7 +304,9 @@ helm upgrade --install thanos solidcharts/thanos --version 0.10.0-rc.3
 | receiver.router.ingress.hosts | list | See _values.yaml_ | Hosts for the receiver router service ingress. |
 | receiver.router.ingress.ingressClassName | string | `nil` | Ingress class name for the receiver router service ingress. |
 | receiver.router.ingress.tls | list | See _values.yaml_ | TLS configuration for the receiver router service ingress. |
+| receiver.router.initContainers | list | `[]` | Optional init containers for the receiver router pod. |
 | receiver.router.livenessProbe | object | See _values.yaml_ | Liveness probe configuration for the receiver router pod default container. |
+| receiver.router.nameOverride | string | `nil` | If set, overrides the name of the component and labels. |
 | receiver.router.nodeSelector | object | `{}` | Node selector labels for scheduling the receiver router pod. |
 | receiver.router.pdb.enabled | bool | `false` | If `true`, create a `PodDisruptionBudget` for the receiver router deployment. |
 | receiver.router.pdb.maxUnavailable | string | `nil` | Maximum number of receiver router replicas that the PDB should allow to be unavailable. |

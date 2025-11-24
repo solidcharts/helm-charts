@@ -1,0 +1,41 @@
+suite: test compactor statefulset
+templates:
+  - compactor/statefulset.yaml
+tests:
+  - it: should use default objstore config mount path
+    set:
+      compactor:
+        enabled: true
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --objstore.config-file=/etc/thanos/objstore.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /etc/thanos/objstore.yaml
+            name: objstore-config
+            subPath: config
+            readOnly: true
+
+  - it: should use custom objstore config mount path
+    set:
+      compactor:
+        enabled: true
+      objstoreConfig:
+        mountPath: /custom/compactor/objstore.yaml
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --objstore.config-file=/custom/compactor/objstore.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /custom/compactor/objstore.yaml
+            name: objstore-config
+            subPath: config
+            readOnly: true

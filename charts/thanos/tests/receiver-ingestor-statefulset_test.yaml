@@ -1,0 +1,41 @@
+suite: test receiver ingestor statefulset
+templates:
+  - receiver-ingestor/statefulset.yaml
+tests:
+  - it: should use default objstore config mount path
+    set:
+      receiver:
+        enabled: true
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --objstore.config-file=/etc/thanos/objstore.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /etc/thanos/objstore.yaml
+            name: objstore-config
+            subPath: config
+            readOnly: true
+
+  - it: should use custom objstore config mount path
+    set:
+      receiver:
+        enabled: true
+      objstoreConfig:
+        mountPath: /receiver/objstore-config.yml
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --objstore.config-file=/receiver/objstore-config.yml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /receiver/objstore-config.yml
+            name: objstore-config
+            subPath: config
+            readOnly: true

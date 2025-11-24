@@ -44,6 +44,13 @@ Objstore config hash
 {{- end }}
 {{- end -}}
 
+{{/*
+Objstore config mount path
+*/}}
+{{- define "thanos.objstoreConfigMountPath" -}}
+{{- default "/etc/thanos/objstore.yaml" .Values.objstoreConfig.mountPath -}}
+{{- end -}}
+
 {{/* Check if we have query ingress */}}
 {{- define "thanos.queryIngress.enabled" -}}
 {{- or (and .Values.queryFrontend.enabled .Values.queryFrontend.ingress.enabled) (and .Values.query.enabled .Values.query.ingress.enabled) -}}

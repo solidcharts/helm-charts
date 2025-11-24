@@ -67,7 +67,7 @@ spec:
             - --log.level={{ .Values.logLevel }}
             - --log.format={{ .Values.logFormat }}
             - {{ printf "--http-address=0.0.0.0:%d" (int .Values.bucketweb.containerPorts.http) }}
-            - --objstore.config-file=/etc/thanos/objstore.yaml
+            - --objstore.config-file={{ include "thanos.objstoreConfigMountPath" . }}
             {{- if .Values.autoGomemlimit.enabled }}
             - --enable-auto-gomemlimit
             {{- with .Values.autoGomemlimit.ratio }}
@@ -92,7 +92,7 @@ spec:
           readinessProbe:
             {{- toYaml .Values.bucketweb.readinessProbe | nindent 12 }}
           volumeMounts:
-            - mountPath: /etc/thanos/objstore.yaml
+            - mountPath: {{ include "thanos.objstoreConfigMountPath" . }}
               name: objstore-config
               subPath: {{ .Values.objstoreConfig.key }}
               readOnly: true
