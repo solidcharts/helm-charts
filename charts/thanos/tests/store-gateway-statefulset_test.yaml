@@ -373,3 +373,31 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: --chunk-pool-size=2GB
+  - it: should name resources with overrideName
+    set:
+      storeGateway:
+        enabled: true
+        nameOverride: custom-store-gateway
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-thanos-custom-store-gateway
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: custom-store-gateway
+  - it: should change mount path for data volume
+    set:
+      storeGateway:
+        enabled: true
+        mountPath: /data
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[?(@.name == "data")].mountPath
+          value: /data
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --data-dir=/data

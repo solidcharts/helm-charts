@@ -267,3 +267,17 @@ tests:
           of: StatefulSet
       - notExists:
           path: spec.volumeClaimTemplates
+  - it: should name resources with nameOverride
+    set:
+      ruler:
+        enabled: true
+        nameOverride: custom-ruler
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-thanos-custom-ruler
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: custom-ruler

@@ -118,9 +118,6 @@ query:
   # -- If `true`, create component.
   enabled: true
 
-  # -- If set, overrides the name of the component and labels.
-  nameOverride: 
-
   serviceAccount:
     # -- If `true`, create a new `ServiceAccount` for the query component.
     create: true
@@ -276,19 +273,6 @@ query:
   # -- Extra volume mounts for the query pod default container.
   extraVolumeMounts: []
 
-  # -- Optional init containers for the query pod.
-  initContainers: []
-
-  # Example:
-  # initContainers:
-  #   - name: my-init
-  #     image: busybox:1.35
-  #     command: ["/bin/sh", "-c"]
-  #     args: ["echo init; sleep 1"]
-  #     volumeMounts:
-  #       - name: objstore-config
-  #         mountPath: /tmp/objstore
-
   # -- Enable DNS service discovery.
   enableDnsDiscovery: true
 
@@ -307,9 +291,6 @@ query:
 queryFrontend:
   # -- If `true`, create the _Thanos Query Frontend_ component.
   enabled: false
-
-  # -- If set, overrides the name of the component and labels.
-  nameOverride: 
 
   serviceAccount:
     # -- If `true`, create a new `ServiceAccount` for the query frontend component.
@@ -463,9 +444,6 @@ queryFrontend:
   # -- Extra volume mounts for the query frontend pod default container.
   extraVolumeMounts: []
 
-  # -- Optional init containers for the queryFrontend pod.
-  initContainers: []
-
   # -- Node selector labels for scheduling the pod (override commons).
   # nodeSelector: {}
 
@@ -481,9 +459,6 @@ queryFrontend:
 storeGateway:
   # -- If `true`, create the store gateway component.
   enabled: true
-
-  # -- If set, overrides the name of the component and labels.
-  nameOverride:
 
   serviceAccount:
     # -- If `true`, create a new `ServiceAccount` for the store gateway component.
@@ -607,9 +582,6 @@ storeGateway:
   # -- Init containers for the store gateway pod.
   initContainers: []
 
-  # -- Mount path for the store gateway data volume.
-  mountPath: /var/thanos/store
-
   persistence:
     # -- If `true`, create a `PersistentVolumeClaim` for the store gateway pod data.
     enabled: false
@@ -641,10 +613,7 @@ storeGateway:
 compactor:
   # -- If `true`, create component.
   enabled: false
-    
-  # -- If set, overrides the name of the component and labels.
-  nameOverride: 
-  
+
   deduplication:
     # -- If `true`, enable deduplication via the compactor component.
     enabled: true
@@ -769,9 +738,6 @@ compactor:
   # -- Extra volume mounts for the compactor pod default container.
   extraVolumeMounts: []
 
-  # -- Optional init containers for the compactor pod.
-  initContainers: []
-
   # -- Node selector labels for scheduling the pod (override commons).
   # nodeSelector: {}
 
@@ -787,10 +753,7 @@ compactor:
 ruler:
   # -- If `true`, create the ruler component.
   enabled: false
-    
-  # -- If set, overrides the name of the component and labels.
-  nameOverride: 
-  
+
   # -- If `true`, add a `thanos_rule` label to `<NAMESPACE>/<RULE_FULLNAME>` on a `Rule` metrics.
   instanceLabel: false
 
@@ -962,9 +925,6 @@ ruler:
   # -- Extra volume mounts for the ruler pod default container.
   extraVolumeMounts: []
 
-  # -- Optional init containers for the ruler pod.
-  initContainers: []
-
   configReloader:
     # -- If `true`, create the ruler pod config reloader sidecar container.
     enabled: true
@@ -1016,10 +976,7 @@ ruler:
 receiver:
   # -- If `true`, create the receiver ingestor & receiver router components.
   enabled: false
-    
-  # -- If set, overrides the name of the component and labels.
-  nameOverride: 
-  
+
   # -- Replication factor for the receiver components.
   replicationFactor: 1
 
@@ -1162,9 +1119,6 @@ receiver:
 
     # -- Extra volume mounts for the receiver ingestor pod default container.
     extraVolumeMounts: []
-
-    # -- Optional init containers for the receiver ingestor pod.
-    initContainers: []
 
     # -- Node selector labels for scheduling the receiver ingestor pod.
     nodeSelector: {}
@@ -1352,9 +1306,6 @@ receiver:
     # -- Node taints the receiver router pod will tolerate for scheduling.
     tolerations: []
 
-  # -- Optional init containers for the receiver router pod.
-  initContainers: []
-
 
 bucketweb:
   # -- If `true`, create the bucket web component.
@@ -1363,10 +1314,7 @@ bucketweb:
   refresh: "30m"
   # -- Timeout to download metadata from remote storage
   timeout: "5m"
-    
-  # -- If set, overrides the name of the component and labels.
-  nameOverride: 
-  
+
   serviceAccount:
     # -- If `true`, create a new `ServiceAccount` for the component.
     create: true
@@ -1519,9 +1467,6 @@ bucketweb:
 
   # -- Extra volume mounts for the bucket web pod default container.
   extraVolumeMounts: []
-
-  # -- Optional init containers for the bucket web pod.
-  initContainers: []
 
   # -- Node selector labels for scheduling the pod (override commons).
   # nodeSelector: {}
