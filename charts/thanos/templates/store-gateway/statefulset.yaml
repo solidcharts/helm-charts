@@ -74,8 +74,8 @@ spec:
             - --log.format={{ .Values.logFormat }}
             - {{ printf "--grpc-address=0.0.0.0:%d" (int .Values.storeGateway.containerPorts.grpc) }}
             - {{ printf "--http-address=0.0.0.0:%d" (int .Values.storeGateway.containerPorts.http) }}
-            - --data-dir=/var/thanos/store
-            - --objstore.config-file=/etc/thanos/objstore.yaml
+            - --data-dir={{ include "thanos.storeGateway.dataMountPath" . }}
+            - --objstore.config-file={{ include "thanos.objstoreConfigMountPath" . }}
           {{- if .Values.autoGomemlimit.enabled }}
             - --enable-auto-gomemlimit
           {{- with .Values.autoGomemlimit.ratio }}
@@ -97,11 +97,11 @@ spec:
           readinessProbe:
             {{- toYaml .Values.storeGateway.readinessProbe | nindent 12 }}
           volumeMounts:
-            - mountPath: /etc/thanos/objstore.yaml
+            - mountPath: {{ include "thanos.objstoreConfigMountPath" . }}
               name: objstore-config
               subPath: {{ .Values.objstoreConfig.key }}
               readOnly: true
-            - mountPath: /var/thanos/store
+            - mountPath: {{ include "thanos.storeGateway.dataMountPath" . }}
               name: data
               readOnly: false
           {{- with .Values.storeGateway.extraVolumeMounts }}

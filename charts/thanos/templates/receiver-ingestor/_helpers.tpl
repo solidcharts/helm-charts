@@ -1,8 +1,15 @@
 {{/*
+Name of the component
+*/}}
+{{- define "thanos.receiverIngestor.name" -}}
+{{- default "receiver-ingestor" .Values.receiver.ingestor.nameOverride -}}
+{{- end }}
+
+{{/*
 Fullname
 */}}
 {{- define "thanos.receiverIngestor.fullname" -}}
-{{ include "shared.fullname" . }}-receiver-ingestor
+{{ include "shared.fullname" . }}-{{ include "thanos.receiverIngestor.name" . }}
 {{- end }}
 
 {{/*
@@ -10,7 +17,7 @@ Common labels
 */}}
 {{- define "thanos.receiverIngestor.labels" -}}
 {{ include "shared.labels" . }}
-app.kubernetes.io/component: receiver-ingestor
+app.kubernetes.io/component: {{ include "thanos.receiverIngestor.name" . }}
 {{- end }}
 
 {{/*
@@ -18,7 +25,7 @@ Selector labels
 */}}
 {{- define "thanos.receiverIngestor.selectorLabels" -}}
 {{ include "shared.selectorLabels" . }}
-app.kubernetes.io/component: receiver-ingestor
+app.kubernetes.io/component: {{ include "thanos.receiverIngestor.name" . }}
 {{- end }}
 
 {{/*
@@ -26,7 +33,7 @@ Create the name of the service account to use
 */}}
 {{- define "thanos.receiverIngestor.serviceAccountName" -}}
 {{- if .Values.receiver.ingestor.serviceAccount.create -}}
-{{- default (printf "%s-receiver-ingestor" (include "shared.fullname" .)) .Values.receiver.ingestor.serviceAccount.name }}
+{{- default (printf "%s-%s" (include "shared.fullname" .) (include "thanos.receiverIngestor.name" .)) .Values.receiver.ingestor.serviceAccount.name }}
 {{- else -}}
 {{- default "default" .Values.receiver.ingestor.serviceAccount.name }}
 {{- end -}}

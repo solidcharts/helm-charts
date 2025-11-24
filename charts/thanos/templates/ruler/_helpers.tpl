@@ -1,8 +1,15 @@
 {{/*
+Name of the component
+*/}}
+{{- define "thanos.ruler.name" -}}
+{{- default "ruler" .Values.ruler.nameOverride -}}
+{{- end }}
+
+{{/*
 Fullname
 */}}
 {{- define "thanos.ruler.fullname" -}}
-{{ include "shared.fullname" . }}-ruler
+{{ include "shared.fullname" . }}-{{ include "thanos.ruler.name" . }}
 {{- end }}
 
 {{/*
@@ -10,7 +17,7 @@ Common labels
 */}}
 {{- define "thanos.ruler.labels" -}}
 {{ include "shared.labels" . }}
-app.kubernetes.io/component: ruler
+app.kubernetes.io/component: {{ include "thanos.ruler.name" . }}
 {{- end }}
 
 {{/*
@@ -18,7 +25,7 @@ Selector labels
 */}}
 {{- define "thanos.ruler.selectorLabels" -}}
 {{ include "shared.selectorLabels" . }}
-app.kubernetes.io/component: ruler
+app.kubernetes.io/component: {{ include "thanos.ruler.name" . }}
 {{- end }}
 
 {{/*
@@ -26,7 +33,7 @@ Create the name of the service account to use
 */}}
 {{- define "thanos.ruler.serviceAccountName" -}}
 {{- if .Values.ruler.serviceAccount.create -}}
-{{- default (printf "%s-ruler" (include "shared.fullname" .)) .Values.ruler.serviceAccount.name }}
+{{- default (printf "%s-%s" (include "shared.fullname" .) (include "thanos.ruler.name" .)) .Values.ruler.serviceAccount.name }}
 {{- else -}}
 {{- default "default" .Values.ruler.serviceAccount.name }}
 {{- end -}}

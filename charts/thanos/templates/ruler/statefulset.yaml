@@ -75,7 +75,7 @@ spec:
             - {{ printf "--grpc-address=0.0.0.0:%d" (int .Values.ruler.containerPorts.grpc) }}
             - {{ printf "--http-address=0.0.0.0:%d" (int .Values.ruler.containerPorts.http) }}
             - --data-dir=/var/thanos/rule
-            - --objstore.config-file=/etc/thanos/objstore.yaml
+            - --objstore.config-file={{ include "thanos.objstoreConfigMountPath" . }}
           {{- if .Values.autoGomemlimit.enabled }}
             - --enable-auto-gomemlimit
           {{- with .Values.autoGomemlimit.ratio }}
@@ -117,7 +117,7 @@ spec:
           readinessProbe:
             {{- toYaml .Values.ruler.readinessProbe | nindent 12 }}
           volumeMounts:
-            - mountPath: /etc/thanos/objstore.yaml
+            - mountPath: {{ include "thanos.objstoreConfigMountPath" . }}
               name: objstore-config
               subPath: {{ .Values.objstoreConfig.key }}
               readOnly: true

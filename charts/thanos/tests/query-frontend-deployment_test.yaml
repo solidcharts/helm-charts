@@ -356,3 +356,17 @@ tests:
           path: spec.template.spec.nodeSelector
       - notExists:
           path: spec.template.spec.tolerations
+  - it: should name resources with nameOverride
+    set:
+      queryFrontend:
+        enabled: true
+        nameOverride: custom-query-frontend
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-thanos-custom-query-frontend
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: custom-query-frontend

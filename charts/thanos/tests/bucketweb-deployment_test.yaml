@@ -378,3 +378,55 @@ tests:
           path: spec.template.spec.nodeSelector
       - notExists:
           path: spec.template.spec.tolerations
+  - it: should name resources with nameOverride
+    set:
+      bucketweb:
+        enabled: true
+        nameOverride: custom-bucketweb
+    asserts:
+      - isKind:
+          of: Deployment
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-thanos-custom-bucketweb
+      - equal:
+          path: metadata.labels["app.kubernetes.io/component"]
+          value: custom-bucketweb
+
+  - it: should use default objstore config mount path
+    set:
+      bucketweb:
+        enabled: true
+    asserts:
+      - isKind:
+          of: Deployment
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --objstore.config-file=/etc/thanos/objstore.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /etc/thanos/objstore.yaml
+            name: objstore-config
+            subPath: config
+            readOnly: true
+
+  - it: should use custom objstore config mount path
+    set:
+      bucketweb:
+        enabled: true
+      objstoreConfig:
+        mountPath: /custom/path/objstore.yaml
+    asserts:
+      - isKind:
+          of: Deployment
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --objstore.config-file=/custom/path/objstore.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            mountPath: /custom/path/objstore.yaml
+            name: objstore-config
+            subPath: config
+            readOnly: true

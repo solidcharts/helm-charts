@@ -15,6 +15,14 @@
 
 ## [UNRELEASED]
 
+## [v0.10.0] - 2025-11-24
+
+### Added
+
+- Support to override name for each component
+- Support to modify the mount path for data volume in Store Gateway
+- Support to override the mount path for the objstore config file
+
 ## [v0.9.0] - 2025-11-20
 
 ### Added
