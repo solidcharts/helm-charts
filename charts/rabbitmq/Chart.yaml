@@ -3,8 +3,8 @@ name: rabbitmq
 description: |
   A Helm chart for RabbitMQ.
 type: application
-version: 0.5.1
-appVersion: "4.2.1-management"
+version: 0.5.2
+appVersion: "4.2.2-management"
 icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/rabbitmq/icon.png
 sources:
   - https://github.com/solidcharts/helm-charts/
