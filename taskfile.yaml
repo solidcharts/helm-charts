@@ -35,6 +35,10 @@ tasks:
     desc: Generate helm docs
     cmds:
       - helm-docs --template-files=./_templates.gotmpl --template-files=./_chart-readme.md.gotmpl -l debug
+  pre-commit-helm-docs:
+    desc: Run pre-commit hook for helm-docs
+    cmds:
+      - pre-commit run helm-docs-container --all-files
   act:
     desc: Run act
     cmds:
