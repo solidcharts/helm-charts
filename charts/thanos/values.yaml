@@ -15,7 +15,7 @@ image:
   # -- Pull policy for images.
   pullPolicy: IfNotPresent
   # -- Image tag version (if not specified, it will use the chart appVersion)
-  tag: v0.40.1
+  tag: v0.41.0
   # -- Set image digest
   digest: ~
 
