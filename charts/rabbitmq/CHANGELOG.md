@@ -14,19 +14,25 @@
 
 ## [UNRELEASED]
 
-## [v0.5.5] - 2025-03-18
+## [v0.6.0] - 2026-04-24
+
+### Changed
+
+- Upgrade to RabbitMQ `4.3.0-management`
+
+## [v0.5.5] - 2026-03-18
 
 ### Changed
 
 - Upgrade to RabbitMQ `4.2.5-management`
 
-## [v0.5.4] - 2025-02-19
+## [v0.5.4] - 2026-02-19
 
 ### Changed
 
 - Upgrade to RabbitMQ `4.2.4-management`
 
-## [v0.5.3] - 2025-01-24
+## [v0.5.3] - 2026-01-24
 
 ### Changed
 
