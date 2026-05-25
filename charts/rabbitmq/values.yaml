@@ -96,7 +96,7 @@ initContainer:
     ## -- Init container image repository
     repository: busybox
     ## -- Init container image tag
-    tag: "1.37.0"
+    tag: "1.38.0"
     ## -- Init container image pull policy
     pullPolicy: IfNotPresent
   securityContext:
