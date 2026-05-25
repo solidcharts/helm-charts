@@ -14,6 +14,12 @@
 
 ## [UNRELEASED]
 
+## [v0.7.0] - 2026-05-25
+
+### Changed
+
+- Upgrade busybox to `1.38.0`
+
 ## [v0.6.0] - 2026-04-24
 
 ### Changed
