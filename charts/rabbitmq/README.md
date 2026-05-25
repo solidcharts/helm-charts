@@ -1,6 +1,6 @@
 # rabbitmq
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: 4.3.0-management](https://img.shields.io/badge/AppVersion-4.3.0--management-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
+![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: 4.3.0-management](https://img.shields.io/badge/AppVersion-4.3.0--management-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
 
 A Helm chart for RabbitMQ.
 
@@ -21,7 +21,7 @@ A Helm chart for RabbitMQ.
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.6.0
+helm upgrade --install rabbitmq oci://ghcr.io/solidcharts/helm-charts/rabbitmq --version 0.7.0
 ```
 
 ### Non-OCI Repository
@@ -31,7 +31,7 @@ Alternatively, you can use the legacy non-OCI method via the following commands:
 ```shell
 helm repo add solidcharts https://solidcharts.github.io/helm-charts/
 helm repo update
-helm upgrade --install rabbitmq solidcharts/rabbitmq --version 0.6.0
+helm upgrade --install rabbitmq solidcharts/rabbitmq --version 0.7.0
 ```
 
 ## Requirements
@@ -84,7 +84,7 @@ helm upgrade --install rabbitmq solidcharts/rabbitmq --version 0.6.0
 | initContainer.image.pullPolicy | string | `"IfNotPresent"` |  |
 | initContainer.image.registry | string | `"docker.io"` |  |
 | initContainer.image.repository | string | `"busybox"` |  |
-| initContainer.image.tag | string | `"1.37.0"` |  |
+| initContainer.image.tag | string | `"1.38.0"` |  |
 | initContainer.securityContext.allowPrivilegeEscalation | bool | `false` |  |
 | initContainer.securityContext.capabilities.drop[0] | string | `"ALL"` |  |
 | initContainer.securityContext.readOnlyRootFilesystem | bool | `true` |  |
