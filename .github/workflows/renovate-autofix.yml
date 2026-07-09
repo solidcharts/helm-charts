@@ -1,0 +1,155 @@
+name: Renovate autofix
+
+# Renovate (Mend hosted app) only edits Chart.yaml + values.yaml. The pr-validate
+# workflow additionally requires a regenerated README.md (helm-docs) and a matching
+# CHANGELOG.md entry, which Renovate cannot produce. This workflow fills that gap by
+# regenerating docs and inserting the missing changelog entry on every Renovate branch.
+#
+# NOTE: the commit is pushed with the default GITHUB_TOKEN, which by design does NOT
+# re-trigger pr-validate (GitHub anti-recursion rule). Re-run pr-validate manually
+# before merge via its workflow_dispatch trigger, or swap the checkout token for a
+# GitHub App / PAT if you want it re-triggered automatically.
+
+on:
+  push:
+    branches:
+      - "renovate/**"
+    paths:
+      - "charts/**"
+
+concurrency:
+  group: renovate-autofix-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  HELM_DOCS_VERSION: "1.14.2" # keep in sync with .pre-commit-config.yaml
+
+jobs:
+  autofix:
+    name: Regenerate docs and changelog
+    runs-on: ubuntu-latest
+    # Skip our own automated commits (belt-and-suspenders; GITHUB_TOKEN pushes do not
+    # trigger workflows anyway).
+    if: github.actor != 'github-actions[bot]'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Fetch main
+        run: git fetch --no-tags origin main
+
+      - name: Install helm-docs
+        run: |
+          set -euo pipefail
+          curl -sSLo helm-docs.tar.gz \
+            "https://github.com/norwoodj/helm-docs/releases/download/v${HELM_DOCS_VERSION}/helm-docs_${HELM_DOCS_VERSION}_Linux_x86_64.tar.gz"
+          tar -xzf helm-docs.tar.gz helm-docs
+          sudo install -m 0755 helm-docs /usr/local/bin/helm-docs
+          rm -f helm-docs.tar.gz helm-docs
+          helm-docs --version
+
+      - name: Add missing changelog entries
+        run: |
+          set -euo pipefail
+
+          # Library chart excluded from pr-validate; it has no image/appVersion bumps.
+          excluded="shared"
+          today="$(date -u +%F)"
+
+          extract() {
+            # extract <key> <file> -> value with optional surrounding quotes stripped
+            grep -E "^$1:" "$2" | head -1 \
+              | sed -E "s/^$1:[[:space:]]*\"?([^\"[:space:]]+)\"?.*/\1/"
+          }
+
+          for chart_yaml in charts/*/Chart.yaml; do
+            chart_dir="$(dirname "$chart_yaml")"
+            chart="$(basename "$chart_dir")"
+            changelog="$chart_dir/CHANGELOG.md"
+
+            [[ "$chart" == "$excluded" ]] && continue
+            [[ -f "$changelog" ]] || { echo "· $chart: no CHANGELOG.md, skipping"; continue; }
+
+            # Only act when this branch changed the chart's Chart.yaml vs main.
+            if git diff --quiet origin/main -- "$chart_yaml"; then
+              continue
+            fi
+
+            new_version="$(extract version "$chart_yaml")"
+            [[ -n "$new_version" ]] || continue
+
+            if grep -q "## \[v${new_version}\]" "$changelog"; then
+              echo "· $chart: changelog already has v${new_version}"
+              continue
+            fi
+
+            new_app="$(extract appVersion "$chart_yaml")"
+            old_app="$(git show "origin/main:$chart_yaml" 2>/dev/null | grep -E '^appVersion:' | head -1 \
+              | sed -E 's/^appVersion:[[:space:]]*"?([^"[:space:]]+)"?.*/\1/' || true)"
+
+            if [[ -n "$new_app" && -n "$old_app" && "$new_app" != "$old_app" ]]; then
+              msg="Upgraded \`${chart}\` image from \`${old_app}\` to \`${new_app}\`"
+            elif [[ -n "$new_app" ]]; then
+              msg="Upgraded \`${chart}\` image to \`${new_app}\`"
+            else
+              msg="Update \`${chart}\` chart to \`v${new_version}\`"
+            fi
+
+            entry="$(printf '## [v%s] - %s\n\n### Changed\n\n- %s' "$new_version" "$today" "$msg")"
+            export entry
+
+            # Insert the new section immediately before the most recent version heading,
+            # i.e. right after the '## [UNRELEASED]' block.
+            awk '
+              !inserted && /^## \[v/ { print ENVIRON["entry"]; print ""; inserted=1 }
+              { print }
+            ' "$changelog" > "$changelog.tmp" && mv "$changelog.tmp" "$changelog"
+
+            if grep -q "## \[v${new_version}\]" "$changelog"; then
+              echo "✓ $chart: added changelog entry v${new_version} — ${msg}"
+            else
+              echo "::error::Failed to insert changelog entry for $chart (no '## [v...]' anchor found)"
+              exit 1
+            fi
+          done
+
+      - name: Regenerate helm-docs
+        run: |
+          set -euo pipefail
+          helm-docs \
+            --template-files=./_templates.gotmpl \
+            --template-files=./_chart-readme.md.gotmpl \
+            -l warning
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "Nothing to fix — docs and changelog already up to date."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "deps: regenerate helm-docs and changelog for renovate update"
+          git push origin "HEAD:${{ github.ref_name }}"
+
+          {
+            echo "### Renovate autofix applied"
+            echo ""
+            echo "Regenerated helm-docs and/or added changelog entries were pushed to \`${{ github.ref_name }}\`."
+            echo ""
+            echo "> pr-validate is **not** re-triggered automatically for GITHUB_TOKEN pushes."
+            echo "> Run it manually (Actions → Pull request validation → Run workflow on this branch) before merging."
+          } >> "$GITHUB_STEP_SUMMARY"
