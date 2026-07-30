@@ -486,6 +486,36 @@ entries:
     version: 0.3.0
   thanos:
   - apiVersion: v2
+    appVersion: v0.42.4
+    created: "2026-07-30T19:06:45.402325477Z"
+    dependencies:
+    - name: shared
+      repository: oci://ghcr.io/solidcharts/helm-charts
+      version: 0.X.X
+    description: 'Thanos Helm chart for Kubernetes. '
+    digest: 453edd74d2b6f1fe40cd07158b63b9d8e11a20b40d52ca3157da9bfbad6297ee
+    home: https://thanos.io/
+    icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/thanos/icon.png
+    keywords:
+    - kubernetes
+    - thanos
+    - prometheus
+    - monitoring
+    - alerting
+    - metrics
+    maintainers:
+    - email: solidcharts@przemeknowak.com
+      name: pnowy
+    name: thanos
+    sources:
+    - https://github.com/thanos-io/thanos
+    - https://github.com/thanos-io/kube-thanos
+    - https://github.com/solidcharts/helm-charts/
+    type: application
+    urls:
+    - https://github.com/solidcharts/helm-charts/releases/download/thanos-0.12.2/thanos-0.12.2.tgz
+    version: 0.12.2
+  - apiVersion: v2
     appVersion: v0.42.2
     created: "2026-07-17T07:16:53.939521971Z"
     dependencies:
@@ -846,4 +876,4 @@ entries:
     urls:
     - https://github.com/solidcharts/helm-charts/releases/download/thanos-0.5.0/thanos-0.5.0.tgz
     version: 0.5.0
-generated: "2026-07-24T07:34:48.191157681Z"
+generated: "2026-07-30T19:06:45.402411167Z"
