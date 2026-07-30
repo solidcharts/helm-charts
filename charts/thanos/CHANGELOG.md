@@ -15,6 +15,12 @@
 
 ## [UNRELEASED]
 
+## [v0.12.2] - 2026-07-30
+
+### Changed
+
+- Upgraded `thanos` image from `v0.42.2` to `v0.42.4`
+
 ## [v0.12.1] - 2026-07-16
 
 ### Changed
