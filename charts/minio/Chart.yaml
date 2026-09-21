@@ -11,9 +11,6 @@ annotations:
 icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/minio/icon.svg
 sources:
   - https://github.com/solidcharts/helm-charts/
-maintainers:
-  - name: pnowy
-    email: solidcharts@przemeknowak.com
 dependencies:
   - name: shared
     version: 0.X.X

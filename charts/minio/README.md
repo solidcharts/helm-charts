@@ -6,12 +6,6 @@
 
 A Helm chart for MinIO.
 
-## Maintainers
-
-| Name | Email | Url |
-| ---- | ------ | --- |
-| pnowy | <solidcharts@przemeknowak.com> |  |
-
 ## Source Code
 
 * <https://github.com/solidcharts/helm-charts/>
