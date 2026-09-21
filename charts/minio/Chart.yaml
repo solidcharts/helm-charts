@@ -1,0 +1,17 @@
+apiVersion: v2
+name: minio
+description: |
+  A Helm chart for MinIO.
+type: application
+version: 1.0.0
+appVersion: "RELEASE.2025-10-15T17-29-55Z"
+deprecated: true
+annotations:
+  artifacthub.io/deprecationReason: "MinIO is no longer available as an open-source product with public container images, and this chart is no longer maintained. Upgrades will not be provided. It is recommended to migrate to an alternative S3-compatible object storage solution."
+icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/minio/icon.svg
+sources:
+  - https://github.com/solidcharts/helm-charts/
+dependencies:
+  - name: shared
+    version: 0.X.X
+    repository: oci://ghcr.io/solidcharts/helm-charts

@@ -23,6 +23,9 @@
       "bumpType": "{{#if isPatch}}patch{{else}}minor{{/if}}"
     }
   ],
+  "ignorePaths": [
+    "charts/minio/**"
+  ],
   "customManagers": [
     {
       "customType": "regex",
