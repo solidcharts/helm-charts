@@ -1,6 +1,29 @@
 apiVersion: v1
 entries:
   minio:
+  - annotations:
+      artifacthub.io/deprecationReason: MinIO is no longer available as an open-source
+        product with public container images, and this chart is no longer maintained.
+        Upgrades will not be provided. It is recommended to migrate to an alternative
+        S3-compatible object storage solution.
+    apiVersion: v2
+    appVersion: RELEASE.2025-10-15T17-29-55Z
+    created: "2026-09-21T07:17:05.983474852Z"
+    dependencies:
+    - name: shared
+      repository: oci://ghcr.io/solidcharts/helm-charts
+      version: 0.X.X
+    deprecated: true
+    description: 'A Helm chart for MinIO. '
+    digest: 170e62d3d496230f42e7e57b01e9594602c89166283ef09378a5eec417c7c585
+    icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/minio/icon.svg
+    name: minio
+    sources:
+    - https://github.com/solidcharts/helm-charts/
+    type: application
+    urls:
+    - https://github.com/solidcharts/helm-charts/releases/download/minio-1.0.0/minio-1.0.0.tgz
+    version: 1.0.0
   - apiVersion: v2
     appVersion: RELEASE.2025-10-15T17-29-55Z
     created: "2025-11-17T15:48:25.350975767Z"
@@ -916,4 +939,4 @@ entries:
     urls:
     - https://github.com/solidcharts/helm-charts/releases/download/thanos-0.5.0/thanos-0.5.0.tgz
     version: 0.5.0
-generated: "2026-09-16T06:10:20.617845632Z"
+generated: "2026-09-21T07:17:05.983628218Z"
