@@ -26,18 +26,6 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Update minio docker image references",
-      "managerFilePatterns": [
-        "/^charts\\/minio\\/Chart\\.yaml$/"
-      ],
-      "matchStrings": [
-        "appVersion:\\s*\"?(?<currentValue>[0-9a-zA-Z._-]+)\"?"
-      ],
-      "depNameTemplate": "minio/minio",
-      "datasourceTemplate": "docker"
-    },
-    {
-      "customType": "regex",
       "description": "Update rabbitmq docker image references",
       "managerFilePatterns": [
         "/^charts\\/rabbitmq\\/Chart\\.yaml$/"

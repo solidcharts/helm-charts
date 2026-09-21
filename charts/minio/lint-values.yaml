@@ -1,6 +1,0 @@
-
-ingress:
-  minio:
-    enabled: true
-  console:
-    enabled: true
