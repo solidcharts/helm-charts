@@ -1,6 +1,8 @@
 # minio
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: RELEASE.2025-10-15T17-29-55Z](https://img.shields.io/badge/AppVersion-RELEASE.2025--10--15T17--29--55Z-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
+> **:exclamation: This Helm Chart is deprecated!**
+
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square)  ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)  ![AppVersion: RELEASE.2025-10-15T17-29-55Z](https://img.shields.io/badge/AppVersion-RELEASE.2025--10--15T17--29--55Z-informational?style=flat-square)  [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/solidcharts)](https://artifacthub.io/packages/search?repo=solidcharts)
 
 A Helm chart for MinIO.
 
@@ -21,7 +23,7 @@ A Helm chart for MinIO.
 To install the chart you can use the following command:
 
 ```shell
-helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --version 0.5.0
+helm upgrade --install minio oci://ghcr.io/solidcharts/helm-charts/minio --version 1.0.0
 ```
 
 ### Non-OCI Repository
@@ -31,7 +33,7 @@ Alternatively, you can use the legacy non-OCI method via the following commands:
 ```shell
 helm repo add solidcharts https://solidcharts.github.io/helm-charts/
 helm repo update
-helm upgrade --install minio solidcharts/minio --version 0.5.0
+helm upgrade --install minio solidcharts/minio --version 1.0.0
 ```
 
 ## Requirements

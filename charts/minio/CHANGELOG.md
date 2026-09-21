@@ -16,6 +16,13 @@
 
 ## [UNRELEASED]
 
+## [v1.0.0] - 2026-09-21
+
+### Deprecated
+
+- Chart is deprecated as MinIO is no longer available as an open product and official public container images are no longer published or maintained.
+- Upgrades will not be provided for this chart. It is recommended to migrate to an alternative S3-compatible object storage solution.
+
 ## [v0.5.0] - 2025-11-17
 
 ### Changed
