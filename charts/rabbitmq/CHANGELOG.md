@@ -14,6 +14,12 @@
 
 ## [UNRELEASED]
 
+## [v0.8.0] - 2026-10-20
+
+### Changed
+
+- Upgraded `rabbitmq` image from `4.3.6-management` to `4.4.0-management`
+
 ## [v0.7.6] - 2026-09-16
 
 ### Changed
