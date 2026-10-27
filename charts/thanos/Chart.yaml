@@ -3,8 +3,8 @@ name: thanos
 description: |
   Thanos Helm chart for Kubernetes.
 type: application
-version: 0.12.2
-appVersion: v0.42.4
+version: 0.12.3
+appVersion: v0.42.5
 keywords:
   - kubernetes
   - thanos
