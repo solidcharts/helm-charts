@@ -148,6 +148,26 @@ entries:
     version: 0.3.2
   rabbitmq:
   - apiVersion: v2
+    appVersion: 4.4.1-management
+    created: "2026-11-18T08:03:59.361131979Z"
+    dependencies:
+    - name: shared
+      repository: oci://ghcr.io/solidcharts/helm-charts
+      version: 0.X.X
+    description: 'A Helm chart for RabbitMQ. '
+    digest: 06a900a4dc073e232c3dd770f73f6260e03adc0b08bca7faff80da2d39e632cc
+    icon: https://raw.githubusercontent.com/solidcharts/helm-charts/main/charts/rabbitmq/icon.png
+    maintainers:
+    - email: solidcharts@przemeknowak.com
+      name: pnowy
+    name: rabbitmq
+    sources:
+    - https://github.com/solidcharts/helm-charts/
+    type: application
+    urls:
+    - https://github.com/solidcharts/helm-charts/releases/download/rabbitmq-0.8.1/rabbitmq-0.8.1.tgz
+    version: 0.8.1
+  - apiVersion: v2
     appVersion: 4.4.0-management
     created: "2026-10-20T15:49:15.851140818Z"
     dependencies:
@@ -989,4 +1009,4 @@ entries:
     urls:
     - https://github.com/solidcharts/helm-charts/releases/download/thanos-0.5.0/thanos-0.5.0.tgz
     version: 0.5.0
-generated: "2026-10-27T16:02:13.652158295Z"
+generated: "2026-11-18T08:03:59.361307148Z"
